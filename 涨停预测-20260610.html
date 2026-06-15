@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>涨停预测日报 - 2026年6月10日</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card: #1a1d27;
+    --card-hover: #1f2332;
+    --red: #e8393a;
+    --green: #3cb371;
+    --gold: #f0b90b;
+    --text: #e0e0e0;
+    --text-secondary: #8b8fa3;
+    --border: #2a2d3a;
+    --accent: #4a6cf7;
+    --accent-glow: rgba(74,108,247,.15);
+    --tag-bg: rgba(240,185,11,.12);
+    --tag-text: #f0b90b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.6; min-height:100vh;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1a1d27 0%, #0f1117 50%, #1a1020 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 24px; text-align: center;
+  }
+  .header h1 {
+    font-size: 28px; font-weight: 700;
+    background: linear-gradient(90deg, #f0b90b, #e8393a);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header .subtitle {
+    color: var(--text-secondary); font-size: 14px; margin-top: 8px;
+  }
+  .header .date-badge {
+    display: inline-block; margin-top: 12px;
+    padding: 4px 16px; border-radius: 20px;
+    background: var(--accent-glow); color: var(--accent);
+    font-size: 13px; font-weight: 500;
+  }
+
+  /* Market Snapshot */
+  .market-snapshot {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    padding: 20px 24px; justify-content: center;
+  }
+  .snapshot-item {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 20px; min-width: 120px;
+    text-align: center;
+  }
+  .snapshot-item .label { font-size: 12px; color: var(--text-secondary); }
+  .snapshot-item .value { font-size: 20px; font-weight: 700; margin-top: 4px; }
+  .snapshot-item .value.up { color: var(--red); }
+  .snapshot-item .value.down { color: var(--green); }
+
+  /* Main Container */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px 40px; }
+
+  /* Section Title */
+  .section-title {
+    font-size: 20px; font-weight: 700; margin: 32px 0 16px;
+    padding-left: 12px; border-left: 3px solid var(--accent);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title .icon { font-size: 22px; }
+
+  /* Alert / Warning Box */
+  .alert-box {
+    background: rgba(240,185,11,.08); border: 1px solid rgba(240,185,11,.2);
+    border-radius: 12px; padding: 16px 20px; margin: 16px 0;
+    font-size: 13px; color: var(--gold); line-height: 1.8;
+  }
+  .alert-box strong { color: #ffd43b; }
+  .alert-box.danger {
+    background: rgba(232,57,58,.08); border-color: rgba(232,57,58,.2);
+    color: #f87171;
+  }
+
+  /* Theme Tags */
+  .theme-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+  .theme-tag {
+    padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 500;
+    background: var(--tag-bg); color: var(--tag-text);
+  }
+
+  /* Stock Card */
+  .stock-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; margin-bottom: 20px; overflow: hidden;
+    transition: border-color .2s;
+  }
+  .stock-card:hover { border-color: var(--accent); }
+  .stock-card-header {
+    padding: 16px 20px; display: flex; align-items: center; gap: 16px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(90deg, rgba(74,108,247,.06), transparent);
+  }
+  .stock-rank {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: linear-gradient(135deg, #f0b90b, #e67e22);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800; color: #000; flex-shrink: 0;
+  }
+  .stock-rank.r2 { background: linear-gradient(135deg, #c0c0c0, #a0a0a0); }
+  .stock-rank.r3 { background: linear-gradient(135deg, #cd7f32, #b87340); }
+  .stock-rank.r4 { background: linear-gradient(135deg, #4a6cf7, #6366f1); }
+  .stock-rank.r5 { background: linear-gradient(135deg, #6366f1, #818cf8); }
+  .stock-info { flex:1; }
+  .stock-name { font-size: 18px; font-weight: 700; }
+  .stock-code { font-size: 12px; color: var(--text-secondary); }
+  .stock-badge {
+    padding: 6px 14px; border-radius: 20px; font-size: 14px; font-weight: 700;
+    background: rgba(232,57,58,.12); color: var(--red);
+  }
+  .stock-badge.limit-up { color: var(--red); background: rgba(232,57,58,.12); }
+  .stock-score {
+    display: flex; flex-direction: column; align-items: center; min-width: 60px;
+  }
+  .score-num { font-size: 28px; font-weight: 800; }
+  .score-label { font-size: 11px; color: var(--text-secondary); }
+  .score-num.s90 { color: #f0b90b; }
+  .score-num.s85 { color: #4a6cf7; }
+
+  .stock-card-body { padding: 16px 20px; }
+  .info-row {
+    display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 10px;
+  }
+  .info-item {
+    background: rgba(255,255,255,.04); border-radius: 8px;
+    padding: 8px 12px; font-size: 13px; flex: 1; min-width: 100px;
+  }
+  .info-item .info-label { color: var(--text-secondary); font-size: 11px; }
+  .info-item .info-val { font-weight: 600; margin-top: 2px; }
+  .info-val.up { color: var(--red); }
+  .info-val.down { color: var(--green); }
+  .info-val.highlight { color: var(--gold); }
+
+  .analysis-section { margin-top: 12px; }
+  .analysis-title {
+    font-size: 14px; font-weight: 600; color: var(--accent);
+    margin-bottom: 6px; display: flex; align-items: center; gap: 4px;
+  }
+  .analysis-text { font-size: 13px; color: var(--text-secondary); line-height: 1.8; }
+
+  .expect-section {
+    background: rgba(74,108,247,.06); border: 1px solid rgba(74,108,247,.15);
+    border-radius: 12px; padding: 14px 16px; margin-top: 12px;
+  }
+  .expect-section .exp-title { font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 6px; }
+  .expect-section .exp-content { font-size: 13px; color: var(--text); line-height: 1.8; }
+  .exp-tag {
+    display: inline-block; padding: 2px 8px; border-radius: 10px;
+    font-size: 11px; margin-right: 4px;
+  }
+  .exp-tag.buy { background: rgba(232,57,58,.15); color: var(--red); }
+  .exp-tag.warn { background: rgba(240,185,11,.15); color: var(--gold); }
+  .exp-tag.ok { background: rgba(60,179,113,.15); color: var(--green); }
+
+  /* Flow diagram */
+  .flow-section {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px; margin: 20px 0;
+  }
+  .flow-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px;
+  }
+  .flow-card h4 { font-size: 14px; margin-bottom: 10px; color: var(--text-secondary); }
+  .flow-item {
+    display: flex; justify-content: space-between; padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,.04); font-size: 13px;
+  }
+  .flow-item:last-child { border-bottom: none; }
+
+  /* Disclaimer */
+  .disclaimer {
+    background: rgba(232,57,58,.06); border: 1px solid rgba(232,57,58,.15);
+    border-radius: 12px; padding: 16px 20px; margin: 24px 0;
+    font-size: 12px; color: #f87171; line-height: 1.8;
+  }
+  .disclaimer strong { display: block; margin-bottom: 4px; }
+
+  .footer {
+    text-align: center; padding: 20px; color: var(--text-secondary);
+    font-size: 12px; border-top: 1px solid var(--border); margin-top: 20px;
+  }
+
+  @media (max-width:640px) {
+    .header h1 { font-size: 22px; }
+    .stock-card-header { flex-wrap: wrap; }
+    .info-row { flex-direction: column; }
+  }
+
+  /* Pulse animation */
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+  .live-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: #e8393a;
+    display: inline-block; animation: pulse 2s infinite; margin-right: 6px;
+  }
+
+  .main-theme {
+    background: linear-gradient(90deg, rgba(74,108,247,.1), transparent);
+    border-radius: 12px; padding: 16px 20px; margin: 20px 0; font-size: 14px;
+  }
+  .main-theme h4 { color: var(--accent); margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>涨停预测日报</h1>
+  <div class="subtitle">结合热门概念、资金流向、龙虎榜多维分析</div>
+  <div class="date-badge"><span class="live-dot"></span>2026年6月10日 盘后分析</div>
+</div>
+
+<!-- Market Overview -->
+<div class="market-snapshot">
+  <div class="snapshot-item">
+    <div class="label">上证指数</div>
+    <div class="value down">3985 <span style="font-size:12px">-0.42%</span></div>
+  </div>
+  <div class="snapshot-item">
+    <div class="label">深证成指</div>
+    <div class="value down">-2.04%</div>
+  </div>
+  <div class="snapshot-item">
+    <div class="label">创业板指</div>
+    <div class="value down">-2.70%</div>
+  </div>
+  <div class="snapshot-item">
+    <div class="label">科创50</div>
+    <div class="value down">-0.65%</div>
+  </div>
+  <div class="snapshot-item">
+    <div class="label">两市成交</div>
+    <div class="value" style="color:var(--gold)">2.0万亿</div>
+  </div>
+  <div class="snapshot-item">
+    <div class="label">涨跌比</div>
+    <div class="value down">~800:3800</div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- Macro Alert -->
+<div class="alert-box danger">
+  <strong>⚠️ 市场风险提示</strong><br>
+  ① 沪指今日再度失守4000点，深成指/创业板双双跌超2%，超3800只个股飘绿，市场整体偏弱；<br>
+  ② 今晚20:30美国CPI数据公布，可能引发全球市场波动，次日A股开盘存在不确定性；<br>
+  ③ 科技股内部分化加剧，昨日强势的CPO/光通信/元件等板块今日大幅回调，追高风险极大；<br>
+  ④ 半导体材料成为今日唯一逆势主线，但需警惕轮动加速和获利盘回吐。
+</div>
+
+<!-- Main Theme -->
+<div class="main-theme">
+  <h4>今日主线：半导体材料逆势爆发</h4>
+  <div class="theme-tags">
+    <span class="theme-tag">靶材 +7.45%</span>
+    <span class="theme-tag">电子特气 +4.83%</span>
+    <span class="theme-tag">电子树脂 +4.66%</span>
+    <span class="theme-tag">稀土永磁 +涨停潮</span>
+    <span class="theme-tag">半导体封装材料</span>
+    <span class="theme-tag">MLCC -2.39%</span>
+    <span class="theme-tag">CPO -3.23%</span>
+  </div>
+  <p style="color:var(--text-secondary);font-size:13px;margin-top:8px;">
+  工信部发布信息通信发展规划：到2028年智能运营能力达国际先进水平，加快建设400Gbps/800Gbps骨干传输网络。
+  发改委：抓紧研究储备针对性政策工具。央行行长潘功胜会见美国前财长保尔森。
+  半导体材料、稀土永磁在大盘调整中逆势涨停，显示资金高度集中。
+  </p>
+</div>
+
+<div class="section-title">
+  <span class="icon">🎯</span>明日最可能涨停的5只个股
+</div>
+
+<!-- Stock 1 -->
+<div class="stock-card">
+  <div class="stock-card-header">
+    <div class="stock-rank">1</div>
+    <div class="stock-info">
+      <div class="stock-name">雅克科技 <span style="font-size:14px;color:var(--text-secondary)">sz002409</span></div>
+      <div class="stock-code">半导体前驱体 · 电子特气龙头</div>
+    </div>
+    <div class="stock-badge limit-up">涨停 +10.00%</div>
+    <div class="stock-score">
+      <div class="score-num s90">96</div>
+      <div class="score-label">综合评分</div>
+    </div>
+  </div>
+  <div class="stock-card-body">
+    <div class="info-row">
+      <div class="info-item">
+        <div class="info-label">今日收盘</div>
+        <div class="info-val up">¥122.55</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">换手率</div>
+        <div class="info-val">10.50%</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">主力净流入</div>
+        <div class="info-val up highlight">+7.63亿</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">超大单净流入</div>
+        <div class="info-val up highlight">+9.56亿</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">总市值</div>
+        <div class="info-val">583亿</div>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="analysis-title">📊 核心分析</div>
+      <div class="analysis-text">
+        雅克科技是半导体材料（前驱体/电子特气）板块的绝对龙头。今日主力净流入7.63亿，位居全市场第3；超大单净流入9.56亿，显示机构级别资金重仓介入。
+        龙虎榜显示：国盛证券杭州建设三路席位买入1.23亿（高胜率席位），国泰海通上海长宁江苏路买入1.11亿。虽然机构席位有净卖出2483万，但整体资金面极为强势。
+        今日首板涨停，K线在连续调整后放量突破，属于低位启动形态。
+        工信部信息通信发展规划直接利好上游半导体材料需求。
+      </div>
+    </div>
+    <div class="expect-section">
+      <div class="exp-title">⚡ 明日竞价预期 & 上车条件</div>
+      <div class="exp-content">
+        <p><span class="exp-tag buy">竞价预期</span> 高开3%~5%为正常预期，高开7%+则属于超预期强势。平开或低开则不及预期，需谨慎。</p>
+        <p><span class="exp-tag buy">上车条件</span> 
+          ① 竞价量能 > 昨日竞价量的80%（约8000万以上）；<br>
+          ② 开盘前15分钟不破分时均线，且30分钟内放量突破早盘高点；<br>
+          ③ 最佳上车点：高开后回踩分时均线获得支撑时（约121-123元区间）。
+        </p>
+        <p><span class="exp-tag warn">止损建议</span> 跌破今日收盘价122.55元（即涨幅为负）止损；盘中若放量跌破118元（-3.7%）果断离场。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Stock 2 -->
+<div class="stock-card">
+  <div class="stock-card-header">
+    <div class="stock-rank r2">2</div>
+    <div class="stock-info">
+      <div class="stock-name">有研新材 <span style="font-size:14px;color:var(--text-secondary)">sh600206</span></div>
+      <div class="stock-code">靶材龙头 · 半导体材料核心</div>
+    </div>
+    <div class="stock-badge limit-up">涨停 +10.00%</div>
+    <div class="stock-score">
+      <div class="score-num s90">93</div>
+      <div class="score-label">综合评分</div>
+    </div>
+  </div>
+  <div class="stock-card-body">
+    <div class="info-row">
+      <div class="info-item">
+        <div class="info-label">今日收盘</div>
+        <div class="info-val up">¥32.24</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">换手率</div>
+        <div class="info-val">13.57%</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">主力净流入</div>
+        <div class="info-val up highlight">+6.24亿</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">超大单净流入</div>
+        <div class="info-val up highlight">+6.27亿</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">总市值</div>
+        <div class="info-val">273亿</div>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="analysis-title">📊 核心分析</div>
+      <div class="analysis-text">
+        有研新材是今日靶材板块的领涨龙头（靶材板块+7.45%，为全市场最强概念之一）。
+        主力净流入6.24亿（全市场第5），超大单6.27亿，资金净流入质量极高（大单+超大单占比高，散户流出）。
+        半导体材料靶材分支属于「卡脖子」国产替代核心，受政策催化明确。
+        首板涨停，换手13.57%适中，表明筹码锁定较好。K线突破前期平台，形成放量突破形态。
+        热搜股票排名第30，市场关注度高但尚未过热。
+      </div>
+    </div>
+    <div class="expect-section">
+      <div class="exp-title">⚡ 明日竞价预期 & 上车条件</div>
+      <div class="exp-content">
+        <p><span class="exp-tag buy">竞价预期</span> 小幅高开2%~4%为正常预期；若高开5%+且竞价量能配合，则属于强势信号。</p>
+        <p><span class="exp-tag buy">上车条件</span> 
+          ① 竞价量能 > 昨日竞价量的70%（约5000万以上）；<br>
+          ② 开盘后若小幅回踩（≤2%）且快速拉回，是较好的半路上车点；<br>
+          ③ 若直接高开5%+且不回头，可在换手充分后（约10点半前后）观察分时二次确认点入场。
+        </p>
+        <p><span class="exp-tag warn">止损建议</span> 跌破30.5元（-5.4%）止损；盘中急跌放量破30元坚决离场。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Stock 3 -->
+<div class="stock-card">
+  <div class="stock-card-header">
+    <div class="stock-rank r3">3</div>
+    <div class="stock-info">
+      <div class="stock-name">中科三环 <span style="font-size:14px;color:var(--text-secondary)">sz000970</span></div>
+      <div class="stock-code">稀土永磁龙头 · 反制概念核心</div>
+    </div>
+    <div class="stock-badge limit-up">涨停 +10.00%</div>
+    <div class="stock-score">
+      <div class="score-num s90">90</div>
+      <div class="score-label">综合评分</div>
+    </div>
+  </div>
+  <div class="stock-card-body">
+    <div class="info-row">
+      <div class="info-item">
+        <div class="info-label">今日收盘</div>
+        <div class="info-val up">¥14.52</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">换手率</div>
+        <div class="info-val">14.13%</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">主力净流入</div>
+        <div class="info-val up highlight">+4.79亿</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">超大单净流入</div>
+        <div class="info-val up highlight">+4.42亿</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">总市值</div>
+        <div class="info-val">177亿</div>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="analysis-title">📊 核心分析</div>
+      <div class="analysis-text">
+        中科三环是稀土永磁板块的绝对龙头。今日首板涨停，龙虎榜极为亮眼：知名游资「作手新一」（国泰海通南京太平南路）净买入4674万，
+        中信建投杭州庆春路买入7186万，机构席位净买入2546万。高胜率席位净买入1.37亿。
+        主力净流入4.79亿，超大单4.42亿，资金面超强。稀土永磁具有「中美博弈反制」题材属性，在当前国际环境下具备持续催化。
+        商务部副部长与欧委会贸易总司长会谈，中美欧贸易关系持续紧张，利好稀土反制概念。
+      </div>
+    </div>
+    <div class="expect-section">
+      <div class="exp-title">⚡ 明日竞价预期 & 上车条件</div>
+      <div class="exp-content">
+        <p><span class="exp-tag buy">竞价预期</span> 高开2%~5%为正常预期。若高开7%+一字板预期，则属于超预期，追板风险加大。</p>
+        <p><span class="exp-tag buy">上车条件</span> 
+          ① 竞价量能 > 昨日竞价量60%（约3000万以上），竞价换手率 > 0.25%；<br>
+          ② 开盘后回踩分时均线不破，且出现5分钟级别的放量拉升，是比较安全的半路介入点；<br>
+          ③ 如果高开后快速封板，不建议排队追板——等次日分歧转一致机会。
+        </p>
+        <p><span class="exp-tag warn">止损建议</span> 跌破13.5元（-7%）止损；盘中若出现大卖单且跌破分时均线超过5分钟，果断出局。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Stock 4 -->
+<div class="stock-card">
+  <div class="stock-card-header">
+    <div class="stock-rank r4">4</div>
+    <div class="stock-info">
+      <div class="stock-name">康强电子 <span style="font-size:14px;color:var(--text-secondary)">sz002119</span></div>
+      <div class="stock-code">半导体封装材料 · 引线框架龙头</div>
+    </div>
+    <div class="stock-badge limit-up">涨停 +10.01%</div>
+    <div class="stock-score">
+      <div class="score-num" style="color:#4a6cf7">87</div>
+      <div class="score-label">综合评分</div>
+    </div>
+  </div>
+  <div class="stock-card-body">
+    <div class="info-row">
+      <div class="info-item">
+        <div class="info-label">今日收盘</div>
+        <div class="info-val up">¥28.36</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">换手率</div>
+        <div class="info-val">13.72%</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">主力净流入</div>
+        <div class="info-val up highlight">+4.05亿</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">超大单净流入</div>
+        <div class="info-val up highlight">+4.82亿</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">总市值</div>
+        <div class="info-val">106亿</div>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="analysis-title">📊 核心分析</div>
+      <div class="analysis-text">
+        康强电子是国内半导体封装引线框架龙头，属于半导体产业链封装环节的核心材料供应商。
+        主力净流入4.05亿，超大单净流入4.82亿，资金净流入主要集中在超大单（占比超100%），说明机构级别资金主导。
+        市值仅106亿，属于小盘弹性品种，在半导体材料主线行情中最具爆发力。
+        微信热股排名第22，市场关注度正在提升。60日涨幅32.77%，相对同板块仍有补涨空间。
+        首板涨停，换手13.72%健康。融资余额5.89亿，近两日融资持续净买入，杠杆资金积极。
+      </div>
+    </div>
+    <div class="expect-section">
+      <div class="exp-title">⚡ 明日竞价预期 & 上车条件</div>
+      <div class="exp-content">
+        <p><span class="exp-tag buy">竞价预期</span> 小幅高开1%~3%为正常预期。若平开或小幅低开（-1%以内），属于分歧机会。</p>
+        <p><span class="exp-tag buy">上车条件</span> 
+          ① 竞价量能 > 昨日竞价量50%（约2500万以上）即可；<br>
+          ② 开盘后前30分钟不破开盘价，观察大单方向（买单持续 > 卖单）；<br>
+          ③ 最优上车点：如果出现-2%左右的盘中回踩且缩量，是极好的低吸机会。
+        </p>
+        <p><span class="exp-tag warn">止损建议</span> 跌破26.5元（-6.6%）止损；小市值弹性大，严格执行止损纪律。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Stock 5 -->
+<div class="stock-card">
+  <div class="stock-card-header">
+    <div class="stock-rank r5">5</div>
+    <div class="stock-info">
+      <div class="stock-name">双星新材 <span style="font-size:14px;color:var(--text-secondary)">sz002585</span></div>
+      <div class="stock-code">光学膜龙头 · 3天2板高辨识度</div>
+    </div>
+    <div class="stock-badge limit-up">涨停 +10.00%</div>
+    <div class="stock-score">
+      <div class="score-num" style="color:#4a6cf7">85</div>
+      <div class="score-label">综合评分</div>
+    </div>
+  </div>
+  <div class="stock-card-body">
+    <div class="info-row">
+      <div class="info-item">
+        <div class="info-label">今日收盘</div>
+        <div class="info-val up">¥13.42</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">换手率</div>
+        <div class="info-val">18.86%</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">主力净流入</div>
+        <div class="info-val up highlight">+2.89亿</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">超大单净流入</div>
+        <div class="info-val up highlight">+3.52亿</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">总市值</div>
+        <div class="info-val">153亿</div>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="analysis-title">📊 核心分析</div>
+      <div class="analysis-text">
+        双星新材3天2板，是光学膜/PET复合铜箔方向的龙头品种。龙虎榜极为豪华：知名游资「方新侠」（中信西安朱雀大街）净买入4846万，
+        国泰海通湛江万豪世家（53.16%胜率）买入1.41亿，机构席位净买入4323万。高胜率席位净买入合计2.23亿，上涨概率10%。
+        3日龙虎榜净买入2.23亿，占流通市值近2%，资金沉淀深厚。5日涨幅25%，但整体处于从低位（4.87元52周低点）的复苏反弹中。
+        注意：5日和10日主力净流入为负，说明今日是资金情绪的拐点。
+      </div>
+    </div>
+    <div class="expect-section">
+      <div class="exp-title">⚡ 明日竞价预期 & 上车条件</div>
+      <div class="exp-content">
+        <p><span class="exp-tag buy">竞价预期</span> 小幅高开1%~3%为正常预期。若大幅高开5%+需要注意抛压（3天2板获利盘较多）。</p>
+        <p><span class="exp-tag buy">上车条件</span> 
+          ① 换手板模式：竞价量能 > 昨日竞价量60%（约3000万以上）；<br>
+          ② 开盘后30分钟内出现充分的筹码交换（换手率 > 5%），回踩分时均线是买点；<br>
+          ③ 不建议集合竞价直接挂涨停价追入——3天2板的获利盘可能导致开盘即抛压。
+        </p>
+        <p><span class="exp-tag warn">止损建议</span> 跌破12.5元（-6.8%）止损；连板股止损纪律尤为重要，不能因为游资锁仓而放松。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Capital Flow Summary -->
+<div class="section-title">
+  <span class="icon">💰</span>资金流向全景
+</div>
+<div class="flow-section">
+  <div class="flow-card">
+    <h4>🏆 主力净流入 Top 5</h4>
+    <div class="flow-item"><span>雅克科技</span><span class="up">+7.63亿</span></div>
+    <div class="flow-item"><span>有研新材</span><span class="up">+6.24亿</span></div>
+    <div class="flow-item"><span>中科三环</span><span class="up">+4.79亿</span></div>
+    <div class="flow-item"><span>康强电子</span><span class="up">+4.05亿</span></div>
+    <div class="flow-item"><span>双星新材</span><span class="up">+2.89亿</span></div>
+  </div>
+  <div class="flow-card">
+    <h4>🦅 游资动向追踪</h4>
+    <div class="flow-item"><span>方新侠</span><span class="up">买双星新材 4846万</span></div>
+    <div class="flow-item"><span>作手新一</span><span class="up">买中科三环 4675万</span></div>
+    <div class="flow-item"><span>粉葛</span><span class="up">买天娱数科 3694万</span></div>
+    <div class="flow-item"><span>中山东路</span><span class="down">卖金安国纪 -8999万</span></div>
+    <div class="flow-item"><span>拉萨天团</span><span class="up">净买 8633万</span></div>
+  </div>
+  <div class="flow-card">
+    <h4>🎯 龙虎榜核心信号</h4>
+    <div class="flow-item"><span>双星新材(高胜率)</span><span class="up">净买2.23亿</span></div>
+    <div class="flow-item"><span>神剑股份(高胜率)</span><span class="up">净买1.76亿</span></div>
+    <div class="flow-item"><span>中科三环(高胜率)</span><span class="up">净买1.37亿</span></div>
+    <div class="flow-item"><span>金安国纪(高胜率)</span><span class="up">净买1.33亿</span></div>
+    <div class="flow-item"><span>中巨芯(机构)</span><span class="down">净卖9372万</span></div>
+  </div>
+</div>
+
+<!-- Summary Strategy Table -->
+<div class="section-title">
+  <span class="icon">📋</span>策略总结表
+</div>
+
+<table style="width:100%; border-collapse:collapse; font-size:13px; margin-bottom:20px;">
+<thead>
+<tr style="background:var(--card);">
+  <th style="padding:10px 12px; text-align:left; border-bottom:1px solid var(--border);">个股</th>
+  <th style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border);">评分</th>
+  <th style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border);">竞价预期</th>
+  <th style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border);">锚定上车价</th>
+  <th style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border);">止损线</th>
+</tr>
+</thead>
+<tbody>
+<tr style="background:rgba(74,108,247,.04);">
+  <td style="padding:10px 12px; border-bottom:1px solid var(--border);">雅克科技</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border); color:var(--gold); font-weight:700;">96</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border);">高开+3%~+5%</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border); color:var(--red);">121~123</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border); color:var(--green);">118</td>
+</tr>
+<tr style="background:rgba(74,108,247,.02);">
+  <td style="padding:10px 12px; border-bottom:1px solid var(--border);">有研新材</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border); color:var(--gold); font-weight:700;">93</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border);">高开+2%~+4%</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border); color:var(--red);">32~33</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border); color:var(--green);">30.5</td>
+</tr>
+<tr style="background:rgba(74,108,247,.04);">
+  <td style="padding:10px 12px; border-bottom:1px solid var(--border);">中科三环</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border); color:var(--gold); font-weight:700;">90</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border);">高开+2%~+5%</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border); color:var(--red);">14~14.5</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border); color:var(--green);">13.5</td>
+</tr>
+<tr style="background:rgba(74,108,247,.02);">
+  <td style="padding:10px 12px; border-bottom:1px solid var(--border);">康强电子</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border); color:var(--accent); font-weight:700;">87</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border);">高开+1%~+3%</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border); color:var(--red);">28~29</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border); color:var(--green);">26.5</td>
+</tr>
+<tr style="background:rgba(74,108,247,.04);">
+  <td style="padding:10px 12px; border-bottom:1px solid var(--border);">双星新材</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border); color:var(--accent); font-weight:700;">85</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border);">高开+1%~+3%</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border); color:var(--red);">13.2~13.8</td>
+  <td style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--border); color:var(--green);">12.5</td>
+</tr>
+</tbody>
+</table>
+
+<!-- Risk Reminder -->
+<div class="alert-box">
+  <strong>📌 明日开盘前必须确认的事项：</strong><br>
+  ① 今晚美国CPI数据（20:30公布）——若通胀超预期，美股可能大跌，影响A股次日开盘；<br>
+  ② 次日集合竞价（9:15-9:25）——观察这5只票的竞价量和价格是否在预期范围内；<br>
+  ③ 板块联动——半导体材料/稀土永磁板块是否有新的涨停助攻；<br>
+  ④ 大盘开盘——若沪指继续低开低走，激进追涨策略应转为观望。
+</div>
+
+<!-- Disclaimer -->
+<div class="disclaimer">
+  <strong>⚠️ 风险提示与免责声明</strong>
+  本报告基于公开市场数据（腾讯自选股行情接口），通过资金流向、龙虎榜、热门概念等多维度进行客观分析。
+  报告中的所有内容仅供参考，不构成任何投资建议、投资评级或交易推荐。
+  股票市场存在重大风险，历史表现不代表未来收益，涨停预测存在高度不确定性。
+  投资者应当根据自身风险承受能力独立做出投资决策，并承担相应风险。
+  如需专业投资建议，请咨询持牌证券投资顾问机构。
+  <br><br>
+  <strong>数据来源：</strong>腾讯自选股 · 数据可能存在延迟 · 请以交易所官方数据为准
+  <br>
+  <strong>生成时间：</strong>2026年6月10日 21:55 CST
+</div>
+
+<div class="footer">
+  WorkBuddy 自动化涨停预测系统 · 每日22:00自动生成 · 仅用于研究参考
+</div>
+
+</div>
+</body>
+</html>

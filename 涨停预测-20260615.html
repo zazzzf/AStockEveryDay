@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6月15日涨停预测 · 5强精选</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card: #1a1d28;
+    --card-hover: #1f2233;
+    --border: #2a2d3a;
+    --text: #e1e4ed;
+    --text-secondary: #8b90a0;
+    --green: #26a69a;
+    --red: #ef5350;
+    --gold: #f0b90b;
+    --blue: #42a5f5;
+    --purple: #ab47bc;
+    --orange: #ff7043;
+    --score-bg: linear-gradient(135deg, #f0b90b, #ff7043);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #1a1d28 0%, #0d1117 40%, #1a1a2e 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 24px 36px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(240,185,11,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #f0b90b, #ffb347);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+  .hero .subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 16px;
+  }
+  .hero .market-snapshot {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .hero .snap-item {
+    text-align: center;
+    min-width: 100px;
+  }
+  .hero .snap-item .label { font-size: 0.78rem; color: var(--text-secondary); }
+  .hero .snap-item .value { font-size: 1.35rem; font-weight: 700; }
+  .hero .snap-item .value.up { color: var(--red); }
+  .hero .snap-item .value.down { color: var(--green); }
+
+  /* Warning banner */
+  .warning {
+    background: linear-gradient(135deg, rgba(239,83,80,0.12), rgba(255,112,67,0.08));
+    border: 1px solid rgba(239,83,80,0.25);
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin: 20px auto;
+    max-width: 900px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.88rem;
+    color: #ffab91;
+  }
+  .warning .icon { font-size: 1.3rem; flex-shrink: 0; }
+
+  /* Main content */
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
+
+  .section-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 32px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title .icon { font-size: 1.4rem; }
+
+  /* Summary cards */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .summary-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  .summary-card .label { font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 4px; }
+  .summary-card .value { font-size: 1.25rem; font-weight: 700; }
+  .summary-card .value.red { color: var(--red); }
+  .summary-card .value.green { color: var(--green); }
+  .summary-card .value.gold { color: var(--gold); }
+
+  /* Stock cards */
+  .stock-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 22px;
+    transition: border-color 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .stock-card:hover { border-color: #3a3d50; }
+  .stock-card.rank-1 { border-color: rgba(240,185,11,0.35); }
+  .stock-card.rank-2 { border-color: rgba(171,71,188,0.3); }
+  .stock-card.rank-3 { border-color: rgba(66,165,245,0.3); }
+
+  .stock-card .rank-badge {
+    position: absolute;
+    top: -4px; right: 20px;
+    font-size: 5rem;
+    font-weight: 900;
+    color: rgba(255,255,255,0.03);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .stock-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .stock-header .name-group .code { font-size: 0.78rem; color: var(--text-secondary); }
+  .stock-header .name-group h2 { font-size: 1.55rem; font-weight: 700; }
+  .stock-header .name-group .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+  .stock-header .name-group .tags span {
+    background: rgba(66,165,245,0.12);
+    color: var(--blue);
+    font-size: 0.72rem;
+    padding: 2px 10px;
+    border-radius: 10px;
+  }
+  .stock-header .name-group .tags span.theme {
+    background: rgba(240,185,11,0.12);
+    color: var(--gold);
+  }
+  .stock-header .score-box {
+    text-align: center;
+    min-width: 70px;
+  }
+  .stock-header .score-box .score-num {
+    font-size: 2.4rem;
+    font-weight: 900;
+    background: var(--score-bg);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stock-header .score-box .score-label { font-size: 0.7rem; color: var(--text-secondary); }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .metric {
+    background: rgba(255,255,255,0.025);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .metric .m-label { font-size: 0.7rem; color: var(--text-secondary); }
+  .metric .m-value { font-size: 1.05rem; font-weight: 700; }
+  .metric .m-value.up { color: var(--red); }
+  .metric .m-value.down { color: var(--green); }
+
+  .analysis-section {
+    background: rgba(255,255,255,0.018);
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+  .analysis-section h4 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--gold);
+  }
+  .analysis-section p, .analysis-section li {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  .analysis-section ul { padding-left: 18px; }
+  .analysis-section ul li { margin-bottom: 4px; }
+
+  .entry-box {
+    background: rgba(38,166,154,0.08);
+    border: 1px solid rgba(38,166,154,0.2);
+    border-radius: 10px;
+    padding: 18px;
+    margin-top: 8px;
+  }
+  .entry-box h4 { color: var(--green); margin-bottom: 10px; font-size: 0.9rem; }
+  .entry-box .auction-expect {
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+  }
+  .entry-box ul { padding-left: 18px; }
+  .entry-box ul li { font-size: 0.86rem; color: var(--text-secondary); margin-bottom: 3px; line-height: 1.7; }
+  .entry-box .stop-loss {
+    color: var(--red);
+    font-weight: 600;
+    margin-top: 6px;
+    font-size: 0.84rem;
+  }
+
+  /* Theme heat map */
+  .theme-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 0.88rem;
+  }
+  .theme-table th {
+    text-align: left;
+    padding: 10px 12px;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .theme-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(42,45,58,0.5);
+  }
+  .theme-table .hot { color: var(--orange); font-weight: 700; }
+
+  /* LHB highlights */
+  .lhb-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .lhb-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 0.84rem;
+  }
+  .lhb-card .lhb-title { font-weight: 700; color: var(--gold); margin-bottom: 6px; }
+  .lhb-card .lhb-stock { color: var(--text); }
+  .lhb-card .lhb-amount { color: var(--red); font-weight: 700; }
+
+  /* Risk & Disclaimer */
+  .risk-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 28px 0;
+  }
+  .risk-section h3 { color: var(--orange); margin-bottom: 12px; font-size: 1.1rem; }
+  .risk-section ul { padding-left: 18px; }
+  .risk-section ul li { font-size: 0.86rem; color: var(--text-secondary); margin-bottom: 6px; line-height: 1.7; }
+
+  .disclaimer {
+    background: rgba(239,83,80,0.06);
+    border: 1px solid rgba(239,83,80,0.15);
+    border-radius: 10px;
+    padding: 18px;
+    margin: 24px 0;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.7;
+  }
+
+  footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 1.5rem; }
+    .hero .market-snapshot { gap: 16px; }
+    .stock-card { padding: 18px; }
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>🔥 明日涨停预测 · 5强精选</h1>
+  <div class="subtitle">基于6月12日（周五）收盘数据 · 预测6月15日（周一）涨停概率</div>
+  <div class="market-snapshot">
+    <div class="snap-item">
+      <div class="label">上证指数</div>
+      <div class="value up">4031.51 <small style="font-size:0.75rem">+1.12%</small></div>
+    </div>
+    <div class="snap-item">
+      <div class="label">深证成指</div>
+      <div class="value up">14963.41 <small style="font-size:0.75rem">+0.75%</small></div>
+    </div>
+    <div class="snap-item">
+      <div class="label">创业板指</div>
+      <div class="value up">3830.35 <small style="font-size:0.75rem">+0.50%</small></div>
+    </div>
+    <div class="snap-item">
+      <div class="label">成交额</div>
+      <div class="value" style="color:#e1e4ed">3.21万亿</div>
+    </div>
+    <div class="snap-item">
+      <div class="label">上涨家数</div>
+      <div class="value up">3900+</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- WARNING -->
+<div class="warning">
+  <span class="icon">⚠️</span>
+  <div>
+    <strong>重要风控提示：</strong>周五沪指冲高4060后回落至4031，3.21万亿巨量换手。板块轮动加速（科技→有色），追高需谨慎。宗申动力已5连板属极高风险。所有操作请严格设止损。
+  </div>
+</div>
+
+<!-- SECTION: Market Overview -->
+<div class="section-title"><span class="icon">📊</span> 市场环境与主线</div>
+
+<div class="summary-grid">
+  <div class="summary-card">
+    <div class="label">🔥 最强板块</div>
+    <div class="value red">工业金属 +5.65%</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">🥈 第二主线</div>
+    <div class="value red">航空装备 +4.10%</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">🥉 第三主线</div>
+    <div class="value red">有色金属 +4.29%</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">📈 5日最强概念</div>
+    <div class="value gold">靶材 +27.68%</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">💡 周末催化</div>
+    <div class="value" style="color:#e1e4ed;font-size:0.95rem">5万亿电网投资</div>
+  </div>
+</div>
+
+<!-- Theme ranking -->
+<table class="theme-table">
+  <tr><th>排名</th><th>概念</th><th>5日涨幅</th><th>当日表现</th><th>催化逻辑</th></tr>
+  <tr><td>1</td><td>靶材</td><td class="hot">+27.68%</td><td><span class="down">分歧回落</span></td><td>半导体材料国产替代</td></tr>
+  <tr><td>2</td><td>电子特气</td><td class="hot">+9.06%</td><td><span class="down">分歧回落</span></td><td>半导体上游</td></tr>
+  <tr><td>3</td><td>锗镓概念</td><td class="hot">+8.87%</td><td>偏强</td><td>战略金属管控</td></tr>
+  <tr><td>4</td><td>无人战机</td><td class="hot">+7.47%</td><td>强势</td><td>国防装备升级</td></tr>
+  <tr><td>5</td><td>钼概念</td><td class="hot">+5.23%</td><td>强势加速</td><td>电网投资+军工需求</td></tr>
+  <tr><td>6</td><td>钨概念</td><td class="hot">+5.38%</td><td>跟涨</td><td>高端制造</td></tr>
+  <tr><td>7</td><td>工业金属</td><td>+3.57%</td><td class="hot">当日+5.65%爆发</td><td>5万亿电网投资</td></tr>
+</table>
+
+<!-- LHB Highlights -->
+<div class="section-title"><span class="icon">🐉</span> 龙虎榜关键信号（6/12）</div>
+<div class="lhb-grid">
+  <div class="lhb-card">
+    <div class="lhb-title">🏦 中山东路 (53.6%胜率)</div>
+    <div class="lhb-amount">+2.39亿</div>
+    <div class="lhb-stock">铜陵有色、海亮股份、达实智能</div>
+  </div>
+  <div class="lhb-card">
+    <div class="lhb-title">🏦 财通杭州东湖南路 (72.73%胜率)</div>
+    <div class="lhb-amount">+7381万</div>
+    <div class="lhb-stock">铜陵有色</div>
+  </div>
+  <div class="lhb-card">
+    <div class="lhb-title">🏦 华金证券上海 (76%胜率)</div>
+    <div class="lhb-amount">+4678万</div>
+    <div class="lhb-stock">金钼股份</div>
+  </div>
+  <div class="lhb-card">
+    <div class="lhb-title">🏦 东北证券青岛 (64.29%胜率)</div>
+    <div class="lhb-amount">+4462万</div>
+    <div class="lhb-stock">金钼股份</div>
+  </div>
+  <div class="lhb-card">
+    <div class="lhb-title">🏦 高盛(中国)上海</div>
+    <div class="lhb-amount">+6.61亿</div>
+    <div class="lhb-stock">富信科技、西安奕材、沃格光电</div>
+  </div>
+  <div class="lhb-card">
+    <div class="lhb-title">🏦 深股通专用</div>
+    <div class="lhb-amount">+2.96亿</div>
+    <div class="lhb-stock">康强电子、铜陵有色、阿石创</div>
+  </div>
+  <div class="lhb-card">
+    <div class="lhb-title">📉 知春路 (卖出)</div>
+    <div class="lhb-amount" style="color:var(--green)">-2.54亿</div>
+    <div class="lhb-stock">粤桂股份、翔鹭钨业</div>
+  </div>
+</div>
+
+<!-- ====== STOCK RANKINGS ====== -->
+<div class="section-title"><span class="icon">🏆</span> 明日涨停5强 · 详细分析</div>
+
+<!-- STOCK 1: 铜陵有色 -->
+<div class="stock-card rank-1">
+  <div class="rank-badge">01</div>
+  <div class="stock-header">
+    <div class="name-group">
+      <div class="code">sz000630</div>
+      <h2>铜陵有色</h2>
+      <div class="tags">
+        <span class="theme">工业金属龙头</span>
+        <span>首板</span>
+        <span>铜概念</span>
+        <span>5万亿电网受益</span>
+      </div>
+    </div>
+    <div class="score-box">
+      <div class="score-num">98</div>
+      <div class="score-label">综合得分</div>
+    </div>
+  </div>
+
+  <div class="metrics-grid">
+    <div class="metric"><div class="m-label">收盘价</div><div class="m-value up">¥7.10 (+10.08%)</div></div>
+    <div class="metric"><div class="m-label">主力净流入</div><div class="m-value up">+14.35亿 (#5)</div></div>
+    <div class="metric"><div class="m-label">超大单净流入</div><div class="m-value up">+15.54亿</div></div>
+    <div class="metric"><div class="m-label">换手率</div><div class="m-value">5.64%</div></div>
+    <div class="metric"><div class="m-label">量比</div><div class="m-value">1.52</div></div>
+    <div class="metric"><div class="m-label">市值 / PE</div><div class="m-value">952亿 / 36.2</div></div>
+    <div class="metric"><div class="m-label">MACD</div><div class="m-value up">金叉发散 DIF>DEA</div></div>
+    <div class="metric"><div class="m-label">RSI(6)</div><div class="m-value" style="color:#ffb347">68.4 偏强</div></div>
+  </div>
+
+  <div class="analysis-section">
+    <h4>📊 核心逻辑</h4>
+    <ul>
+      <li><strong>板块共振最强：</strong>工业金属板块+5.65%全市场领涨，铜陵有色是铜板块核心标的，周末5万亿电网投资计划直接利好铜需求</li>
+      <li><strong>龙虎榜四维共振：</strong>中山东路+2.39亿（53.6%胜率）+ 财通杭州东湖南路+7381万（72.73%胜率）+ 机构3席位+1.17亿 + 深股通买入，游资+机构+外资三重共振</li>
+      <li><strong>技术面健康：</strong>首板涨停封板坚决（全天封死），换手5.64%充分换手但未过度，MACD金叉发散，RSI仅68.4未超买</li>
+      <li><strong>量价配合：</strong>成交额43.56亿，量比1.52温和放量，非爆量出货形态</li>
+    </ul>
+  </div>
+
+  <div class="entry-box">
+    <h4>🎯 明日竞价预期 & 上车条件</h4>
+    <div class="auction-expect">竞价预期：高开 3%~7%（≈7.30~7.60），竞价量 > 50万手</div>
+    <ul>
+      <li><strong>✅ 最佳上车：</strong>竞价高开3-5%（7.30-7.45），竞价换手>0.3%，开盘后不回补缺口，分批介入</li>
+      <li><strong>⚠️ 谨慎上车：</strong>竞价高开5-7%（7.45-7.60），需等开盘30分钟确认不破分时均线，再小仓试探</li>
+      <li><strong>❌ 放弃：</strong>竞价一字板封死（无买入机会）；竞价高开>8%后快速回落（追高被套风险）</li>
+      <li><strong>🔍 关键观察：</strong>9:20后竞价单量是否稳步增加（真买单）还是撤单（假抢筹）</li>
+      <li class="stop-loss">🛑 止损：跌破5日均线 ¥6.42 必须离场</li>
+    </ul>
+  </div>
+</div>
+
+<!-- STOCK 2: 洛阳钼业 -->
+<div class="stock-card rank-2">
+  <div class="rank-badge">02</div>
+  <div class="stock-header">
+    <div class="name-group">
+      <div class="code">sh603993</div>
+      <h2>洛阳钼业</h2>
+      <div class="tags">
+        <span class="theme">有色巨头</span>
+        <span>首板</span>
+        <span>钼+铜双概念</span>
+        <span>低PE</span>
+      </div>
+    </div>
+    <div class="score-box">
+      <div class="score-num">95</div>
+      <div class="score-label">综合得分</div>
+    </div>
+  </div>
+
+  <div class="metrics-grid">
+    <div class="metric"><div class="m-label">收盘价</div><div class="m-value up">¥19.11 (+10.02%)</div></div>
+    <div class="metric"><div class="m-label">主力净流入</div><div class="m-value up">+16.71亿 (#2)</div></div>
+    <div class="metric"><div class="m-label">超大单净流入</div><div class="m-value up">+19.09亿</div></div>
+    <div class="metric"><div class="m-label">换手率</div><div class="m-value">2.61%</div></div>
+    <div class="metric"><div class="m-label">市值 / PE</div><div class="m-value">4088亿 / 16.9</div></div>
+    <div class="metric"><div class="m-label">5日涨幅</div><div class="m-value up">+5.06%</div></div>
+    <div class="metric"><div class="m-label">MACD</div><div class="m-value" style="color:#ffb347">DIF收敛中</div></div>
+    <div class="metric"><div class="m-label">RSI(6)</div><div class="m-value" style="color:#42a5f5">62.5 健康</div></div>
+  </div>
+
+  <div class="analysis-section">
+    <h4>📊 核心逻辑</h4>
+    <ul>
+      <li><strong>有色板块最强资金：</strong>主力净流入+16.71亿全市场排名第2，超大单+19.09亿，大资金重仓抢筹</li>
+      <li><strong>低估值优势：</strong>PE仅16.93，在有色金属板块中属极低水平，安全边际充足；市值4088亿流动性极好</li>
+      <li><strong>低位首板启动：</strong>5日涨幅仅+5.06%，刚从低位启动，上方空间充足，非追高形态</li>
+      <li><strong>钼+铜双主线：</strong>同时受益于钼概念（5日+5.23%）和铜概念（电网投资催化），双主线加持</li>
+    </ul>
+  </div>
+
+  <div class="entry-box">
+    <h4>🎯 明日竞价预期 & 上车条件</h4>
+    <div class="auction-expect">竞价预期：高开 2%~6%（≈19.50~20.25），竞价量 > 40万手</div>
+    <ul>
+      <li><strong>✅ 最佳上车：</strong>竞价高开2-4%（19.50-19.88），竞价额>5000万，开盘30分钟不破分时均线</li>
+      <li><strong>⚠️ 谨慎上车：</strong>竞价高开4-6%（19.88-20.25），需确认开盘后资金持续流入（Level2大单净买）</li>
+      <li><strong>❌ 放弃：</strong>竞价大幅高开>7%后急杀（大盘股高开过多容易被砸）；竞价量<20万手（资金不认可）</li>
+      <li class="stop-loss">🛑 止损：跌破今日涨停价 ¥19.11 必须离场</li>
+    </ul>
+  </div>
+</div>
+
+<!-- STOCK 3: 金钼股份 -->
+<div class="stock-card rank-3">
+  <div class="rank-badge">03</div>
+  <div class="stock-header">
+    <div class="name-group">
+      <div class="code">sh601958</div>
+      <h2>金钼股份</h2>
+      <div class="tags">
+        <span class="theme">钼概念龙头</span>
+        <span>一字板2连板</span>
+        <span>高胜率席位</span>
+      </div>
+    </div>
+    <div class="score-box">
+      <div class="score-num">94</div>
+      <div class="score-label">综合得分</div>
+    </div>
+  </div>
+
+  <div class="metrics-grid">
+    <div class="metric"><div class="m-label">收盘价</div><div class="m-value up">¥25.52 (+10.00%)</div></div>
+    <div class="metric"><div class="m-label">换手率</div><div class="m-value">0.51%（极度惜售）</div></div>
+    <div class="metric"><div class="m-label">主力净流入</div><div class="m-value up">+1.87亿</div></div>
+    <div class="metric"><div class="m-label">市值 / PE</div><div class="m-value">823亿 / 24.4</div></div>
+    <div class="metric"><div class="m-label">5日涨幅</div><div class="m-value up">+16.21%</div></div>
+    <div class="metric"><div class="m-label">连板状态</div><div class="m-value up">一字板×2</div></div>
+    <div class="metric"><div class="m-label">MACD</div><div class="m-value" style="color:#ffb347">金叉但柱缩</div></div>
+    <div class="metric"><div class="m-label">RSI(6)</div><div class="m-value" style="color:#ff7043">71.5 偏强</div></div>
+  </div>
+
+  <div class="analysis-section">
+    <h4>📊 核心逻辑</h4>
+    <ul>
+      <li><strong>双高胜率席位护航：</strong>华金证券上海（76%胜率）+4678万 + 东北证券青岛（64.29%胜率）+4462万，高胜率席位共振极为罕见</li>
+      <li><strong>一字板极度惜售：</strong>换手仅0.51%，封板意愿极强，场内筹码锁定良好</li>
+      <li><strong>钼概念强势：</strong>钼概念5日+5.23%加速，金钼是钼板块唯一龙头，享受稀缺溢价</li>
+      <li><strong>风险信号：</strong>MACD柱开始缩短（-0.053），2连板后追高风险加大，需警惕开板</li>
+    </ul>
+  </div>
+
+  <div class="entry-box">
+    <h4>🎯 明日竞价预期 & 上车条件</h4>
+    <div class="auction-expect">竞价预期：一字板（≈28.07）或 高开 5%~10%（≈26.80~28.07）</div>
+    <ul>
+      <li><strong>✅ 观察为主：</strong>如果继续一字板封死，观察封单量（>5亿为强势），不建议排板（排到即开板）</li>
+      <li><strong>⚠️ 开板机会：</strong>若一字板打开，必须等换手>1%后、回封确认再轻仓介入（开板回封是最佳买点）</li>
+      <li><strong>❌ 放弃：</strong>竞价高开<3%（资金不认可，2连板后低于预期即弱势）；竞价高开后急杀>5%</li>
+      <li class="stop-loss">🛑 止损：跌破5日均线 ¥22.31 必须离场</li>
+    </ul>
+  </div>
+</div>
+
+<!-- STOCK 4: 恩捷股份 -->
+<div class="stock-card">
+  <div class="rank-badge">04</div>
+  <div class="stock-header">
+    <div class="name-group">
+      <div class="code">sz002812</div>
+      <h2>恩捷股份</h2>
+      <div class="tags">
+        <span class="theme">电池隔膜龙头</span>
+        <span>首板</span>
+        <span>机构重仓</span>
+        <span>困境反转</span>
+      </div>
+    </div>
+    <div class="score-box">
+      <div class="score-num">91</div>
+      <div class="score-label">综合得分</div>
+    </div>
+  </div>
+
+  <div class="metrics-grid">
+    <div class="metric"><div class="m-label">收盘价</div><div class="m-value up">¥67.54 (+10.00%)</div></div>
+    <div class="metric"><div class="m-label">主力净流入</div><div class="m-value up">+6.20亿</div></div>
+    <div class="metric"><div class="m-label">超大单净流入</div><div class="m-value up">+6.49亿</div></div>
+    <div class="metric"><div class="m-label">换手率</div><div class="m-value">5.77%</div></div>
+    <div class="metric"><div class="m-label">市值 / PE</div><div class="m-value">663亿 / 176</div></div>
+    <div class="metric"><div class="m-label">机构买入</div><div class="m-value up">3席位+1.39亿</div></div>
+    <div class="metric"><div class="m-label">MACD</div><div class="m-value" style="color:#ffb347">负值收敛中</div></div>
+    <div class="metric"><div class="m-label">RSI(6)</div><div class="m-value" style="color:#42a5f5">58.8 中性偏强</div></div>
+  </div>
+
+  <div class="analysis-section">
+    <h4>📊 核心逻辑</h4>
+    <ul>
+      <li><strong>机构认可度高：</strong>机构3席位买入1.39亿，买入占比10%，主力+6.20亿，资金结构健康</li>
+      <li><strong>电池板块共振：</strong>电池板块+3.26%，锂矿+2.44%，能源金属+3.64%，新能源链条整体回暖</li>
+      <li><strong>困境反转逻辑：</strong>PE高达176但Fwd PE仅63.7，业绩改善预期强；从高位87.71跌至25.87后反弹，底部确认</li>
+      <li><strong>技术面改善：</strong>MACD负值但持续收敛，RSI仅58.8未超买，有继续修复空间</li>
+    </ul>
+  </div>
+
+  <div class="entry-box">
+    <h4>🎯 明日竞价预期 & 上车条件</h4>
+    <div class="auction-expect">竞价预期：高开 2%~6%（≈69.00~71.50），竞价量 > 3万手</div>
+    <ul>
+      <li><strong>✅ 最佳上车：</strong>竞价高开2-4%（69.00-70.24），竞价额>2000万，开盘30分钟不能跌破分时均线</li>
+      <li><strong>⚠️ 谨慎上车：</strong>竞价高开4-6%，需确认电池板块整体高开（板块不强则个股独木难支）</li>
+      <li><strong>❌ 放弃：</strong>竞价低开或平开（首板次日低开=强转弱）；竞价高开>8%后急杀</li>
+      <li class="stop-loss">🛑 止损：跌破今日涨停价 ¥67.54 必须离场</li>
+    </ul>
+  </div>
+</div>
+
+<!-- STOCK 5: 宗申动力 -->
+<div class="stock-card">
+  <div class="rank-badge">05</div>
+  <div class="stock-header">
+    <div class="name-group">
+      <div class="code">sz001696</div>
+      <h2>宗申动力</h2>
+      <div class="tags">
+        <span class="theme">无人战机龙头</span>
+        <span style="background:rgba(239,83,80,0.15);color:#ef5350">5连板⚠️</span>
+        <span>航空装备</span>
+        <span>极高风险</span>
+      </div>
+    </div>
+    <div class="score-box">
+      <div class="score-num">88</div>
+      <div class="score-label">综合得分</div>
+    </div>
+  </div>
+
+  <div class="metrics-grid">
+    <div class="metric"><div class="m-label">收盘价</div><div class="m-value up">¥22.84 (+10.02%)</div></div>
+    <div class="metric"><div class="m-label">5日涨幅</div><div class="m-value up">+59.72% 🔥</div></div>
+    <div class="metric"><div class="m-label">换手率</div><div class="m-value">10.51%</div></div>
+    <div class="metric"><div class="m-label">主力净流入</div><div class="m-value up">+3.59亿</div></div>
+    <div class="metric"><div class="m-label">市值 / PE</div><div class="m-value">262亿 / 42.8</div></div>
+    <div class="metric"><div class="m-label">机构买入</div><div class="m-value up">4席位+7407万</div></div>
+    <div class="metric"><div class="m-label">RSI(6)</div><div class="m-value" style="color:#ef5350">94.2 极度超买!</div></div>
+    <div class="metric"><div class="m-label">MACD</div><div class="m-value up">极强 MACD柱1.88</div></div>
+  </div>
+
+  <div class="analysis-section">
+    <h4>📊 核心逻辑</h4>
+    <ul>
+      <li><strong>动量无敌：</strong>5连板，5日+59.72%，全市场最强动量个股之一，无人战机概念龙头地位确立</li>
+      <li><strong>机构+游资共振：</strong>机构4席位买入7407万，国海上海世纪大道（58.3%胜率）+3380万</li>
+      <li><strong>板块支撑：</strong>航空装备+4.10%，无人战机5日+7.47%</li>
+      <li><strong style="color:#ef5350">⚠️ 三重风险：</strong>①RSI=94.2极度超买（历史极值区域）；②5连板后获利盘巨大；③美国军事企业清单短期利空军工板块</li>
+    </ul>
+  </div>
+
+  <div class="entry-box">
+    <h4>🎯 明日竞价预期 & 上车条件（仅限超短线高手）</h4>
+    <div class="auction-expect">竞价预期：高开 3%~8%（≈23.50~24.70），不排除一字板</div>
+    <ul>
+      <li><strong>✅ 极谨慎上车：</strong>竞价高开3-5%，竞价换手>1%（约9.4万手），开盘不能急杀。仅适合能承受-10%日内亏损的超短线</li>
+      <li><strong>⚠️ 仅观察：</strong>竞价一字板（无买点）；竞价高开5-8%但封板不坚决（可能是出货板）</li>
+      <li><strong>❌ 绝对放弃：</strong>竞价低开<2%（5连板后低开=情绪崩溃，大概率核按钮）；竞价高开>8%后急杀>5%</li>
+      <li class="stop-loss">🛑 硬止损：跌破5日均线 ¥19.11（注意：距离现价-16.3%！容错空间极小）</li>
+    </ul>
+  </div>
+</div>
+
+<!-- RISK SECTION -->
+<div class="risk-section">
+  <h3>🛡️ 风险提示 & 全局风控</h3>
+  <ul>
+    <li><strong>🔴 4060压力位：</strong>周五沪指最高4060后回落至4031，4060是短期关键压力。若周一开盘无法站稳4060，短线情绪可能转弱</li>
+    <li><strong>🔴 3.21万亿巨量：</strong>放量冲高回落是警示信号。若周一早盘缩量，说明周五追高资金被套，反弹无力</li>
+    <li><strong>🔴 板块轮动加速：</strong>科技股（半导体-1.2%）向周期股切换，轮动加快意味着一日游概率增加。有色若周一不能延续强势需果断离场</li>
+    <li><strong>🔴 美联储加息变数：</strong>周末消息面关注美联储加息预期变化，可能影响全球风险偏好</li>
+    <li><strong>🟡 仓位建议：</strong>市场虽放量但冲高回落，总仓位控制在5-7成，单票不超过2成。连板股（宗申、金钼）单票不超过1成</li>
+    <li><strong>🟢 积极信号：</strong>央行M2社融数据偏暖；5万亿电网投资计划实质性利好；3900+上涨赚钱效应仍在</li>
+  </ul>
+</div>
+
+<!-- DISCLAIMER -->
+<div class="disclaimer">
+  <strong>⚠️ 免责声明</strong><br>
+  以上内容基于公开市场数据的量化分析，仅供参考，不构成任何投资建议或个股推荐。<br>
+  涨停预测具有高度不确定性，历史胜率不代表未来表现。所有操作风险自担。<br>
+  投资有风险，决策需谨慎。如需专业投资建议，请咨询持牌证券投资顾问机构。<br><br>
+  <small>数据来源：腾讯自选股行情接口 · 数据截止：2026年6月12日收盘 · 生成时间：2026年6月14日 22:42</small>
+</div>
+
+</div>
+
+<footer>
+  腾讯自选股 · 涨停预测自动化 · 仅供研究参考
+</footer>
+
+</body>
+</html>
