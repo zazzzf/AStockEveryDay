@@ -8,27 +8,57 @@
 <script>
 tailwind.config = {
   theme: { extend: { colors: {
-    accent:'#f0883e',blue:'#58a6ff',red:'#f85149',green:'#3fb950',yellow:'#d29922',
-    body:'#0a0e17',card:'#111827',elevated:'#0d1117',border:'#21262d',
-    'text-primary':'#e6edf3','text-secondary':'#8b949e','text-muted':'#484f58'
+    parchment:'#f5f4ed', ivory:'#faf9f5', 'near-black':'#141413',
+    terracotta:'#c96442', coral:'#d97757',
+    'warm-sand':'#e8e6dc', 'charcoal-warm':'#4d4c48',
+    'olive-gray':'#5e5d59', 'stone-gray':'#87867f',
+    'border-cream':'#f0eee6', 'border-warm':'#e8e6dc',
+    'dark-surface':'#30302e', 'warm-silver':'#b0aea5',
+    'crimson':'#b53333', 'focus-blue':'#3898ec',
+    'rise-red':'#d94a3a', 'fall-green':'#5a9e6b', 'warn-amber':'#b8860b'
   }}}
 }
 </script>
 <style>
-  .gradient-text{background:linear-gradient(135deg,#f0883e,#ff6b35);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% auto;}
-  .score-fill{height:100%;border-radius:3px;}
-  .hl{color:#58a6ff;font-weight:600;}.wn{color:#d29922;font-weight:600;}
-  .gn{color:#3fb950;font-weight:600;}.ac{color:#f0883e;}
-  .bl{color:#58a6ff;font-weight:600;}
-  .timeline::before{content:'';position:absolute;left:5px;top:4px;bottom:4px;width:2px;background:#21262d;}
-  .timeline-dot::before{content:'';position:absolute;left:-19px;top:6px;width:10px;height:10px;border-radius:50%;background:#f0883e;border:2px solid #0a0e17;box-shadow:0 0 0 2px #f0883e;}
-  .latest-ribbon{position:absolute;top:18px;right:-30px;background:#f0883e;color:#0a0e17;font-size:10px;font-weight:800;letter-spacing:1px;padding:5px 38px;transform:rotate(35deg);pointer-events:none;}
-  #loading{display:flex;align-items:center;justify-content:center;min-height:60vh;}
-  .spinner{width:40px;height:40px;border:3px solid #21262d;border-top-color:#f0883e;border-radius:50%;animation:spin .8s linear infinite;}
-  @keyframes spin{to{transform:rotate(360deg);}}
+  :root {
+    --serif: Georgia, 'Noto Serif SC', 'Source Han Serif SC', serif;
+    --sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  }
+  .font-serif { font-family: var(--serif); }
+  .font-sans { font-family: var(--sans); }
+
+  /* Score progress bar */
+  .score-fill { height: 100%; border-radius: 3px; }
+
+  /* Timeline styling */
+  .timeline { position: relative; }
+  .timeline::before { content: ''; position: absolute; left: 5px; top: 4px; bottom: 4px; width: 1.5px; background: #e8e6dc; }
+  .timeline-dot { position: relative; }
+  .timeline-dot::before { content: ''; position: absolute; left: -19px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: #c96442; border: 2px solid #f5f4ed; box-shadow: 0px 0px 0px 1px #c96442; }
+
+  /* Latest ribbon - subtle Claude-style */
+  .latest-ribbon { position: absolute; top: 16px; right: -28px; background: #c96442; color: #faf9f5; font-size: 9px; font-weight: 600; letter-spacing: 1.5px; padding: 4px 36px; transform: rotate(35deg); pointer-events: none; font-family: var(--sans); text-transform: uppercase; }
+
+  /* Loading */
+  #loading { display: flex; align-items: center; justify-content: center; min-height: 60vh; }
+  .spinner { width: 36px; height: 36px; border: 2px solid #e8e6dc; border-top-color: #c96442; border-radius: 50%; animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Ring shadow utilities */
+  .ring-warm { box-shadow: 0px 0px 0px 1px #d1cfc5; }
+  .ring-terracotta { box-shadow: 0px 0px 0px 1px #c96442; }
+  .whisper { box-shadow: rgba(0,0,0,0.05) 0px 4px 24px; }
+
+  /* Smooth transitions */
+  .transition-warm { transition: all 0.2s ease; }
+
+  /* Section divider */
+  .section-divider { display: flex; align-items: center; gap: 12px; }
+  .section-divider span { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #87867f; white-space: nowrap; font-family: var(--sans); }
+  .section-divider .line { flex: 1; height: 1px; background: #e8e6dc; }
 </style>
 </head>
-<body class="bg-[#0a0e17] text-[#e6edf3] font-sans antialiased min-h-screen">
+<body class="bg-parchment text-near-black font-sans antialiased min-h-screen leading-relaxed">
 
 <div id="app"><!-- SPA renders here --></div>
 
@@ -47,60 +77,84 @@ function route() {
 }
 
 // ==================== HELPERS ====================
-const scoreGrad = s => s >= 95 ? 'linear-gradient(90deg,#3fb950,#f0883e)' : s >= 88 ? 'linear-gradient(90deg,#f0c040,#f0883e)' : 'linear-gradient(90deg,#f0c040,#58a6ff)';
-const rankClr = r => r===1 ? 'from-[#f0883e] to-[#ff6b35] text-white shadow-[0_2px_8px_rgba(240,136,62,0.3)]' : r===2 ? 'from-[#b0b0b0] to-[#8a8a8a] text-[#0a0e17]' : r===3 ? 'from-[#cd7f32] to-[#a06828] text-white' : 'bg-[#21262d] text-[#8b949e]';
-const tagClr = t => t==='concept' ? 'bg-[#58a6ff]/10 text-[#58a6ff] border-[#58a6ff]/15' : t==='lhb' ? 'bg-[#f0883e]/10 text-[#f0883e] border-[#f0883e]/15' : 'bg-[#3fb950]/10 text-[#3fb950] border-[#3fb950]/15';
+const scoreGrad = s => s >= 95 ? 'linear-gradient(90deg,#5a9e6b,#c96442)' : s >= 88 ? 'linear-gradient(90deg,#b8860b,#c96442)' : 'linear-gradient(90deg,#b8860b,#3898ec)';
+const rankBadge = r => {
+  if (r===1) return 'bg-terracotta text-ivory shadow-[0px_0px_0px_1px_#c96442]';
+  if (r===2) return 'bg-[#b0aea5] text-near-black';
+  if (r===3) return 'bg-[#b8860b] text-ivory';
+  return 'bg-[#e8e6dc] text-stone-gray';
+};
+const tagClr = t => {
+  if (t==='concept') return 'bg-[#3898ec]/8 text-[#3898ec] border-[#3898ec]/15';
+  if (t==='lhb') return 'bg-[#c96442]/8 text-[#c96442] border-[#c96442]/15';
+  return 'bg-[#5a9e6b]/8 text-[#5a9e6b] border-[#5a9e6b]/15';
+};
 
 // ==================== HOME PAGE ====================
 function home() {
   const latest = predictionsIndex[0];
   const history = predictionsIndex.slice(1);
   $('#app').innerHTML = `
-<div class="bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,rgba(240,136,62,0.04),transparent_70%)] bg-gradient-to-b from-[#0d1117]/98 to-[#0a0e17] border-b border-[#21262d] py-10 px-4 text-center relative after:content-[''] after:absolute after:-bottom-px after:left-1/2 after:-translate-x-1/2 after:w-[120px] after:h-0.5 after:bg-[#f0883e] after:rounded-sm">
-  <div class="inline-flex items-center gap-2.5 text-xs text-[#484f58] tracking-[3px] uppercase mb-5 select-none">
-    <span class="w-[30px] h-[30px] bg-gradient-to-br from-[#f0883e] to-[#e04040] rounded-lg inline-flex items-center justify-center text-[15px] text-white font-extrabold">S</span> Stock Partner
-  </div>
-  <h1 class="text-2xl sm:text-3xl font-extrabold gradient-text mb-4">A股每日涨停预测</h1>
-  <p class="text-sm text-[#8b949e] max-w-md mx-auto leading-relaxed">基于热门股、资金流向、龙虎榜、热门概念多维数据，每日筛选最具涨停潜力的5只个股</p>
-  <div class="flex items-center justify-center gap-3 mt-5 flex-wrap">
-    <span class="inline-flex items-center gap-1 text-xs text-[#f0883e] bg-[#f0883e]/10 border border-[#f0883e]/20 rounded-full px-3.5 py-1">⚡ 自动更新 · 每个交易日 20:00</span>
-  </div>
-</div>
-<div class="max-w-3xl mx-auto px-4 py-8 pb-20">
-  <div class="flex items-center gap-3 my-8"><span class="text-[11px] font-bold tracking-[1.5px] uppercase text-[#484f58] whitespace-nowrap select-none">最新一期</span><div class="flex-1 h-px bg-gradient-to-r from-[#21262d] to-transparent"></div></div>
-  <div class="bg-[#111827] border border-[#f0883e] rounded-2xl p-6 sm:p-8 relative overflow-hidden shadow-[0_0_20px_rgba(240,136,62,0.08)]">
-    <div class="latest-ribbon">LATEST</div>
-    <div class="mb-5"><div class="flex items-center gap-3 flex-wrap mb-3">
-      <span class="inline-flex items-center gap-1 text-xs text-[#484f58] bg-[#0d1117] border border-[#21262d] rounded-full px-3 py-1 whitespace-nowrap">📝 ${latest.generated} 生成</span>
-      <span class="text-[#21262d] text-base font-light">→</span>
-      <span class="text-lg sm:text-xl font-bold text-[#e6edf3] inline-flex items-center gap-2">${latest.date.slice(5)} <span class="text-xs font-medium text-[#58a6ff] bg-[#58a6ff]/10 border border-[#58a6ff]/20 rounded-full px-2.5 py-1">${latest.weekday}</span></span>
-    </div></div>
-    <p class="text-sm text-[#8b949e] leading-relaxed mb-5 pb-5 border-b border-[#21262d]">${latest.title} · ${latest.summary}</p>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 mb-6">${latest.topStocks.map((n,i)=>`
-      <a href="#${latest.id.slice(4)}" class="flex items-center gap-1.5 bg-[#0d1117] border border-[#21262d] rounded-lg px-3 py-2.5 text-sm hover:border-[#58a6ff] hover:bg-[#58a6ff]/10 transition-all">
-        <span class="inline-flex items-center justify-center w-5 h-5 rounded ${i===0?'bg-gradient-to-br from-[#f0883e] to-[#ff6b35] text-white':i===1?'bg-[#8b949e] text-[#0a0e17]':i===2?'bg-[#cd7f32] text-white':'bg-[#21262d] text-[#8b949e]'} text-[11px] font-extrabold">${i+1}</span>
-        <span class="font-semibold text-[#e6edf3]">${n}</span>
-        <span class="text-[11px] text-[#484f58] font-mono">${latest.topCodes[i]}</span>
-      </a>`).join('')}</div>
-    <div class="flex gap-3 flex-wrap">
-      <a href="#${latest.id.slice(4)}" class="inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-lg text-sm font-semibold bg-gradient-to-br from-[#f0883e] to-[#e04040] text-white shadow-[0_2px_12px_rgba(240,136,62,0.22)] hover:shadow-[0_4px_20px_rgba(240,136,62,0.38)] hover:-translate-y-0.5 transition-all">查看完整报告 →</a>
-      <a href="https://github.com/zazzzf/AStockEveryDay" target="_blank" class="inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-lg text-sm font-semibold bg-[#0d1117] text-[#8b949e] border border-[#21262d] hover:border-[#58a6ff] hover:text-[#58a6ff] transition-all">GitHub 仓库</a>
+<!-- DARK HERO -->
+<div class="bg-near-black text-warm-silver py-14 sm:py-20 px-4 text-center border-b border-dark-surface">
+  <div class="max-w-2xl mx-auto">
+    <div class="inline-flex items-center gap-2.5 text-xs text-warm-silver tracking-[2px] uppercase mb-8 font-sans opacity-60 select-none">
+      <span class="w-[28px] h-[28px] bg-terracotta rounded-lg inline-flex items-center justify-center text-[14px] text-ivory font-bold font-serif">S</span> Stock Partner
+    </div>
+    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-serif font-normal leading-[1.15] text-ivory mb-6 tracking-tight">A股每日涨停预测</h1>
+    <p class="text-base sm:text-lg text-warm-silver max-w-lg mx-auto leading-relaxed font-sans opacity-80">基于热门股、资金流向、龙虎榜、热门概念多维数据，每日筛选最具涨停潜力的5只个股</p>
+    <div class="flex items-center justify-center gap-3 mt-8 flex-wrap">
+      <span class="inline-flex items-center gap-1.5 text-xs text-terracotta bg-terracotta/10 border border-terracotta/20 rounded-full px-4 py-1.5 font-sans">每个交易日 20:00 自动更新</span>
     </div>
   </div>
-  ${history.length ? `
-  <div class="flex items-center gap-3 my-8"><span class="text-[11px] font-bold tracking-[1.5px] uppercase text-[#484f58] whitespace-nowrap select-none">往期记录</span><div class="flex-1 h-px bg-gradient-to-r from-[#21262d] to-transparent"></div></div>
-  <div class="flex flex-col gap-3">${history.map(h=>`
-    <a href="#${h.id.slice(4)}" class="flex items-center gap-4 bg-[#111827] border border-[#21262d] rounded-lg px-5 py-3.5 transition-all hover:border-[#f0883e]/30 hover:bg-[#1a2236] hover:translate-x-[3px] relative overflow-hidden group">
-      <span class="text-[11px] text-[#484f58] bg-[#0d1117] border border-[#21262d] rounded-full px-2.5 py-1 whitespace-nowrap shrink-0">📝 ${h.generated} 生成</span>
-      <span class="text-[#21262d] text-sm shrink-0 group-hover:text-[#f0883e] transition-colors">→</span>
-      <span class="flex-1 text-sm font-semibold text-[#e6edf3] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">${h.date.slice(5)} <span class="text-[#58a6ff] font-normal text-xs ml-1">${h.weekday}</span> · ${h.title}</span>
-      <span class="text-[#21262d] text-base shrink-0 group-hover:text-[#f0883e] group-hover:translate-x-[3px] transition-all">→</span>
-    </a>`).join('')}</div>`:''}
 </div>
-<div class="text-center py-10 px-4 border-t border-[#21262d] text-xs text-[#484f58] leading-relaxed">
+
+<!-- LATEST PREDICTION -->
+<div class="max-w-3xl mx-auto px-4 py-12 sm:py-16">
+  <div class="section-divider mb-8"><span>最新一期</span><div class="line"></div></div>
+
+  <div class="bg-ivory border border-border-cream rounded-2xl p-6 sm:p-8 relative overflow-hidden whisper">
+    <div class="latest-ribbon">LATEST</div>
+    <div class="mb-6">
+      <div class="flex items-center gap-3 flex-wrap mb-4">
+        <span class="inline-flex items-center gap-1 text-xs text-stone-gray bg-warm-sand/50 border border-border-cream rounded-full px-3 py-1 font-sans whitespace-nowrap">${latest.generated} 生成</span>
+        <span class="text-border-warm text-base font-serif">→</span>
+        <span class="text-xl sm:text-2xl font-serif font-normal text-near-black inline-flex items-center gap-2">${latest.date.slice(5)} <span class="text-xs font-sans font-medium text-[#3898ec] bg-[#3898ec]/8 border border-[#3898ec]/15 rounded-full px-2.5 py-1">${latest.weekday}</span></span>
+      </div>
+      <p class="text-sm text-olive-gray leading-relaxed pb-6 border-b border-border-cream font-sans">${latest.title} · ${latest.summary}</p>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 mb-7">${latest.topStocks.map((n,i)=>`
+      <a href="#${latest.id.slice(4)}" class="flex items-center gap-1.5 bg-parchment border border-border-cream rounded-xl px-3 py-2.5 text-sm hover:border-terracotta/30 hover:bg-terracotta/[0.03] transition-warm">
+        <span class="inline-flex items-center justify-center w-5 h-5 rounded-lg ${i===0?'bg-terracotta text-ivory':i===1?'bg-stone-gray text-ivory':i===2?'bg-warn-amber text-ivory':'bg-warm-sand text-stone-gray'} text-[11px] font-bold font-sans">${i+1}</span>
+        <span class="font-semibold text-near-black font-sans">${n}</span>
+        <span class="text-[10px] text-stone-gray font-mono ml-auto">${latest.topCodes[i]}</span>
+      </a>`).join('')}</div>
+
+    <div class="flex gap-3 flex-wrap">
+      <a href="#${latest.id.slice(4)}" class="inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-xl text-sm font-sans font-medium bg-terracotta text-ivory ring-terracotta hover:opacity-90 transition-warm">查看完整报告 →</a>
+      <a href="https://github.com/zazzzf/AStockEveryDay" target="_blank" class="inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-xl text-sm font-sans font-medium bg-warm-sand text-charcoal-warm border border-border-warm hover:border-terracotta/30 transition-warm">GitHub 仓库</a>
+    </div>
+  </div>
+
+  ${history.length ? `
+  <div class="section-divider my-10"><span>往期记录</span><div class="line"></div></div>
+  <div class="flex flex-col gap-3">
+    ${history.map(h=>`
+    <a href="#${h.id.slice(4)}" class="flex items-center gap-4 bg-ivory border border-border-cream rounded-xl px-5 py-3.5 transition-warm hover:border-terracotta/20 hover:bg-terracotta/[0.02] group">
+      <span class="text-[11px] text-stone-gray bg-parchment border border-border-cream rounded-full px-2.5 py-1 font-sans whitespace-nowrap shrink-0">${h.generated} 生成</span>
+      <span class="text-border-warm text-sm shrink-0 group-hover:text-terracotta transition-warm font-serif">→</span>
+      <span class="flex-1 text-sm font-sans font-medium text-near-black min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">${h.date.slice(5)} <span class="text-[#3898ec] font-normal text-xs ml-1">${h.weekday}</span> · ${h.title}</span>
+      <span class="text-border-warm text-base shrink-0 group-hover:text-terracotta group-hover:translate-x-[3px] transition-warm font-serif">→</span>
+    </a>`).join('')}
+  </div>`:''}
+</div>
+
+<!-- FOOTER -->
+<div class="text-center py-12 px-4 border-t border-border-cream text-xs text-stone-gray leading-relaxed font-sans">
   <p>数据来源：腾讯自选股 · 龙虎榜 · 通达信 &nbsp;|&nbsp; 每个交易日 20:00 自动生成</p>
-  <p class="text-[#f85149] opacity-80 mt-3">⚠️ 以上内容由 AI 基于公开信息整理生成，仅供参考，不构成任何投资建议。</p>
-  <p class="mt-3"><a href="https://github.com/zazzzf/AStockEveryDay" target="_blank" class="text-[#58a6ff] hover:text-[#79b8ff]">查看 GitHub 仓库 →</a></p>
+  <p class="text-crimson/70 mt-3">以上内容由 AI 基于公开信息整理生成，仅供参考，不构成任何投资建议。</p>
+  <p class="mt-3"><a href="https://github.com/zazzzf/AStockEveryDay" target="_blank" class="text-terracotta hover:text-coral transition-warm">查看 GitHub 仓库 →</a></p>
 </div>`;
 }
 
@@ -114,7 +168,7 @@ async function loadPrediction(id) {
     const d = await res.json();
     renderPrediction(d);
   } catch(e) {
-    $('#app').innerHTML = `<div class="max-w-3xl mx-auto px-4 py-20 text-center"><p class="text-[#8b949e]">数据加载失败</p><a href="#home" class="text-[#58a6ff] mt-4 inline-block">← 返回首页</a></div>`;
+    $('#app').innerHTML = `<div class="max-w-3xl mx-auto px-4 py-20 text-center font-sans"><p class="text-olive-gray">数据加载失败</p><a href="#home" class="text-terracotta hover:text-coral mt-4 inline-block transition-warm">← 返回首页</a></div>`;
   }
 }
 
@@ -127,86 +181,86 @@ function renderPrediction(d) {
 
   $('#app').innerHTML = `
 <div class="max-w-3xl mx-auto px-4 py-8 pb-20">
-  <a href="#home" class="inline-flex items-center gap-1 text-sm text-[#484f58] hover:text-[#58a6ff] mb-4 transition-colors">← 返回首页</a>
+  <a href="#home" class="inline-flex items-center gap-1 text-sm text-stone-gray hover:text-terracotta mb-6 transition-warm font-sans">← 返回首页</a>
 
   <!-- HEADER -->
-  <div class="text-center pb-8 mb-8 border-b border-[#21262d] relative after:content-[''] after:absolute after:-bottom-px after:left-1/2 after:-translate-x-1/2 after:w-[100px] after:h-0.5 after:bg-[#f0883e] after:rounded-sm">
-    <h1 class="text-2xl sm:text-3xl font-extrabold gradient-text mb-3">${d.title||'涨停预测'}</h1>
-    <p class="text-sm text-[#8b949e] max-w-lg mx-auto mb-4 leading-relaxed">${d.subtitle||''}</p>
+  <div class="text-center pb-10 mb-10 border-b border-border-cream">
+    <h1 class="text-2xl sm:text-3xl md:text-4xl font-serif font-normal text-near-black mb-4 leading-tight tracking-tight">${d.title||'涨停预测'}</h1>
+    <p class="text-sm text-olive-gray max-w-lg mx-auto mb-5 leading-relaxed font-sans">${d.subtitle||''}</p>
     <div class="flex justify-center gap-3 flex-wrap">
-      <span class="inline-flex items-center gap-1 text-xs text-[#f0883e] bg-[#f0883e]/10 border border-[#f0883e]/20 rounded-full px-3 py-1">📅 预测日期：${d.date}（${d.weekday}）| 数据截止：${d.generated}生成</span>
+      <span class="inline-flex items-center gap-1 text-xs text-terracotta bg-terracotta/8 border border-terracotta/15 rounded-full px-3.5 py-1.5 font-sans">预测日期：${d.date}（${d.weekday}）| ${d.generated}生成</span>
     </div>
   </div>
 
-  ${d.macroAlert ? `<div class="bg-[#f85149]/5 border border-[#f85149]/15 rounded-lg p-5 mb-6"><strong class="text-[#f85149]">${d.macroAlert}</strong></div>`:''}
+  ${d.macroAlert ? `<div class="bg-crimson/[0.06] border border-crimson/15 rounded-xl p-5 mb-8 font-sans"><strong class="text-crimson">${d.macroAlert}</strong></div>`:''}
 
   <!-- MARKET SNAPSHOT -->
   ${renderMarketSnapshot(d)}
 
-  ${d.themeOverview ? `<div class="bg-[#111827] border border-[#21262d] rounded-lg p-5 mb-6 text-sm text-[#8b949e] leading-relaxed">${d.themeOverview}</div>`:''}
+  ${d.themeOverview ? `<div class="bg-ivory border border-border-cream rounded-xl p-5 mb-8 text-sm text-olive-gray leading-relaxed font-sans">${d.themeOverview}</div>`:''}
 
   <!-- HOT CONCEPTS -->
-  ${hasConcepts ? `<h2 class="text-lg font-bold text-[#e6edf3] mb-4 flex items-center gap-2">🔥 热门概念</h2><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-6">${d.hotConcepts.map(c=>`<div class="bg-[#0d1117] border border-[#21262d] rounded-lg p-2.5 text-sm"><span class="text-[#f0883e]">#${c.rank}</span> ${c.name} <span class="${(c.change.startsWith('+')||c.change.includes('涨停'))?'text-[#f85149]':'text-[#3fb950]'} float-right">${c.change}</span>${c.note?`<span class="text-xs text-[#484f58] block">${c.note}</span>`:''}</div>`).join('')}</div>`:''}
+  ${hasConcepts ? `<h2 class="text-lg font-serif font-normal text-near-black mb-5 flex items-center gap-2">热门概念</h2><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-8">${d.hotConcepts.map(c=>`<div class="bg-ivory border border-border-cream rounded-xl p-3 text-sm font-sans"><span class="text-terracotta font-medium">#${c.rank}</span> ${c.name} <span class="${(c.change.startsWith('+')||c.change.includes('涨停'))?'text-rise-red':'text-fall-green'} float-right font-medium">${c.change}</span>${c.note?`<span class="text-xs text-stone-gray block mt-0.5">${c.note}</span>`:''}</div>`).join('')}</div>`:''}
 
-  ${hasFiveDay ? `<h2 class="text-lg font-bold text-[#e6edf3] mb-4 flex items-center gap-2">📈 5日最强概念</h2><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 mb-6">${d.fiveDayConcepts.map(c=>`<div class="bg-[#0d1117] border ${c.rank<=3?'border-[#f85149]/25':'border-[#21262d]'} rounded-lg p-2.5 text-sm">${c.medal?`<span class="${c.medal==='🥇'?'text-[#f0883e]':c.medal==='🥈'?'text-[#c0c0c0]':'text-[#cd7f32]'}">${c.medal}</span> `:`<span class="text-[#484f58]">#${c.rank}</span> `}${c.name} <span class="text-[#f85149] float-right">${c.change}</span></div>`).join('')}</div>`:''}
+  ${hasFiveDay ? `<h2 class="text-lg font-serif font-normal text-near-black mb-5 flex items-center gap-2">5日最强概念</h2><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 mb-8">${d.fiveDayConcepts.map(c=>`<div class="bg-ivory border ${c.rank<=3?'border-terracotta/20':'border-border-cream'} rounded-xl p-3 text-sm font-sans">${c.medal?`<span class="${c.medal==='🥇'?'text-terracotta':c.medal==='🥈'?'text-stone-gray':'text-warn-amber'}">${c.medal}</span> `:`<span class="text-stone-gray">#${c.rank}</span> `}${c.name} <span class="text-rise-red float-right font-medium">${c.change}</span></div>`).join('')}</div>`:''}
 
   <!-- STOCK CARDS -->
-  <h2 class="text-lg font-bold text-[#e6edf3] mb-5 flex items-center gap-2">🎯 涨停预测 · 5强个股</h2>
+  <h2 class="text-xl font-serif font-normal text-near-black mb-6 flex items-center gap-2">涨停预测 · 5强个股</h2>
   ${stocks.map(s=>renderStockCard(s)).join('')}
 
   <!-- SUMMARY TABLE -->
-  ${hasSummary ? `<h2 class="text-lg font-bold text-[#e6edf3] mb-4 flex items-center gap-2">📋 汇总对比</h2><div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-[13px]"><thead><tr>${d.summaryTable.headers.map(h=>`<th class="bg-[#0d1117] text-[#f0883e] px-3 py-2.5 text-left font-bold text-xs uppercase tracking-wider border border-[#21262d] whitespace-nowrap">${h}</th>`).join('')}</tr></thead><tbody>${d.summaryTable.rows.map((r,i)=>`<tr class="even:bg-[#0d1117]/40 hover:bg-[#f0883e]/5">${r.map(c=>`<td class="px-3 py-2.5 border border-[#21262d] text-[#8b949e] text-center">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:''}
+  ${hasSummary ? `<h2 class="text-xl font-serif font-normal text-near-black mb-5 mt-10 flex items-center gap-2">汇总对比</h2><div class="overflow-x-auto mb-8"><table class="w-full border-collapse text-[13px] font-sans"><thead><tr>${d.summaryTable.headers.map(h=>`<th class="bg-warm-sand/50 text-terracotta px-3 py-2.5 text-left font-semibold text-xs tracking-wider border border-border-cream whitespace-nowrap">${h}</th>`).join('')}</tr></thead><tbody>${d.summaryTable.rows.map((r,i)=>`<tr class="even:bg-ivory hover:bg-terracotta/[0.02]">${r.map(c=>`<td class="px-3 py-2.5 border border-border-cream text-olive-gray text-center">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:''}
 
   <!-- AUCTION TIMELINE -->
-  ${hasTimeline ? `<div class="bg-[#58a6ff]/5 border border-[#58a6ff]/15 rounded-lg p-5 mb-6"><h3 class="text-[15px] font-bold text-[#58a6ff] mb-4">⏰ 明日竞价统一观察框架（9:15-9:25）</h3><div class="timeline relative pl-6 my-4">${d.auctionTimeline.map(t=>`<div class="timeline-dot relative mb-4 pl-5"><div class="text-[11px] text-[#484f58] font-mono font-semibold">${t.time}</div><div class="text-[13px] text-[#8b949e] leading-relaxed mt-0.5">${t.desc}</div></div>`).join('')}</div></div>`:''}
+  ${hasTimeline ? `<div class="bg-[#3898ec]/[0.04] border border-[#3898ec]/15 rounded-xl p-6 mb-8"><h3 class="text-[15px] font-serif font-normal text-[#3898ec] mb-4">明日竞价统一观察框架（9:15-9:25）</h3><div class="timeline relative pl-6 my-4">${d.auctionTimeline.map(t=>`<div class="timeline-dot relative mb-4 pl-5"><div class="text-[11px] text-stone-gray font-mono font-semibold">${t.time}</div><div class="text-[13px] text-olive-gray leading-relaxed mt-0.5 font-sans">${t.desc}</div></div>`).join('')}</div></div>`:''}
 
   <!-- RISK -->
-  ${d.riskItems && d.riskItems.length ? `<div class="bg-[#f85149]/5 border border-[#f85149]/15 rounded-lg p-6 mb-6"><h3 class="text-[15px] font-bold text-[#f85149] mb-4 flex items-center gap-1.5">⚠️ 风险提示与风控纪律</h3><ul class="list-none space-y-2">${d.riskItems.map(r=>`<li class="text-[13px] text-[#8b949e] leading-relaxed pl-5 relative before:content-['⚠'] before:absolute before:left-0 before:text-[#d29922] before:text-xs border-b border-[#f85149]/5 pb-2">${r}</li>`).join('')}</ul></div>`:''}
+  ${d.riskItems && d.riskItems.length ? `<div class="bg-crimson/[0.04] border border-crimson/15 rounded-xl p-6 mb-8"><h3 class="text-[15px] font-serif font-normal text-crimson mb-5 flex items-center gap-1.5">风险提示与风控纪律</h3><ul class="list-none space-y-2 font-sans">${d.riskItems.map(r=>`<li class="text-[13px] text-olive-gray leading-relaxed pl-5 relative before:content-['!'] before:absolute before:left-0 before:text-warn-amber before:text-xs before:font-bold border-b border-crimson/5 pb-2">${r}</li>`).join('')}</ul></div>`:''}
 
   <!-- FOOTER -->
-  ${d.footer ? `<div class="text-center pt-10 border-t border-[#21262d] text-xs text-[#484f58] leading-relaxed"><p>📊 数据来源：${d.footer.source} | ⏰ 生成时间：${d.footer.time}</p><p class="text-[#f85149] opacity-80 mt-3">⚠️ 以上内容由AI基于公开信息整理生成，仅供参考，不构成任何投资建议。</p><p class="mt-2"><a href="https://github.com/zazzzf/AStockEveryDay" target="_blank" class="text-[#58a6ff] hover:text-[#79b8ff]">View on GitHub</a></p></div>`:''}
+  ${d.footer ? `<div class="text-center pt-10 border-t border-border-cream text-xs text-stone-gray leading-relaxed font-sans"><p>数据来源：${d.footer.source} | 生成时间：${d.footer.time}</p><p class="text-crimson/70 mt-3">以上内容由AI基于公开信息整理生成，仅供参考，不构成任何投资建议。</p><p class="mt-2"><a href="https://github.com/zazzzf/AStockEveryDay" target="_blank" class="text-terracotta hover:text-coral transition-warm">View on GitHub</a></p></div>`:''}
 </div>`;
 }
 
 function renderMarketSnapshot(d) {
   if (!d.marketSnapshot || !d.marketSnapshot.indices) return '';
   const idx = d.marketSnapshot.indices;
-  return `<div class="bg-gradient-to-br from-[#111827]/95 to-[#162333]/90 border border-[#21262d] rounded-2xl p-6 mb-6 relative overflow-hidden">
-    <div class="absolute top-[-50%] right-[-20%] w-[400px] h-[400px] bg-[radial-gradient(circle,rgba(240,136,62,0.04),transparent_70%)] pointer-events-none"></div>
-    <h2 class="text-[15px] font-bold text-[#f0883e] mb-5 flex items-center gap-2 relative">📊 今日市场全景</h2>
+  return `<div class="bg-near-black border border-dark-surface rounded-2xl p-6 sm:p-7 mb-8 relative overflow-hidden">
+    <div class="absolute top-[-40%] right-[-15%] w-[350px] h-[350px] bg-[radial-gradient(circle,rgba(201,100,66,0.06),transparent_65%)] pointer-events-none"></div>
+    <h2 class="text-[15px] font-serif font-normal text-terracotta mb-5 flex items-center gap-2 relative">今日市场全景</h2>
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 relative">${idx.map(i=>`
-      <div class="bg-[#0d1117] border border-[#21262d] rounded-lg p-3 text-center hover:border-[#58a6ff]/25 transition-colors">
-        <div class="text-[11px] text-[#484f58] uppercase tracking-wide">${i.label}</div>
-        <div class="text-lg font-bold ${i.isUp?'text-[#f85149]':'text-[#3fb950]'} tabular-nums">${i.value}</div>
-        ${i.change?`<div class="text-xs ${i.isUp?'text-[#f85149]':'text-[#8b949e]'}">${i.change}</div>`:''}
+      <div class="bg-dark-surface border border-[#3d3d3a] rounded-xl p-3.5 text-center hover:border-terracotta/20 transition-warm">
+        <div class="text-[11px] text-warm-silver uppercase tracking-wide font-sans">${i.label}</div>
+        <div class="text-lg font-sans font-bold ${i.isUp?'text-rise-red':'text-fall-green'} tabular-nums mt-1">${i.value}</div>
+        ${i.change?`<div class="text-xs ${i.isUp?'text-rise-red':'text-warm-silver'} font-sans mt-0.5">${i.change}</div>`:''}
       </div>`).join('')}</div></div>`;
 }
 
 function renderStockCard(s) {
   const metrics = s.metrics || [];
   const tags = s.tags || [];
-  return `<div class="bg-[#111827] border border-[#21262d] rounded-2xl p-5 sm:p-6 mb-5 hover:border-[#f0883e]/30 hover:shadow-[0_0_20px_rgba(240,136,62,0.08)] transition-all">
-    <div class="flex items-center gap-3 mb-4 flex-wrap">
-      <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br ${rankClr(s.rank)} font-extrabold text-sm">${s.rank}</span>
-      <span class="text-xl font-bold text-[#e6edf3]">${s.name}</span>
-      <span class="text-sm text-[#484f58] font-mono">${s.code}</span>
-      ${tags.map(t=>`<span class="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-full ${tagClr(t.type)}">${t.text}</span>`).join('')}
+  return `<div class="bg-ivory border border-border-cream rounded-2xl p-5 sm:p-6 mb-5 whisper hover:border-terracotta/20 transition-warm">
+    <div class="flex items-center gap-3 mb-5 flex-wrap">
+      <span class="inline-flex items-center justify-center w-8 h-8 rounded-xl ${rankBadge(s.rank)} font-bold text-sm font-sans">${s.rank}</span>
+      <span class="text-xl font-serif font-normal text-near-black">${s.name}</span>
+      <span class="text-sm text-stone-gray font-mono">${s.code}</span>
+      ${tags.map(t=>`<span class="inline-flex items-center gap-1 text-[11px] font-sans font-medium px-2.5 py-1 rounded-full border ${tagClr(t.type)}">${t.text}</span>`).join('')}
     </div>
-    <div class="flex items-center gap-3 mb-4">
-      <span class="text-[11px] text-[#484f58] whitespace-nowrap">涨停概率评分</span>
-      <div class="flex-1 h-1.5 bg-[#21262d] rounded-full overflow-hidden"><div class="score-fill" style="width:${s.score}%;background:${scoreGrad(s.score)}"></div></div>
-      <span class="text-sm font-extrabold text-[#f0883e] min-w-[28px] text-right">${s.score}</span>
+    <div class="flex items-center gap-3 mb-5">
+      <span class="text-[11px] text-stone-gray whitespace-nowrap font-sans">涨停概率评分</span>
+      <div class="flex-1 h-1.5 bg-warm-sand rounded-full overflow-hidden"><div class="score-fill" style="width:${s.score}%;background:${scoreGrad(s.score)}"></div></div>
+      <span class="text-sm font-bold text-terracotta min-w-[28px] text-right font-sans">${s.score}</span>
     </div>
-    <div class="flex items-baseline gap-4 mb-4 flex-wrap">
-      <span class="text-2xl sm:text-[28px] font-extrabold text-[#f85149] tabular-nums">${s.price}</span>
-      <span class="text-base font-semibold text-[#f85149]">${s.change}</span>
-      ${s.limitStatus?`<span class="text-xs text-[#484f58] bg-[#0d1117] px-3 py-1 rounded-full border border-[#21262d]">${s.limitStatus}</span>`:''}
+    <div class="flex items-baseline gap-4 mb-5 flex-wrap">
+      <span class="text-2xl sm:text-[28px] font-bold text-rise-red tabular-nums font-sans">${s.price}</span>
+      <span class="text-base font-semibold text-rise-red font-sans">${s.change}</span>
+      ${s.limitStatus?`<span class="text-xs text-stone-gray bg-parchment px-3 py-1 rounded-full border border-border-cream font-sans">${s.limitStatus}</span>`:''}
     </div>
-    ${metrics.length ? `<div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5">${metrics.map(m=>`<div class="bg-[#0d1117] border border-[#21262d] rounded-lg p-2.5"><div class="text-[11px] text-[#484f58] uppercase tracking-wide">${m.label}</div><div class="text-[15px] font-semibold ${m.highlight?'text-[#f85149]':'text-[#e6edf3]'}">${m.value}</div></div>`).join('')}</div>`:''}
+    ${metrics.length ? `<div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">${metrics.map(m=>`<div class="bg-parchment border border-border-cream rounded-xl p-3"><div class="text-[11px] text-stone-gray uppercase tracking-wide font-sans">${m.label}</div><div class="text-[15px] font-sans font-semibold ${m.highlight?'text-rise-red':'text-near-black'} mt-0.5">${m.value}</div></div>`).join('')}</div>`:''}
     <div class="space-y-3">
-      ${s.coreLogic?`<div class="bg-[#0d1117] border-l-[3px] border-[#58a6ff] border border-[#21262d] rounded-lg p-4"><h4 class="text-sm font-bold text-[#58a6ff] mb-2">📊 核心逻辑</h4><p class="text-sm text-[#8b949e] leading-relaxed">${s.coreLogic}</p></div>`:''}
-      ${s.auctionExpect?`<div class="bg-gradient-to-br from-[#1a1f2e]/60 to-[#111827] border border-[#f0883e]/25 rounded-lg p-5"><h4 class="text-sm font-bold text-[#f0883e] mb-3 flex items-center gap-1.5">🔔 明日竞价预期</h4><p class="text-sm text-[#8b949e] leading-relaxed">${s.auctionExpect}</p></div>`:''}
-      ${s.entryCondition?`<div class="bg-gradient-to-br from-[#162316]/40 to-[#111827] border border-[#3fb950]/25 rounded-lg p-5"><h4 class="text-sm font-bold text-[#3fb950] mb-3 flex items-center gap-1.5">✅ 建议上车条件</h4><p class="text-sm text-[#8b949e] leading-relaxed">${s.entryCondition}</p></div>`:''}
+      ${s.coreLogic?`<div class="bg-[#3898ec]/[0.03] border-l-[3px] border-[#3898ec] border border-[#3898ec]/15 rounded-xl p-4"><h4 class="text-sm font-serif font-normal text-[#3898ec] mb-2">核心逻辑</h4><p class="text-sm text-olive-gray leading-relaxed font-sans">${s.coreLogic}</p></div>`:''}
+      ${s.auctionExpect?`<div class="bg-terracotta/[0.04] border border-terracotta/20 rounded-xl p-5"><h4 class="text-sm font-serif font-normal text-terracotta mb-3 flex items-center gap-1.5">明日竞价预期</h4><p class="text-sm text-olive-gray leading-relaxed font-sans">${s.auctionExpect}</p></div>`:''}
+      ${s.entryCondition?`<div class="bg-[#5a9e6b]/[0.04] border border-[#5a9e6b]/20 rounded-xl p-5"><h4 class="text-sm font-serif font-normal text-fall-green mb-3 flex items-center gap-1.5">建议上车条件</h4><p class="text-sm text-olive-gray leading-relaxed font-sans">${s.entryCondition}</p></div>`:''}
     </div>
   </div>`;
 }
