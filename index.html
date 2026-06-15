@@ -22,12 +22,20 @@ body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft
 /* 最新预测卡片 */
 .latest-card { background: linear-gradient(135deg, #161b22, #1c2333); border: 1px solid #f0883e66; border-radius: 14px; padding: 28px; position: relative; overflow: hidden; }
 .latest-card::before { content: '最新'; position: absolute; top: 16px; right: -28px; background: #f0883e; color: #0d1117; font-size: 11px; font-weight: 700; padding: 4px 36px; transform: rotate(35deg); }
-.latest-card h2 { font-size: 20px; color: #f0f6fc; margin-bottom: 6px; }
+
+/* 标题行：生成日期 → 预测日期 */
+.title-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; flex-wrap: wrap; }
+.gen-time { font-size: 13px; color: #8b949e; background: #21262d; border: 1px solid #30363d; border-radius: 6px; padding: 3px 10px; white-space: nowrap; }
+.gen-time::before { content: '📝 '; }
+.arrow-icon { color: #30363d; font-size: 14px; }
+.pred-target { font-size: 20px; font-weight: 700; color: #f0f6fc; }
+.pred-date-tag { font-size: 13px; color: #58a6ff; background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.25); border-radius: 6px; padding: 3px 10px; margin-left: 6px; }
+
 .latest-card .date { font-size: 13px; color: #8b949e; margin-bottom: 16px; }
 .latest-card .summary { font-size: 14px; color: #e1e4e8; line-height: 1.8; margin-bottom: 18px; }
 .latest-card .stocks { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
-.latest-card .stock-tag { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 6px 14px; font-size: 13px; color: #58a6ff; }
-.latest-card .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.stock-tag { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 6px 14px; font-size: 13px; color: #58a6ff; }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
 .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; transition: all .2s; }
 .btn-primary { background: linear-gradient(135deg, #f0883e, #e04040); color: #fff; }
 .btn-primary:hover { opacity: .85; }
@@ -38,15 +46,20 @@ body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft
 .history-list { display: flex; flex-direction: column; gap: 10px; }
 .history-item { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 16px 20px; display: flex; align-items: center; gap: 14px; text-decoration: none; color: #e1e4e8; transition: all .2s; }
 .history-item:hover { border-color: #f0883e; background: #1c2128; }
-.history-item .day { font-size: 13px; color: #8b949e; white-space: nowrap; min-width: 80px; }
-.history-item .title { flex: 1; font-size: 15px; font-weight: 600; }
+/* 历史项左侧：生成时间 */
+.history-item .gen-badge {
+  font-size: 12px; color: #8b949e;
+  background: #21262d; border: 1px solid #30363d;
+  border-radius: 6px; padding: 4px 10px;
+  white-space: nowrap;
+}
+/* 箭头 */
+.history-item .arr { color: #30363d; font-size: 14px; }
+/* 预测目标 */
+.history-item .pred-title { flex: 1; font-size: 15px; font-weight: 600; }
+.history-item .pred-title .wkday { color: #58a6ff; font-weight: 400; font-size: 13px; margin-left: 4px; }
 .history-item .arrow { color: #30363d; font-size: 18px; transition: color .2s; }
 .history-item:hover .arrow { color: #f0883e; }
-
-/* 空状态 */
-.empty-state { text-align: center; padding: 60px 20px; color: #484f58; }
-.empty-state .icon { font-size: 48px; margin-bottom: 16px; }
-.empty-state p { font-size: 14px; }
 
 .footer { text-align: center; padding: 30px 20px; border-top: 1px solid #21262d; color: #484f58; font-size: 12px; }
 .footer a { color: #58a6ff; text-decoration: none; }
@@ -63,13 +76,17 @@ body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft
 
 <div class="container">
 
-  <div class="section-label">今日预测</div>
+  <div class="section-label">最新一期</div>
 
   <div class="latest-card">
-    <h2>🔥 2026年6月16日（周二）预测</h2>
-    <div class="date">📅 数据截止：2026-06-15 收盘 &nbsp;|&nbsp; 生成时间：2026-06-15 20:44</div>
+    <div class="title-row">
+      <span class="gen-time">06-15 生成</span>
+      <span class="arrow-icon">→</span>
+      <span class="pred-target">6月16日<span class="pred-date-tag">周二</span></span>
+    </div>
+    <div class="date">📊 数据截止：2026-06-15 收盘 &nbsp;|&nbsp; 生成时间：20:44</div>
     <div class="summary">
-      今日沪指<b style="color:#f85149">+1.61%</b>逼近4100点，创业板指<b style="color:#f85149">+5.30%</b>创11年新高，美伊协议达成提振全球风险偏好。MLCC/电子布/半导体/CPO/PCB 五大板块集体爆发，100+个股涨停。
+      沪指<b style="color:#f85149">+1.61%</b>逼近4100点，创业板指<b style="color:#f85149">+5.30%</b>创11年新高。美伊协议达成提振全球风险偏好，MLCC/电子布/半导体/CPO/PCB 五大板块集体爆发，100+个股涨停。
     </div>
     <div class="stocks">
       <span class="stock-tag">🥇 东山精密 (sz002384)</span>
@@ -84,27 +101,31 @@ body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft
     </div>
   </div>
 
-  <div class="section-label">历史预测</div>
+  <div class="section-label">往期记录</div>
 
   <div class="history-list">
     <a class="history-item" href="涨停预测-20260615.html">
-      <span class="day">06/15 (周一)</span>
-      <span class="title">6月15日涨停预测 · 5强精选</span>
+      <span class="gen-badge">06-14 生成</span>
+      <span class="arr">→</span>
+      <span class="pred-title">6月15日<span class="wkday">(周一)</span> · 5强精选</span>
       <span class="arrow">→</span>
     </a>
     <a class="history-item" href="涨停预测-20260613.html">
-      <span class="day">06/13 (周六)</span>
-      <span class="title">6月13日涨停预测 · 每日涨停潜力股精选</span>
+      <span class="gen-badge">06-12 生成</span>
+      <span class="arr">→</span>
+      <span class="pred-title">6月13日<span class="wkday">(周六)</span> · 涨停潜力股精选</span>
       <span class="arrow">→</span>
     </a>
     <a class="history-item" href="涨停预测-20260611.html">
-      <span class="day">06/11 (周四)</span>
-      <span class="title">明日涨停预测 · 2026年6月11日盘后分析</span>
+      <span class="gen-badge">06-10 生成</span>
+      <span class="arr">→</span>
+      <span class="pred-title">6月11日<span class="wkday">(周四)</span> · 盘后分析</span>
       <span class="arrow">→</span>
     </a>
     <a class="history-item" href="涨停预测-20260610.html">
-      <span class="day">06/10 (周三)</span>
-      <span class="title">涨停预测日报 · 2026年6月10日</span>
+      <span class="gen-badge">06-09 生成</span>
+      <span class="arr">→</span>
+      <span class="pred-title">6月10日<span class="wkday">(周三)</span> · 涨停预测日报</span>
       <span class="arrow">→</span>
     </a>
   </div>
@@ -112,7 +133,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft
 </div>
 
 <div class="footer">
-  <p>📊 数据来源：腾讯自选股 · 龙虎榜 · 通达信 &nbsp;|&nbsp; ⏰ 每日 20:00 自动生成</p>
+  <p>📊 数据来源：腾讯自选股 · 龙虎榜 · 通达信 &nbsp;|&nbsp; ⏰ 每个交易日 20:00 自动生成</p>
   <p style="color:#f85149; margin-top:8px;">⚠️ 以上内容由AI基于公开信息整理生成，仅供参考，不构成任何投资建议。投资有风险，决策需谨慎。</p>
   <p style="margin-top:8px;"><a href="https://github.com/zazzzf/AStockEveryDay" target="_blank">GitHub →</a></p>
 </div>
