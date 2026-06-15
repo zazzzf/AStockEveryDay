@@ -89,6 +89,7 @@ const tagClr = t => {
   if (t==='lhb') return 'bg-[#c96442]/8 text-[#c96442] border-[#c96442]/15';
   return 'bg-[#5a9e6b]/8 text-[#5a9e6b] border-[#5a9e6b]/15';
 };
+const baiduUrl = c => `https://finance.baidu.com/stock/${c.replace(/^(sz|sh|bj)/,'')}.html`;
 
 // ==================== HOME PAGE ====================
 function home() {
@@ -125,11 +126,11 @@ function home() {
     </div>
 
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 mb-7">${latest.topStocks.map((n,i)=>`
-      <a href="#${latest.id.slice(4)}" class="flex items-center gap-1.5 bg-parchment border border-border-cream rounded-xl px-3 py-2.5 text-sm hover:border-terracotta/30 hover:bg-terracotta/[0.03] transition-warm">
-        <span class="inline-flex items-center justify-center w-5 h-5 rounded-lg ${i===0?'bg-terracotta text-ivory':i===1?'bg-stone-gray text-ivory':i===2?'bg-warn-amber text-ivory':'bg-warm-sand text-stone-gray'} text-[11px] font-bold font-sans">${i+1}</span>
-        <span class="font-semibold text-near-black font-sans">${n}</span>
+      <div class="flex items-center gap-1.5 bg-parchment border border-border-cream rounded-xl px-3 py-2.5 text-sm hover:border-terracotta/30 transition-warm">
+        <a href="#${latest.id.slice(4)}" class="inline-flex items-center justify-center w-5 h-5 rounded-lg shrink-0 ${i===0?'bg-terracotta text-ivory':i===1?'bg-stone-gray text-ivory':i===2?'bg-warn-amber text-ivory':'bg-warm-sand text-stone-gray'} text-[11px] font-bold font-sans">${i+1}</a>
+        <a href="${baiduUrl(latest.topCodes[i])}" target="_blank" class="font-semibold text-near-black font-sans hover:text-terracotta transition-warm" title="百度行情">${n}</a>
         <span class="text-[10px] text-stone-gray font-mono ml-auto">${latest.topCodes[i]}</span>
-      </a>`).join('')}</div>
+      </div>`).join('')}</div>
 
     <div class="flex gap-3 flex-wrap">
       <a href="#${latest.id.slice(4)}" class="inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-xl text-sm font-sans font-medium bg-terracotta text-ivory ring-terracotta hover:opacity-90 transition-warm">查看完整报告 →</a>
@@ -241,7 +242,7 @@ function renderStockCard(s) {
   return `<div class="bg-ivory border border-border-cream rounded-2xl p-5 sm:p-6 mb-5 whisper hover:border-terracotta/20 transition-warm">
     <div class="flex items-center gap-3 mb-5 flex-wrap">
       <span class="inline-flex items-center justify-center w-8 h-8 rounded-xl ${rankBadge(s.rank)} font-bold text-sm font-sans">${s.rank}</span>
-      <span class="text-xl font-serif font-normal text-near-black">${s.name}</span>
+      <span class="text-xl font-serif font-normal text-near-black"><a href="${baiduUrl(s.code)}" target="_blank" class="hover:text-terracotta transition-warm" title="百度行情">${s.name}</a></span>
       <span class="text-sm text-stone-gray font-mono">${s.code}</span>
       ${tags.map(t=>`<span class="inline-flex items-center gap-1 text-[11px] font-sans font-medium px-2.5 py-1 rounded-full border ${tagClr(t.type)}">${t.text}</span>`).join('')}
     </div>
