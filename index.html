@@ -4,122 +4,225 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A股每日涨停预测 · Stock Partner</title>
-<link rel="stylesheet" href="assets/style.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: { extend: { colors: {
+    accent:'#f0883e',blue:'#58a6ff',red:'#f85149',green:'#3fb950',yellow:'#d29922',
+    body:'#0a0e17',card:'#111827',elevated:'#0d1117',border:'#21262d',
+    'text-primary':'#e6edf3','text-secondary':'#8b949e','text-muted':'#484f58'
+  }}}
+}
+</script>
+<style>
+  .gradient-text{background:linear-gradient(135deg,#f0883e,#ff6b35);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% auto;}
+  .score-fill{height:100%;border-radius:3px;}
+  .hl{color:#58a6ff;font-weight:600;}.wn{color:#d29922;font-weight:600;}
+  .gn{color:#3fb950;font-weight:600;}.ac{color:#f0883e;}
+  .bl{color:#58a6ff;font-weight:600;}
+  .timeline::before{content:'';position:absolute;left:5px;top:4px;bottom:4px;width:2px;background:#21262d;}
+  .timeline-dot::before{content:'';position:absolute;left:-19px;top:6px;width:10px;height:10px;border-radius:50%;background:#f0883e;border:2px solid #0a0e17;box-shadow:0 0 0 2px #f0883e;}
+  .latest-ribbon{position:absolute;top:18px;right:-30px;background:#f0883e;color:#0a0e17;font-size:10px;font-weight:800;letter-spacing:1px;padding:5px 38px;transform:rotate(35deg);pointer-events:none;}
+  #loading{display:flex;align-items:center;justify-content:center;min-height:60vh;}
+  .spinner{width:40px;height:40px;border:3px solid #21262d;border-top-color:#f0883e;border-radius:50%;animation:spin .8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+</style>
 </head>
-<body>
+<body class="bg-[#0a0e17] text-[#e6edf3] font-sans antialiased min-h-screen">
 
-<!-- ============ Header ============ -->
-<div class="site-header">
-  <div class="header-brand">
-    <span class="brand-icon">S</span>
-    Stock Partner
+<div id="app"><!-- SPA renders here --></div>
+
+<script>
+// ==================== APP STATE & ROUTER ====================
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+let predictionsIndex = [];
+
+function route() {
+  const hash = location.hash.replace('#','');
+  if (!hash || hash === 'home') return home();
+  const pred = predictionsIndex.find(p => p.id.endsWith(hash) || p.id === hash);
+  if (pred) return loadPrediction(pred.id);
+  home();
+}
+
+// ==================== HELPERS ====================
+const scoreGrad = s => s >= 95 ? 'linear-gradient(90deg,#3fb950,#f0883e)' : s >= 88 ? 'linear-gradient(90deg,#f0c040,#f0883e)' : 'linear-gradient(90deg,#f0c040,#58a6ff)';
+const rankClr = r => r===1 ? 'from-[#f0883e] to-[#ff6b35] text-white shadow-[0_2px_8px_rgba(240,136,62,0.3)]' : r===2 ? 'from-[#b0b0b0] to-[#8a8a8a] text-[#0a0e17]' : r===3 ? 'from-[#cd7f32] to-[#a06828] text-white' : 'bg-[#21262d] text-[#8b949e]';
+const tagClr = t => t==='concept' ? 'bg-[#58a6ff]/10 text-[#58a6ff] border-[#58a6ff]/15' : t==='lhb' ? 'bg-[#f0883e]/10 text-[#f0883e] border-[#f0883e]/15' : 'bg-[#3fb950]/10 text-[#3fb950] border-[#3fb950]/15';
+
+// ==================== HOME PAGE ====================
+function home() {
+  const latest = predictionsIndex[0];
+  const history = predictionsIndex.slice(1);
+  $('#app').innerHTML = `
+<div class="bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,rgba(240,136,62,0.04),transparent_70%)] bg-gradient-to-b from-[#0d1117]/98 to-[#0a0e17] border-b border-[#21262d] py-10 px-4 text-center relative after:content-[''] after:absolute after:-bottom-px after:left-1/2 after:-translate-x-1/2 after:w-[120px] after:h-0.5 after:bg-[#f0883e] after:rounded-sm">
+  <div class="inline-flex items-center gap-2.5 text-xs text-[#484f58] tracking-[3px] uppercase mb-5 select-none">
+    <span class="w-[30px] h-[30px] bg-gradient-to-br from-[#f0883e] to-[#e04040] rounded-lg inline-flex items-center justify-center text-[15px] text-white font-extrabold">S</span> Stock Partner
   </div>
-  <h1>A股每日涨停预测</h1>
-  <p class="desc">基于热门股、资金流向、龙虎榜、热门概念多维数据，每日筛选最具涨停潜力的5只个股</p>
-  <div class="header-meta">
-    <span class="badge badge-accent">⚡ 自动更新 · 每个交易日 20:00</span>
+  <h1 class="text-2xl sm:text-3xl font-extrabold gradient-text mb-4">A股每日涨停预测</h1>
+  <p class="text-sm text-[#8b949e] max-w-md mx-auto leading-relaxed">基于热门股、资金流向、龙虎榜、热门概念多维数据，每日筛选最具涨停潜力的5只个股</p>
+  <div class="flex items-center justify-center gap-3 mt-5 flex-wrap">
+    <span class="inline-flex items-center gap-1 text-xs text-[#f0883e] bg-[#f0883e]/10 border border-[#f0883e]/20 rounded-full px-3.5 py-1">⚡ 自动更新 · 每个交易日 20:00</span>
   </div>
 </div>
-
-<!-- ============ Body ============ -->
-<div class="container">
-
-  <!-- 最新一期 -->
-  <div class="section-divider">
-    <span class="label">最新一期</span>
-    <span class="line"></span>
-  </div>
-
-  <div class="latest-card">
-    <div class="title-block">
-      <div class="title-row">
-        <span class="gen-label">📝 06-15 生成</span>
-        <span class="arrow-sep">→</span>
-        <span class="pred-heading">
-          6月16日 <span class="pred-weekday">周二</span>
-        </span>
-      </div>
-    </div>
-
-    <div class="market-summary-brief">
-      沪指 <b>+1.61%</b> 逼近4100点，创业板指 <b>+5.30%</b> 创11年新高。美伊协议达成提振全球风险偏好，MLCC / 电子布 / 半导体 / CPO / PCB 五大板块集体爆发，100+ 个股涨停。
-    </div>
-
-    <div class="stock-grid">
-      <a class="stock-chip" href="涨停预测-20260616.html">
-        <span class="rank r1">1</span>
-        <span class="name">东山精密</span>
-        <span class="code">002384</span>
-      </a>
-      <a class="stock-chip" href="涨停预测-20260616.html">
-        <span class="rank r2">2</span>
-        <span class="name">风华高科</span>
-        <span class="code">000636</span>
-      </a>
-      <a class="stock-chip" href="涨停预测-20260616.html">
-        <span class="rank r3">3</span>
-        <span class="name">太辰光</span>
-        <span class="code">300570</span>
-      </a>
-      <a class="stock-chip" href="涨停预测-20260616.html">
-        <span class="rank r4">4</span>
-        <span class="name">云南锗业</span>
-        <span class="code">002428</span>
-      </a>
-      <a class="stock-chip" href="涨停预测-20260616.html">
-        <span class="rank r5">5</span>
-        <span class="name">生益科技</span>
-        <span class="code">600183</span>
-      </a>
-    </div>
-
-    <div class="action-row">
-      <a class="btn btn-primary" href="涨停预测-20260616.html">查看完整报告 →</a>
-      <a class="btn btn-ghost" href="https://github.com/zazzzf/AStockEveryDay" target="_blank">GitHub 仓库</a>
+<div class="max-w-3xl mx-auto px-4 py-8 pb-20">
+  <div class="flex items-center gap-3 my-8"><span class="text-[11px] font-bold tracking-[1.5px] uppercase text-[#484f58] whitespace-nowrap select-none">最新一期</span><div class="flex-1 h-px bg-gradient-to-r from-[#21262d] to-transparent"></div></div>
+  <div class="bg-[#111827] border border-[#f0883e] rounded-2xl p-6 sm:p-8 relative overflow-hidden shadow-[0_0_20px_rgba(240,136,62,0.08)]">
+    <div class="latest-ribbon">LATEST</div>
+    <div class="mb-5"><div class="flex items-center gap-3 flex-wrap mb-3">
+      <span class="inline-flex items-center gap-1 text-xs text-[#484f58] bg-[#0d1117] border border-[#21262d] rounded-full px-3 py-1 whitespace-nowrap">📝 ${latest.generated} 生成</span>
+      <span class="text-[#21262d] text-base font-light">→</span>
+      <span class="text-lg sm:text-xl font-bold text-[#e6edf3] inline-flex items-center gap-2">${latest.date.slice(5)} <span class="text-xs font-medium text-[#58a6ff] bg-[#58a6ff]/10 border border-[#58a6ff]/20 rounded-full px-2.5 py-1">${latest.weekday}</span></span>
+    </div></div>
+    <p class="text-sm text-[#8b949e] leading-relaxed mb-5 pb-5 border-b border-[#21262d]">${latest.title} · ${latest.summary}</p>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 mb-6">${latest.topStocks.map((n,i)=>`
+      <a href="#${latest.id.slice(4)}" class="flex items-center gap-1.5 bg-[#0d1117] border border-[#21262d] rounded-lg px-3 py-2.5 text-sm hover:border-[#58a6ff] hover:bg-[#58a6ff]/10 transition-all">
+        <span class="inline-flex items-center justify-center w-5 h-5 rounded ${i===0?'bg-gradient-to-br from-[#f0883e] to-[#ff6b35] text-white':i===1?'bg-[#8b949e] text-[#0a0e17]':i===2?'bg-[#cd7f32] text-white':'bg-[#21262d] text-[#8b949e]'} text-[11px] font-extrabold">${i+1}</span>
+        <span class="font-semibold text-[#e6edf3]">${n}</span>
+        <span class="text-[11px] text-[#484f58] font-mono">${latest.topCodes[i]}</span>
+      </a>`).join('')}</div>
+    <div class="flex gap-3 flex-wrap">
+      <a href="#${latest.id.slice(4)}" class="inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-lg text-sm font-semibold bg-gradient-to-br from-[#f0883e] to-[#e04040] text-white shadow-[0_2px_12px_rgba(240,136,62,0.22)] hover:shadow-[0_4px_20px_rgba(240,136,62,0.38)] hover:-translate-y-0.5 transition-all">查看完整报告 →</a>
+      <a href="https://github.com/zazzzf/AStockEveryDay" target="_blank" class="inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-lg text-sm font-semibold bg-[#0d1117] text-[#8b949e] border border-[#21262d] hover:border-[#58a6ff] hover:text-[#58a6ff] transition-all">GitHub 仓库</a>
     </div>
   </div>
-
-  <!-- 往期记录 -->
-  <div class="section-divider">
-    <span class="label">往期记录</span>
-    <span class="line"></span>
-  </div>
-
-  <div class="history-list">
-    <a class="history-item" href="涨停预测-20260615.html">
-      <span class="hi-gen">📝 06-14 生成</span>
-      <span class="hi-arrow">→</span>
-      <span class="hi-title">6月15日 <span class="hi-wkday">周一</span> · 5强精选</span>
-      <span class="hi-go">→</span>
-    </a>
-    <a class="history-item" href="涨停预测-20260613.html">
-      <span class="hi-gen">📝 06-12 生成</span>
-      <span class="hi-arrow">→</span>
-      <span class="hi-title">6月13日 <span class="hi-wkday">周六</span> · 涨停潜力股精选</span>
-      <span class="hi-go">→</span>
-    </a>
-    <a class="history-item" href="涨停预测-20260611.html">
-      <span class="hi-gen">📝 06-10 生成</span>
-      <span class="hi-arrow">→</span>
-      <span class="hi-title">6月11日 <span class="hi-wkday">周四</span> · 盘后分析</span>
-      <span class="hi-go">→</span>
-    </a>
-    <a class="history-item" href="涨停预测-20260610.html">
-      <span class="hi-gen">📝 06-09 生成</span>
-      <span class="hi-arrow">→</span>
-      <span class="hi-title">6月10日 <span class="hi-wkday">周三</span> · 涨停预测日报</span>
-      <span class="hi-go">→</span>
-    </a>
-  </div>
-
+  ${history.length ? `
+  <div class="flex items-center gap-3 my-8"><span class="text-[11px] font-bold tracking-[1.5px] uppercase text-[#484f58] whitespace-nowrap select-none">往期记录</span><div class="flex-1 h-px bg-gradient-to-r from-[#21262d] to-transparent"></div></div>
+  <div class="flex flex-col gap-3">${history.map(h=>`
+    <a href="#${h.id.slice(4)}" class="flex items-center gap-4 bg-[#111827] border border-[#21262d] rounded-lg px-5 py-3.5 transition-all hover:border-[#f0883e]/30 hover:bg-[#1a2236] hover:translate-x-[3px] relative overflow-hidden group">
+      <span class="text-[11px] text-[#484f58] bg-[#0d1117] border border-[#21262d] rounded-full px-2.5 py-1 whitespace-nowrap shrink-0">📝 ${h.generated} 生成</span>
+      <span class="text-[#21262d] text-sm shrink-0 group-hover:text-[#f0883e] transition-colors">→</span>
+      <span class="flex-1 text-sm font-semibold text-[#e6edf3] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">${h.date.slice(5)} <span class="text-[#58a6ff] font-normal text-xs ml-1">${h.weekday}</span> · ${h.title}</span>
+      <span class="text-[#21262d] text-base shrink-0 group-hover:text-[#f0883e] group-hover:translate-x-[3px] transition-all">→</span>
+    </a>`).join('')}</div>`:''}
 </div>
-
-<!-- ============ Footer ============ -->
-<div class="site-footer">
+<div class="text-center py-10 px-4 border-t border-[#21262d] text-xs text-[#484f58] leading-relaxed">
   <p>数据来源：腾讯自选股 · 龙虎榜 · 通达信 &nbsp;|&nbsp; 每个交易日 20:00 自动生成</p>
-  <p class="disclaimer">⚠️ 以上内容由 AI 基于公开信息整理生成，仅供参考，不构成任何投资建议。投资有风险，决策需谨慎。</p>
-  <p style="margin-top:12px;"><a href="https://github.com/zazzzf/AStockEveryDay" target="_blank">查看 GitHub 仓库 →</a></p>
-</div>
+  <p class="text-[#f85149] opacity-80 mt-3">⚠️ 以上内容由 AI 基于公开信息整理生成，仅供参考，不构成任何投资建议。</p>
+  <p class="mt-3"><a href="https://github.com/zazzzf/AStockEveryDay" target="_blank" class="text-[#58a6ff] hover:text-[#79b8ff]">查看 GitHub 仓库 →</a></p>
+</div>`;
+}
 
+// ==================== PREDICTION PAGE ====================
+async function loadPrediction(id) {
+  $('#app').innerHTML = `<div id="loading"><div class="spinner"></div></div>`;
+  window.scrollTo(0,0);
+  try {
+    const res = await fetch(`data/${id}.json`);
+    if (!res.ok) throw new Error('Not found');
+    const d = await res.json();
+    renderPrediction(d);
+  } catch(e) {
+    $('#app').innerHTML = `<div class="max-w-3xl mx-auto px-4 py-20 text-center"><p class="text-[#8b949e]">数据加载失败</p><a href="#home" class="text-[#58a6ff] mt-4 inline-block">← 返回首页</a></div>`;
+  }
+}
+
+function renderPrediction(d) {
+  const stocks = d.stocks || [];
+  const hasConcepts = d.hotConcepts && d.hotConcepts.length > 0;
+  const hasFiveDay = d.fiveDayConcepts && d.fiveDayConcepts.length > 0;
+  const hasTimeline = d.auctionTimeline && d.auctionTimeline.length > 0;
+  const hasSummary = d.summaryTable && d.summaryTable.rows && d.summaryTable.rows.length > 0;
+
+  $('#app').innerHTML = `
+<div class="max-w-3xl mx-auto px-4 py-8 pb-20">
+  <a href="#home" class="inline-flex items-center gap-1 text-sm text-[#484f58] hover:text-[#58a6ff] mb-4 transition-colors">← 返回首页</a>
+
+  <!-- HEADER -->
+  <div class="text-center pb-8 mb-8 border-b border-[#21262d] relative after:content-[''] after:absolute after:-bottom-px after:left-1/2 after:-translate-x-1/2 after:w-[100px] after:h-0.5 after:bg-[#f0883e] after:rounded-sm">
+    <h1 class="text-2xl sm:text-3xl font-extrabold gradient-text mb-3">${d.title||'涨停预测'}</h1>
+    <p class="text-sm text-[#8b949e] max-w-lg mx-auto mb-4 leading-relaxed">${d.subtitle||''}</p>
+    <div class="flex justify-center gap-3 flex-wrap">
+      <span class="inline-flex items-center gap-1 text-xs text-[#f0883e] bg-[#f0883e]/10 border border-[#f0883e]/20 rounded-full px-3 py-1">📅 预测日期：${d.date}（${d.weekday}）| 数据截止：${d.generated}生成</span>
+    </div>
+  </div>
+
+  ${d.macroAlert ? `<div class="bg-[#f85149]/5 border border-[#f85149]/15 rounded-lg p-5 mb-6"><strong class="text-[#f85149]">${d.macroAlert}</strong></div>`:''}
+
+  <!-- MARKET SNAPSHOT -->
+  ${renderMarketSnapshot(d)}
+
+  ${d.themeOverview ? `<div class="bg-[#111827] border border-[#21262d] rounded-lg p-5 mb-6 text-sm text-[#8b949e] leading-relaxed">${d.themeOverview}</div>`:''}
+
+  <!-- HOT CONCEPTS -->
+  ${hasConcepts ? `<h2 class="text-lg font-bold text-[#e6edf3] mb-4 flex items-center gap-2">🔥 热门概念</h2><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-6">${d.hotConcepts.map(c=>`<div class="bg-[#0d1117] border border-[#21262d] rounded-lg p-2.5 text-sm"><span class="text-[#f0883e]">#${c.rank}</span> ${c.name} <span class="${(c.change.startsWith('+')||c.change.includes('涨停'))?'text-[#f85149]':'text-[#3fb950]'} float-right">${c.change}</span>${c.note?`<span class="text-xs text-[#484f58] block">${c.note}</span>`:''}</div>`).join('')}</div>`:''}
+
+  ${hasFiveDay ? `<h2 class="text-lg font-bold text-[#e6edf3] mb-4 flex items-center gap-2">📈 5日最强概念</h2><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 mb-6">${d.fiveDayConcepts.map(c=>`<div class="bg-[#0d1117] border ${c.rank<=3?'border-[#f85149]/25':'border-[#21262d]'} rounded-lg p-2.5 text-sm">${c.medal?`<span class="${c.medal==='🥇'?'text-[#f0883e]':c.medal==='🥈'?'text-[#c0c0c0]':'text-[#cd7f32]'}">${c.medal}</span> `:`<span class="text-[#484f58]">#${c.rank}</span> `}${c.name} <span class="text-[#f85149] float-right">${c.change}</span></div>`).join('')}</div>`:''}
+
+  <!-- STOCK CARDS -->
+  <h2 class="text-lg font-bold text-[#e6edf3] mb-5 flex items-center gap-2">🎯 涨停预测 · 5强个股</h2>
+  ${stocks.map(s=>renderStockCard(s)).join('')}
+
+  <!-- SUMMARY TABLE -->
+  ${hasSummary ? `<h2 class="text-lg font-bold text-[#e6edf3] mb-4 flex items-center gap-2">📋 汇总对比</h2><div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-[13px]"><thead><tr>${d.summaryTable.headers.map(h=>`<th class="bg-[#0d1117] text-[#f0883e] px-3 py-2.5 text-left font-bold text-xs uppercase tracking-wider border border-[#21262d] whitespace-nowrap">${h}</th>`).join('')}</tr></thead><tbody>${d.summaryTable.rows.map((r,i)=>`<tr class="even:bg-[#0d1117]/40 hover:bg-[#f0883e]/5">${r.map(c=>`<td class="px-3 py-2.5 border border-[#21262d] text-[#8b949e] text-center">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:''}
+
+  <!-- AUCTION TIMELINE -->
+  ${hasTimeline ? `<div class="bg-[#58a6ff]/5 border border-[#58a6ff]/15 rounded-lg p-5 mb-6"><h3 class="text-[15px] font-bold text-[#58a6ff] mb-4">⏰ 明日竞价统一观察框架（9:15-9:25）</h3><div class="timeline relative pl-6 my-4">${d.auctionTimeline.map(t=>`<div class="timeline-dot relative mb-4 pl-5"><div class="text-[11px] text-[#484f58] font-mono font-semibold">${t.time}</div><div class="text-[13px] text-[#8b949e] leading-relaxed mt-0.5">${t.desc}</div></div>`).join('')}</div></div>`:''}
+
+  <!-- RISK -->
+  ${d.riskItems && d.riskItems.length ? `<div class="bg-[#f85149]/5 border border-[#f85149]/15 rounded-lg p-6 mb-6"><h3 class="text-[15px] font-bold text-[#f85149] mb-4 flex items-center gap-1.5">⚠️ 风险提示与风控纪律</h3><ul class="list-none space-y-2">${d.riskItems.map(r=>`<li class="text-[13px] text-[#8b949e] leading-relaxed pl-5 relative before:content-['⚠'] before:absolute before:left-0 before:text-[#d29922] before:text-xs border-b border-[#f85149]/5 pb-2">${r}</li>`).join('')}</ul></div>`:''}
+
+  <!-- FOOTER -->
+  ${d.footer ? `<div class="text-center pt-10 border-t border-[#21262d] text-xs text-[#484f58] leading-relaxed"><p>📊 数据来源：${d.footer.source} | ⏰ 生成时间：${d.footer.time}</p><p class="text-[#f85149] opacity-80 mt-3">⚠️ 以上内容由AI基于公开信息整理生成，仅供参考，不构成任何投资建议。</p><p class="mt-2"><a href="https://github.com/zazzzf/AStockEveryDay" target="_blank" class="text-[#58a6ff] hover:text-[#79b8ff]">View on GitHub</a></p></div>`:''}
+</div>`;
+}
+
+function renderMarketSnapshot(d) {
+  if (!d.marketSnapshot || !d.marketSnapshot.indices) return '';
+  const idx = d.marketSnapshot.indices;
+  return `<div class="bg-gradient-to-br from-[#111827]/95 to-[#162333]/90 border border-[#21262d] rounded-2xl p-6 mb-6 relative overflow-hidden">
+    <div class="absolute top-[-50%] right-[-20%] w-[400px] h-[400px] bg-[radial-gradient(circle,rgba(240,136,62,0.04),transparent_70%)] pointer-events-none"></div>
+    <h2 class="text-[15px] font-bold text-[#f0883e] mb-5 flex items-center gap-2 relative">📊 今日市场全景</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 relative">${idx.map(i=>`
+      <div class="bg-[#0d1117] border border-[#21262d] rounded-lg p-3 text-center hover:border-[#58a6ff]/25 transition-colors">
+        <div class="text-[11px] text-[#484f58] uppercase tracking-wide">${i.label}</div>
+        <div class="text-lg font-bold ${i.isUp?'text-[#f85149]':'text-[#3fb950]'} tabular-nums">${i.value}</div>
+        ${i.change?`<div class="text-xs ${i.isUp?'text-[#f85149]':'text-[#8b949e]'}">${i.change}</div>`:''}
+      </div>`).join('')}</div></div>`;
+}
+
+function renderStockCard(s) {
+  const metrics = s.metrics || [];
+  const tags = s.tags || [];
+  return `<div class="bg-[#111827] border border-[#21262d] rounded-2xl p-5 sm:p-6 mb-5 hover:border-[#f0883e]/30 hover:shadow-[0_0_20px_rgba(240,136,62,0.08)] transition-all">
+    <div class="flex items-center gap-3 mb-4 flex-wrap">
+      <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br ${rankClr(s.rank)} font-extrabold text-sm">${s.rank}</span>
+      <span class="text-xl font-bold text-[#e6edf3]">${s.name}</span>
+      <span class="text-sm text-[#484f58] font-mono">${s.code}</span>
+      ${tags.map(t=>`<span class="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-full ${tagClr(t.type)}">${t.text}</span>`).join('')}
+    </div>
+    <div class="flex items-center gap-3 mb-4">
+      <span class="text-[11px] text-[#484f58] whitespace-nowrap">涨停概率评分</span>
+      <div class="flex-1 h-1.5 bg-[#21262d] rounded-full overflow-hidden"><div class="score-fill" style="width:${s.score}%;background:${scoreGrad(s.score)}"></div></div>
+      <span class="text-sm font-extrabold text-[#f0883e] min-w-[28px] text-right">${s.score}</span>
+    </div>
+    <div class="flex items-baseline gap-4 mb-4 flex-wrap">
+      <span class="text-2xl sm:text-[28px] font-extrabold text-[#f85149] tabular-nums">${s.price}</span>
+      <span class="text-base font-semibold text-[#f85149]">${s.change}</span>
+      ${s.limitStatus?`<span class="text-xs text-[#484f58] bg-[#0d1117] px-3 py-1 rounded-full border border-[#21262d]">${s.limitStatus}</span>`:''}
+    </div>
+    ${metrics.length ? `<div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5">${metrics.map(m=>`<div class="bg-[#0d1117] border border-[#21262d] rounded-lg p-2.5"><div class="text-[11px] text-[#484f58] uppercase tracking-wide">${m.label}</div><div class="text-[15px] font-semibold ${m.highlight?'text-[#f85149]':'text-[#e6edf3]'}">${m.value}</div></div>`).join('')}</div>`:''}
+    <div class="space-y-3">
+      ${s.coreLogic?`<div class="bg-[#0d1117] border-l-[3px] border-[#58a6ff] border border-[#21262d] rounded-lg p-4"><h4 class="text-sm font-bold text-[#58a6ff] mb-2">📊 核心逻辑</h4><p class="text-sm text-[#8b949e] leading-relaxed">${s.coreLogic}</p></div>`:''}
+      ${s.auctionExpect?`<div class="bg-gradient-to-br from-[#1a1f2e]/60 to-[#111827] border border-[#f0883e]/25 rounded-lg p-5"><h4 class="text-sm font-bold text-[#f0883e] mb-3 flex items-center gap-1.5">🔔 明日竞价预期</h4><p class="text-sm text-[#8b949e] leading-relaxed">${s.auctionExpect}</p></div>`:''}
+      ${s.entryCondition?`<div class="bg-gradient-to-br from-[#162316]/40 to-[#111827] border border-[#3fb950]/25 rounded-lg p-5"><h4 class="text-sm font-bold text-[#3fb950] mb-3 flex items-center gap-1.5">✅ 建议上车条件</h4><p class="text-sm text-[#8b949e] leading-relaxed">${s.entryCondition}</p></div>`:''}
+    </div>
+  </div>`;
+}
+
+// ==================== INIT ====================
+async function init() {
+  try {
+    const res = await fetch('data/predictions.json');
+    predictionsIndex = await res.json();
+  } catch(e) {
+    predictionsIndex = [];
+  }
+  route();
+  window.addEventListener('hashchange', route);
+}
+init();
+</script>
 </body>
 </html>

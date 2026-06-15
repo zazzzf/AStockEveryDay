@@ -1,0 +1,128 @@
+{
+  "id": "20260616", "date": "2026-06-16", "weekday": "周二",
+  "generated": "06-15 20:44",
+  "title": "🔥 涨停预测 · 明日最强5股",
+  "subtitle": "基于今日热门股、资金流向、龙虎榜、热门概念多维数据交叉筛选",
+  "marketSnapshot": {
+    "indices": [
+      {"label":"上证指数","value":"4096.47","change":"+1.61% ↑","isUp":true},
+      {"label":"创业板指","value":"4033.53","change":"+5.30% ↑","isUp":true},
+      {"label":"深证成指","value":"15531.11","change":"+3.79% ↑","isUp":true},
+      {"label":"涨停家数","value":"100+","change":"超280股涨逾10%","isUp":true},
+      {"label":"最强板块","value":"MLCC","change":"+9.49%","isUp":true},
+      {"label":"核心催化","value":"美伊协议","change":"全球风险偏好↑","isUp":false}
+    ]
+  },
+  "hotConcepts": [
+    {"rank":1,"name":"MLCC","change":"+9.49%"},{"rank":2,"name":"电子布","change":"+9.99%"},
+    {"rank":3,"name":"半导体","change":"+6.08%"},{"rank":4,"name":"元件","change":"+8.97%"},
+    {"rank":5,"name":"PCB概念","change":"+7.75%"},{"rank":6,"name":"通信设备","change":"+7.04%"},
+    {"rank":7,"name":"玻璃玻纤","change":"+9.82%"},{"rank":8,"name":"小金属","change":"+6.13%"},
+    {"rank":9,"name":"CPO","change":"+7.59%"},{"rank":10,"name":"工业金属","change":"+5.15%"}
+  ],
+  "fiveDayConcepts": [
+    {"rank":1,"name":"靶材","change":"+41.77%","medal":"🥇"},
+    {"rank":2,"name":"锗镓概念","change":"+23.66%","medal":"🥈"},
+    {"rank":3,"name":"电子布","change":"+21.83%","medal":"🥉"},
+    {"rank":4,"name":"有色(锡)","change":"+18.23%"},
+    {"rank":5,"name":"钨概念","change":"+17.14%"},
+    {"rank":6,"name":"钼概念","change":"+14.88%"},
+    {"rank":7,"name":"大硅片","change":"+14.09%"},
+    {"rank":8,"name":"半导体材料","change":"+13.77%"},
+    {"rank":9,"name":"PCB概念","change":"+10.89%"},
+    {"rank":10,"name":"铜概念","change":"+9.30%"}
+  ],
+  "stocks": [
+    {
+      "rank":1,"name":"东山精密","code":"sz002384","score":96,
+      "tags":[{"text":"PCB概念","type":"concept"},{"text":"主力#2全市场","type":"lhb"},{"text":"首板","type":"board"}],
+      "price":"239.31","change":"+10.00%","limitStatus":"📈 涨停",
+      "metrics":[
+        {"label":"主力净流入","value":"+35.28亿"},{"label":"超大单净流入","value":"+43.69亿"},
+        {"label":"换手率","value":"6.16%"},{"label":"总市值","value":"4383亿"},
+        {"label":"PE(TTM)","value":"214.85"},{"label":"MACD DIF","value":"8.56","highlight":true}
+      ],
+      "coreLogic":"PCB/FPC龙头+5G+汽车电子三重概念共振。今日主力净流入35.28亿全市场排名第2，超大单43.69亿资金深度介入。PCB概念今日+7.75%，5日+10.89%动量强劲。首板换手仅6.16%惜售明显，机构专用席位大宗交易折价买入。RSI(6)=66.5处于强势但未超买区间。",
+      "auctionExpect":"预期<span class=\"hl\">高开2%-5%</span>（约244-251元区间）。核心观察点：① 竞价量能需大于今日集合竞价量的<span class=\"hl\">1.2倍</span>以上；② 竞价最后一分钟不能出现<span class=\"wn\">大额抛单砸低2%以上</span>；③ 若竞价高开超过7%需谨慎追高，等待开盘回踩确认。",
+      "entryCondition":"① 竞价高开2-5%+竞价量>昨日1.2倍 → <span class=\"gn\">竞价可轻仓上车</span>；② 若高开高走回踩分时均线不破 → <span class=\"gn\">回踩加仓</span>；③ 若开盘30分钟内封板且封单>5亿 → <span class=\"bl\">排板参与</span>；④ <span class=\"ac\">止损线：跌破今日涨停价239.31（即跌破5%以上）必须止损</span>"
+    },
+    {
+      "rank":2,"name":"风华高科","code":"sz000636","score":93,
+      "tags":[{"text":"MLCC龙头","type":"concept"},{"text":"主力#7全市场","type":"lhb"},{"text":"首板","type":"board"}],
+      "price":"65.03","change":"+10.00%","limitStatus":"📈 涨停",
+      "metrics":[
+        {"label":"主力净流入","value":"+16.88亿"},{"label":"超大单净流入","value":"+17.95亿"},
+        {"label":"换手率","value":"12.43%"},{"label":"总市值","value":"752亿"},
+        {"label":"PE(TTM)","value":"244.84"},{"label":"5日涨幅","value":"+17.11%","highlight":true}
+      ],
+      "coreLogic":"MLCC板块今日+9.49%全市场涨幅第一！风华高科是国内MLCC绝对龙头，今日首板涨停。主力净流入16.88亿全市场排名第7。被动元件概念5日+26.11%、20日+58.67%，属于当前最强产业趋势。换手12.43%量价配合合理。",
+      "auctionExpect":"预期<span class=\"hl\">高开3%-6%</span>（约67-69元区间）。MLCC板块热度极高，有望出现<span class=\"hl\">一字板或接近一字板</span>开盘。核心观察：① 若一字板开盘，关注封单金额是否>3亿；② 若非一字板，竞价量需>昨日集合竞价的<span class=\"hl\">1.5倍</span>。",
+      "entryCondition":"① 竞价一字板+封单>3亿 → <span class=\"bl\">排板参与</span>；② 高开3-6%+竞价放量 → <span class=\"gn\">竞价上车半仓</span>；③ 若高开后回踩不破分时均线 → <span class=\"gn\">回踩加仓</span>；④ <span class=\"ac\">止损线：跌破62元必须止损</span>"
+    },
+    {
+      "rank":3,"name":"太辰光","code":"sz300570","score":89,
+      "tags":[{"text":"CPO龙头","type":"concept"},{"text":"机构4席买入","type":"lhb"},{"text":"20cm首板","type":"board"}],
+      "price":"222.10","change":"+20.00%","limitStatus":"🚀 20cm涨停",
+      "metrics":[
+        {"label":"主力净流入","value":"+6.62亿"},{"label":"机构净买入","value":"+2.87亿(4席位)"},
+        {"label":"换手率","value":"15.73%"},{"label":"总市值","value":"504亿"},
+        {"label":"PE(TTM)","value":"176.77"},{"label":"60日涨幅","value":"+95.1%","highlight":true}
+      ],
+      "coreLogic":"CPO概念今日+7.59%，60日+65%为中长期最强主线之一。太辰光今日20cm涨停，龙虎榜机构4席位净买入2.87亿，高胜率席位国泰海通武汉紫阳东路(51.3%胜率)+2.86亿买入。CPO+光通信双概念叠加AI算力需求持续爆发。",
+      "auctionExpect":"预期<span class=\"hl\">高开5%-10%</span>（约233-244元区间）。20cm股波动大，竞价需格外谨慎。核心观察：① 若高开&lt;8%且竞价量>昨日1.3倍 → 强势信号；② 若高开>12%需警惕获利盘涌出；③ <span class=\"wn\">20cm股连板概率低</span>。",
+      "entryCondition":"① 高开5-8%+竞价放量>1.3倍 → <span class=\"gn\">竞价轻仓1/3</span>；② 开盘后若回踩分时均线获得支撑 → <span class=\"gn\">回踩加仓1/3</span>；③ 午后若能封板且封单稳定 → <span class=\"bl\">最后1/3排板</span>；④ <span class=\"ac\">止损线：跌破205元必须止损</span>"
+    },
+    {
+      "rank":4,"name":"云南锗业","code":"sz002428","score":87,
+      "tags":[{"text":"锗镓龙头","type":"concept"},{"text":"机构3天+21亿","type":"lhb"},{"text":"持续强势","type":"board"}],
+      "price":"101.49","change":"+10.00%","limitStatus":"📈 涨停",
+      "metrics":[
+        {"label":"主力净流入","value":"+13.26亿"},{"label":"机构3天净买","value":"+21.14亿(5席位)"},
+        {"label":"换手率","value":"15.04%"},{"label":"总市值","value":"663亿"},
+        {"label":"5日涨幅","value":"+29.06%","highlight":true},{"label":"锗镓概念5日","value":"+23.66%","highlight":true}
+      ],
+      "coreLogic":"锗镓概念5日+23.66%全市场排名第2！云南锗业是锗镓绝对龙头，机构5席位合计净买入21.14亿。今日主力净流入13.26亿。MACD DIF=3.33即将金叉DEA=3.10，RSI(6)=72.6强势但不极端。<span class=\"ac\">风险提示：已连续大涨，5日涨幅29%，短期获利盘压力较大。</span>",
+      "auctionExpect":"预期<span class=\"hl\">高开3%-7%</span>（约104-109元区间）。连续3天强势后可能出现：① <span class=\"hl\">一字板加速</span>（概率约30%）；② <span class=\"hl\">高开震荡</span>（概率约50%）。<span class=\"wn\">若竞价量能萎缩超过30%，警惕短期见顶信号</span>。",
+      "entryCondition":"① <span class=\"ac\">已连续大涨，不建议重仓追高</span>；② 若一字板开盘+封单>5亿 → <span class=\"bl\">排板轻仓</span>；③ 若高开后回踩5%以上获得强力支撑 → <span class=\"gn\">回踩轻仓尝试</span>；④ <span class=\"ac\">止损线：跌破95元必须止损</span>"
+    },
+    {
+      "rank":5,"name":"生益科技","code":"sh600183","score":85,
+      "tags":[{"text":"PCB覆铜板","type":"concept"},{"text":"首板惜售","type":"board"}],
+      "price":"166.41","change":"+10.00%","limitStatus":"📈 涨停",
+      "metrics":[
+        {"label":"换手率","value":"2.26%"},{"label":"总市值","value":"4042亿"},
+        {"label":"PE(TTM)","value":"102.90"},{"label":"20日涨幅","value":"+69.55%","highlight":true},
+        {"label":"60日涨幅","value":"+172.45%","highlight":true},{"label":"52周最高","value":"166.41(今日新高)","highlight":false}
+      ],
+      "coreLogic":"PCB覆铜板(CCL)全球龙头，4000亿市值大盘股首板涨停意义重大。今日换手仅2.26%极度惜售，说明筹码锁定极好。今日创52周新高，突破所有技术阻力。PE 102相对合理。<span class=\"ac\">风险：大盘股连板难度高，更可能走趋势。</span>",
+      "auctionExpect":"预期<span class=\"hl\">高开2%-4%</span>（约169-173元区间）。大盘股不太可能一字板。核心观察：① 竞价量需>昨日<span class=\"hl\">1.5倍</span>；② 高开后若大单持续买入 → 趋势延续信号。",
+      "entryCondition":"① 高开2-4%+竞价放量>1.5倍 → <span class=\"gn\">竞价可轻仓</span>；② 若开盘后稳步推升不破分时均线 → <span class=\"gn\">加仓</span>；③ 大盘股更适合<span class=\"bl\">趋势持有</span>而非博弈连板；④ <span class=\"ac\">止损线：跌破160元减半仓，跌破151元清仓</span>"
+    }
+  ],
+  "summaryTable": {
+    "headers":["排名","股票","代码","概念","主力净流入","评分","竞价预期","风险等级"],
+    "rows":[
+      ["🥇","东山精密","sz002384","PCB/FPC","+35.28亿","96","高开2-5%","中低"],
+      ["🥈","风华高科","sz000636","MLCC","+16.88亿","93","高开3-6%/可能一字","中"],
+      ["🥉","太辰光","sz300570","CPO/光通信","+6.62亿","89","高开5-10%","中高(20cm)"],
+      ["#4","云南锗业","sz002428","锗镓","+13.26亿","87","高开3-7%","高(已涨29%)"],
+      ["#5","生益科技","sh600183","PCB覆铜板","未单独上榜","85","高开2-4%","低(大盘股)"]
+    ]
+  },
+  "auctionTimeline": [
+    {"time":"9:15-9:20","desc":"观察5股竞价量能是否放大（对比昨日集合竞价量），关注是否有大单试盘。此阶段可撤单，价格信号参考价值有限。"},
+    {"time":"9:20-9:25","desc":"<strong>关键5分钟</strong>——不可撤单阶段，价格和量能信号真实。确认竞价方向：若多只票同时被砸低2%+，当日整体情绪可能转弱，考虑减仓或观望。"},
+    {"time":"9:25","desc":"竞价结束，对比实际开盘价与预期区间。若集体低于预期下限，市场情绪偏弱，降低仓位。"},
+    {"time":"9:30-10:00","desc":"开盘30分钟定胜负：若3只及以上在30分钟内封板，当日主线确认，可积极参与；若无一封板，降低预期。"}
+  ],
+  "riskItems": [
+    "<strong>大盘风险：</strong>沪指6连阳逼近4100，创业板单日+5.3%后短期超买，明日可能出现震荡或回调。若上证跌破4050，创业板跌破3950，整体策略转为防守。",
+    "<strong>美伊协议持续性：</strong>今日大涨的核心催化是美伊协议，若出现反复或执行层面问题，市场情绪可能快速逆转。",
+    "<strong>超级央行周：</strong>本周美联储等重要央行议息，北京时间周四凌晨美联储决议可能引发全球波动。",
+    "<strong>板块轮动风险：</strong>MLCC/PCB/CPO今日集体爆发后，明日可能出现分化，后排股追高风险大。",
+    "<strong>仓位纪律：</strong>单票不超过总仓位20%，5只合计不超过70%，保留30%现金应对不确定性。",
+    "<strong>止损铁律：</strong>任何一只跌破建议止损线，必须无条件执行止损，不抱幻想。",
+    "<strong>竞价集体低开：</strong>若3只以上竞价低开，则当日预测失效，全部观望不开仓。"
+  ],
+  "footer":{"source":"腾讯自选股 · 龙虎榜 · 通达信","time":"2026-06-15 20:44"}
+}

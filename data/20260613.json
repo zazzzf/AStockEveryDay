@@ -1,0 +1,111 @@
+{
+  "id":"20260613","date":"2026-06-13","weekday":"周六",
+  "generated":"06-12 21:55",
+  "title":"🔥 6月13日（周五）涨停潜力股精选",
+  "subtitle":"基于今日热门股 · 资金流向 · 热门概念 · 龙虎榜多维度分析 | ⚠️ 仅供研究参考",
+  "marketSnapshot":{"indices":[
+    {"label":"上证指数","value":"4031.51","change":"+1.12%","isUp":true},
+    {"label":"深证成指","value":"14963.41","change":"+0.75%","isUp":true},
+    {"label":"创业板指","value":"3830.35","change":"+0.50%","isUp":true},
+    {"label":"两市成交额","value":"3.21万亿","change":"放量+5300亿","isUp":true},
+    {"label":"上涨家数","value":"3900+","change":"普涨格局","isUp":true},
+    {"label":"市场风格","value":"冲高回落","change":"最高4060后回落","isUp":false}
+  ]},
+  "hotConcepts":[
+    {"rank":1,"name":"工业金属","change":"+5.65%","note":"当日领涨"},
+    {"rank":2,"name":"航空装备","change":"+4.10%"},
+    {"rank":3,"name":"有色金属","change":"+4.29%"},
+    {"rank":4,"name":"证券","change":"+3.50%"},
+    {"rank":5,"name":"电池","change":"+3.26%"},
+    {"rank":6,"name":"半导体","change":"-1.20%","note":"回调"},
+    {"rank":7,"name":"CPO","change":"-1.09%","note":"回调"},
+    {"rank":8,"name":"通信设备","change":"-1.03%","note":"回调"}
+  ],
+  "themeOverview":"连续3日领涨的<b>半导体材料</b>（靶材/特气）今日集体回调，资金大幅流出。新主线切换至<b>有色金属/工业金属</b>（+5.65%）+ <b>航空装备</b>（+4.10%）。上证重返4000点后冲高回落，4060点压力明显。明日是关键确认日。",
+  "stocks":[
+    {
+      "rank":1,"name":"铜陵有色","code":"sz000630","score":98,
+      "tags":[{"text":"工业金属龙头","type":"concept"},{"text":"主力全市场#5","type":"lhb"}],
+      "price":"7.10","change":"+10.08%","limitStatus":"📈 涨停首板",
+      "metrics":[
+        {"label":"收盘价","value":"¥7.10"},{"label":"主力净流入","value":"+14.35亿(#5)"},
+        {"label":"超大单净流入","value":"+15.54亿"},{"label":"换手率","value":"5.64%"},
+        {"label":"总市值","value":"952亿"},{"label":"PE","value":"36.20"}
+      ],
+      "coreLogic":"<strong>主线最强：</strong>工业金属板块+5.65%领涨。<strong>资金共振：</strong>机构3席位+中山东路（53.56%胜率）+财通杭州（72.73%胜率）。MACD金叉形成，5日涨幅+10.25%趋势加速初期。",
+      "auctionExpect":"预期<span class=\"hl\">高开 3%-5%</span>（约7.30-7.45元）",
+      "entryCondition":"✅ <strong>最佳：</strong>竞价高开3%以内，竞价额>2500万 | ✅ <strong>次优：</strong>若高开5%+后回踩至7.20附近企稳 | ❌ <strong>放弃：</strong>高开超7%或低开；竞价量能萎缩50%以上"
+    },
+    {
+      "rank":2,"name":"洛阳钼业","code":"sh603993","score":95,
+      "tags":[{"text":"钼铜双龙头","type":"concept"},{"text":"主力全市场#2","type":"lhb"}],
+      "price":"19.11","change":"+10.02%","limitStatus":"📈 涨停首板",
+      "metrics":[
+        {"label":"收盘价","value":"¥19.11"},{"label":"主力净流入","value":"+16.71亿(#2)"},
+        {"label":"超大单净流入","value":"+19.09亿"},{"label":"换手率","value":"2.61%"},
+        {"label":"总市值","value":"4088亿"},{"label":"PE","value":"16.93"}
+      ],
+      "coreLogic":"<strong>资金体量最大：</strong>主力净流入+16.71亿全市场排名第2。<strong>估值洼地：</strong>PE仅16.93，钼+铜双主业受益于资源品涨价。4088亿市值涨停代表大资金对有色方向的确认信号。",
+      "auctionExpect":"预期<span class=\"hl\">高开 2%-4%</span>（约19.50-19.90元）",
+      "entryCondition":"✅ <strong>最佳：</strong>高开2-3%，回踩分时均线不破时上车 | ✅ <strong>次优：</strong>若平开或小幅高开，9:35前放量拉升突破19.50 | ❌ <strong>放弃：</strong>低开；竞价量能严重萎缩"
+    },
+    {
+      "rank":3,"name":"金钼股份","code":"sh601958","score":93,
+      "tags":[{"text":"钼矿稀缺资源","type":"concept"},{"text":"一字板2连板","type":"lhb"}],
+      "price":"25.52","change":"+10.00%","limitStatus":"📈 一字板2连板",
+      "metrics":[
+        {"label":"收盘价","value":"¥25.52"},{"label":"换手率","value":"0.51%"},
+        {"label":"主力净流入","value":"+1.87亿"},{"label":"总市值","value":"823亿"},
+        {"label":"PE","value":"24.37"},{"label":"5日涨幅","value":"+16.21%","highlight":true}
+      ],
+      "coreLogic":"<strong>一字板 = 最强势信号：</strong>全天一字封死，换手仅0.51%。<strong>高胜率席位：</strong>华金证券上海（76%胜率）+东北证券青岛（64.29%）。钼矿为战略稀缺资源。",
+      "auctionExpect":"预期<span class=\"hl\">大概率继续一字板</span>（涨停价28.07元）",
+      "entryCondition":"✅ <strong>一字板排队：</strong>9:15前挂涨停价排队，9:20封单>5亿可持有排单 | ✅ <strong>开板回封：</strong>若盘中开板，回封瞬间追入 | ❌ <strong>放弃：</strong>封单量低于2亿或大幅撤单"
+    },
+    {
+      "rank":4,"name":"恩捷股份","code":"sz002812","score":90,
+      "tags":[{"text":"锂电池隔膜龙头","type":"concept"},{"text":"机构3席位买入","type":"lhb"}],
+      "price":"67.54","change":"+10.00%","limitStatus":"📈 涨停首板",
+      "metrics":[
+        {"label":"收盘价","value":"¥67.54"},{"label":"主力净流入","value":"+6.20亿"},
+        {"label":"机构买入","value":"3席位+1.39亿"},{"label":"换手率","value":"5.77%"},
+        {"label":"总市值","value":"663亿"},{"label":"PE(TTM)","value":"176"}
+      ],
+      "coreLogic":"<strong>电池板块共振：</strong>电池板块+3.26%，恩捷为隔膜绝对龙头。<strong>机构认可：</strong>机构3席位买入1.39亿。<strong>低位首板：</strong>5日涨+6.68%，属于低位反弹首板，空间更大。",
+      "auctionExpect":"预期<span class=\"hl\">高开 2%-4%</span>（约68.90-70.20元）",
+      "entryCondition":"✅ <strong>最佳：</strong>竞价高开2-3%，开盘后回踩分时均线不破时上车 | ❌ <strong>放弃：</strong>低开或高开超6%；电池板块集体走弱"
+    },
+    {
+      "rank":5,"name":"宗申动力","code":"sz001696","score":87,
+      "tags":[{"text":"航天军工","type":"concept"},{"text":"5连板⚠️","type":"lhb"}],
+      "price":"22.84","change":"+10.02%","limitStatus":"⚠️ 5连板涨停",
+      "metrics":[
+        {"label":"收盘价","value":"¥22.84"},{"label":"5日涨幅","value":"+59.72%","highlight":true},
+        {"label":"RSI(6)","value":"99.8 超买","highlight":true},{"label":"主力净流入","value":"+3.59亿"},
+        {"label":"换手率","value":"10.51%"},{"label":"总市值","value":"262亿"}
+      ],
+      "coreLogic":"<strong>航天双主线：</strong>航空装备+4.10% + 商业航天热度第一。<strong>连板龙头：</strong>5连板从15.75→22.84，累计+59.72%。⚠️ RSI 99.8严重超买，5连板后追高风险极大。",
+      "auctionExpect":"预期<span class=\"hl\">高开 5%-8%</span>（约24.00-24.70元）",
+      "entryCondition":"✅ <strong>极端博弈（仅限短线高手）：</strong>竞价高开5%以内，竞价量>昨日80%，开盘5分钟内封板可追 | ⚠️ <strong>风险提示：</strong>5连板后追高风险极大，一旦炸板可能日内亏损15%+ | ❌ <strong>放弃：</strong>高开8%+后快速回落；竞价量能萎缩"
+    }
+  ],
+  "summaryTable":{
+    "headers":["优先级","个股","竞价预期","上车方式","目标","风险"],
+    "rows":[
+      ["🥇","铜陵有色","高开3-5%","竞价确认后上车","涨停","中低"],
+      ["🥈","洛阳钼业","高开2-4%","回踩均线不破上车","涨停","中低"],
+      ["🥉","金钼股份","一字板概率大","9:15前排涨停价","涨停","中"],
+      ["4","恩捷股份","高开2-4%","回踩确认后上车","涨停","中"],
+      ["5","宗申动力","高开5-8%","仅轻仓博弈","涨停","高"]
+    ]
+  },
+  "riskItems":[
+    "<strong>板块轮动风险：</strong>今日半导体材料集体大跌，若明日有色金属也出现类似轮动，需立即止损。",
+    "<strong>冲高回落信号：</strong>上证最高4060后回落至4031，4060点为关键压力位。若明日无法突破4060，市场可能重回调整。",
+    "<strong>周五效应：</strong>周末前资金趋于谨慎，高位股更容易出现获利了结。",
+    "<strong>仓位控制：</strong>单只个股仓位不超过总资金20%，5只合计不超过60%。",
+    "<strong>止损纪律：</strong>买入后若跌幅超-5%无条件止损；涨停炸板不回封立即出局。",
+    "<strong>作废条件：</strong>若上证开盘跌破4000点，当日计划全部作废。"
+  ],
+  "footer":{"source":"腾讯自选股 · 数据日期：2026年6月12日收盘","time":"2026年6月12日 21:55"}
+}

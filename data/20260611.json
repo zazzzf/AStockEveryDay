@@ -1,0 +1,108 @@
+{
+  "id":"20260611","date":"2026-06-11","weekday":"周四",
+  "generated":"06-10 22:00",
+  "title":"🔥 明日涨停预测",
+  "subtitle":"结合热门股 · 资金流向 · 热门概念 · 龙虎榜 综合研判 | 6月12日（周五）操盘参考",
+  "marketSnapshot":{"indices":[
+    {"label":"上证指数","value":"3987.01","change":"-0.16%","isUp":false},
+    {"label":"深证成指","value":"14851.98","change":"-0.68%","isUp":false},
+    {"label":"创业板指","value":"3811.25","change":"-1.13%","isUp":false},
+    {"label":"两市成交","value":"~2.56万亿","change":"缩量整理","isUp":false},
+    {"label":"市场判断","value":"结构性行情","change":"指数弱个股强","isUp":true}
+  ]},
+  "hotConcepts":[
+    {"rank":1,"name":"小金属","change":"+4.86%"},
+    {"rank":2,"name":"半导体","change":"+1.47%"},
+    {"rank":3,"name":"靶材","change":"+17.23%"},
+    {"rank":4,"name":"电子化学品","change":"+5.18%"},
+    {"rank":5,"name":"钼概念","change":"+5.21%"},
+    {"rank":6,"name":"钨概念","change":"+5.21%"},
+    {"rank":7,"name":"电子特气","change":"+6.92%"},
+    {"rank":8,"name":"半导体材料","change":"+2.48%"}
+  ],
+  "themeOverview":"<strong class=\"text-[#f85149]\">🔥 主线定调：半导体材料 + 小金属 双轮驱动</strong><br>靶材（+17.23%）是全市场涨幅最大的细分概念，电子特气（+6.92%）紧随其后。小金属方向钼/钨（各+5.21%）受供给收缩+需求回暖催化。明日这两个方向大概率继续演绎。",
+  "stocks":[
+    {
+      "rank":1,"name":"阿石创","code":"sz300706","score":98,
+      "tags":[{"text":"靶材核心","type":"concept"},{"text":"半导体材料","type":"concept"},{"text":"强烈推荐","type":"board"}],
+      "price":"67.88","change":"+19.99%","limitStatus":"🔴 20cm涨停",
+      "metrics":[
+        {"label":"流通市值","value":"77.3亿"},{"label":"换手率","value":"30.97%"},
+        {"label":"主力净流入","value":"+2.61亿"},{"label":"机构净买","value":"+1.12亿"},
+        {"label":"MACD","value":"金叉 DIF 3.37"},{"label":"5日涨幅","value":"+28.71%","highlight":true}
+      ],
+      "coreLogic":"<strong>靶材板块是今日全市场最强细分</strong>（+17.23%）。<strong>机构5个席位连续3天买入</strong>，中线逻辑被机构认可。仅77亿流通市值，弹性极大。20cm首板放量（换手31%），筹码充分换手。",
+      "auctionExpect":"预期<span class=\"hl\">高开 5%~10%</span>（约71-75元），竞价量比至少>3，封单量>5万手为健康信号。若竞价高开超15%需警惕获利盘集中涌出。",
+      "entryCondition":"<strong>最佳买点：</strong>竞价高开3%-8%，开盘30分钟内不跳水翻绿，换手>5%时介入 | <strong>追板买点：</strong>9:40前封板，封单>10万手 | <strong>坚决不买：</strong>高开低走翻绿、竞价量比<2 | <strong>止损：</strong>-5%无条件止损"
+    },
+    {
+      "rank":2,"name":"雅克科技","code":"sz002409","score":95,
+      "tags":[{"text":"前驱体龙头","type":"concept"},{"text":"电子特气","type":"concept"},{"text":"强烈推荐","type":"board"}],
+      "price":"134.81","change":"+10.00%","limitStatus":"🔴 涨停",
+      "metrics":[
+        {"label":"流通市值","value":"429亿"},{"label":"换手率","value":"18.10%"},
+        {"label":"机构净买","value":"+2.28亿"},{"label":"PE(TTM)","value":"63.73"},
+        {"label":"MACD","value":"金叉 DIF 6.01"}
+      ],
+      "coreLogic":"<strong>半导体前驱体绝对龙头</strong>+电子特气双主线共振。机构连续3天上榜，中线资金锁仓。10%涨停（非20cm），连板稳定性远高于20cm品种。20日主力净流入+5.66亿。",
+      "auctionExpect":"预期<span class=\"hl\">高开 3%~7%</span>（约139-144元）。10%板2板预期较强。",
+      "entryCondition":"<strong>最佳买点：</strong>高开3%-5%，回踩分时均线不破 | <strong>追板买点：</strong>开盘30分钟内封板，封单>2万手 | <strong>坚决不买：</strong>高开超8%但量比<1.5 | <strong>止损：</strong>-5%无条件止损"
+    },
+    {
+      "rank":3,"name":"章源钨业","code":"sz002378","score":92,
+      "tags":[{"text":"钨龙头","type":"concept"},{"text":"小金属","type":"concept"},{"text":"推荐","type":"board"}],
+      "price":"33.63","change":"+10.01%","limitStatus":"🔴 涨停",
+      "metrics":[
+        {"label":"流通市值","value":"402亿"},{"label":"主力净流入","value":"+11.00亿(#3)","highlight":true},
+        {"label":"机构净买","value":"+1.62亿"},{"label":"MACD","value":"刚金叉"},
+        {"label":"250日涨幅","value":"+311%","highlight":true}
+      ],
+      "coreLogic":"<strong>主力净流入11亿全市场排名第3</strong>，资金攻击力极强。知春路（顶级游资）+1亿买入。MACD今日刚完成金叉，技术面启动信号明确。近一年涨幅超300%。",
+      "auctionExpect":"预期<span class=\"hl\">高开 3%~6%</span>（约34.6-35.6元）。竞价量比>3为强信号。",
+      "entryCondition":"<strong>最佳买点：</strong>高开3%-5%，开盘15分钟内回踩分时均线获支撑 | <strong>追板买点：</strong>9:35前封板，封单>5万手 | <strong>坚决不买：</strong>竞价量比<1.5 | <strong>止损：</strong>-5%无条件止损"
+    },
+    {
+      "rank":4,"name":"云南锗业","code":"sz002428","score":90,
+      "tags":[{"text":"锗龙头","type":"concept"},{"text":"小金属","type":"concept"},{"text":"推荐","type":"board"}],
+      "price":"88.24","change":"+10.00%","limitStatus":"🔴 涨停",
+      "metrics":[
+        {"label":"流通市值","value":"576亿"},{"label":"主力净流入","value":"+21.78亿(#1)","highlight":true},
+        {"label":"机构净买","value":"+3.95亿"},{"label":"换手率","value":"19.99%"}
+      ],
+      "coreLogic":"<strong>主力净买入+21.78亿全市场排名第一</strong>。机构4席位总买入9.14亿，机构抢筹力度惊人。深股通专用席位也是最活跃席位。⚠️ MACD仍在零轴下方。",
+      "auctionExpect":"预期<span class=\"hl\">一字板或高开8%以上</span>（约95-97元）。机构+主力+深股通三路资金共振。",
+      "entryCondition":"<strong>最佳买点：</strong>若一字板盘中开板，炸板回封瞬间可追 | <strong>次选：</strong>若非一字板，高开5-8%，开盘15分钟不破分时均线 | <strong>坚决不买：</strong>一字板炸板后超10分钟未回封 | <strong>止损：</strong>-5%无条件止损"
+    },
+    {
+      "rank":5,"name":"康强电子","code":"sz002119","score":87,
+      "tags":[{"text":"封装材料","type":"concept"},{"text":"3连板","type":"lhb"},{"text":"关注","type":"board"}],
+      "price":"31.20","change":"+10.01%","limitStatus":"🔴 3连板涨停",
+      "metrics":[
+        {"label":"流通市值","value":"117亿"},{"label":"连板数","value":"3连板 🔥","highlight":true},
+        {"label":"换手率","value":"14.58%"},{"label":"主力净流入","value":"+1.18亿"},
+        {"label":"MACD","value":"金叉"}
+      ],
+      "coreLogic":"<strong>3连板</strong>打出辨识度，每次都是实体涨停（非一字），换手充分。仅117亿流通市值小盘优势。⚠️ 3连板后4板压力加大。",
+      "auctionExpect":"预期<span class=\"hl\">高开 3%~6%</span>（约32.1-33.1元）。3连板后市场关注度高。",
+      "entryCondition":"<strong>最佳买点：</strong>高开3%-5%，开盘10分钟内缩量上攻 | <strong>坚决不买：</strong>竞价低开、开盘即放量下跌 | <strong>止损：</strong>-5%严格止损；3连板后一旦断板建议直接清仓"
+    }
+  ],
+  "summaryTable":{
+    "headers":["优先级","股票","代码","概念","竞价预期","最佳买点","止损","评分"],
+    "rows":[
+      ["🥇","阿石创","sz300706","靶材","高开5-10%","71-75元","-5%","98"],
+      ["🥈","雅克科技","sz002409","前驱体/特气","高开3-7%","139-144元","-5%","95"],
+      ["🥉","章源钨业","sz002378","钨/小金属","高开3-6%","34.6-35.6元","-5%","92"],
+      ["4","云南锗业","sz002428","锗/小金属","一字板或8%+","开板回封时","-5%","90"],
+      ["5","康强电子","sz002119","封装材料","高开3-6%","32.1-33.1元","-5%","87"]
+    ]
+  },
+  "riskItems":[
+    "<strong>仓位管理</strong>：单票仓位不超过总仓位的30%，5只总仓位控制在60%以内。",
+    "<strong>大盘风险</strong>：上证失守4000点后偏弱，若明日大盘放量下跌超过1.5%，所有追板操作暂停。",
+    "<strong>板块风险</strong>：若靶材/小金属板块竞价集体低开，所有计划作废。",
+    "<strong>20cm风险</strong>：阿石创为20cm品种，连板难度远高于10cm，需更严格的止盈止损纪律。",
+    "<strong>炸板处理</strong>：任何持仓炸板（从涨停开板），不抱幻想，第一时间降低仓位。"
+  ],
+  "footer":{"source":"腾讯自选股 · 通达信 | 分析工具：WorkBuddy AI","time":"2026年6月11日 22:00 (GMT+8)"}
+}
