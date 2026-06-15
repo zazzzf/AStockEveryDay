@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>涨停预测 · 2026年6月16日（周二）</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; background: #0f1117; color: #e1e4e8; line-height: 1.7; }
+.container { max-width: 860px; margin: 0 auto; padding: 20px 16px; }
+.header { text-align: center; padding: 40px 0 30px; border-bottom: 1px solid #21262d; margin-bottom: 30px; }
+.header h1 { font-size: 28px; font-weight: 700; background: linear-gradient(135deg, #f0883e, #e04040); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+.header .sub { color: #8b949e; font-size: 14px; }
+.header .date-badge { display: inline-block; background: #1c2128; border: 1px solid #30363d; border-radius: 20px; padding: 4px 16px; font-size: 13px; color: #58a6ff; margin-top: 12px; }
+
+.market-snapshot { background: linear-gradient(135deg, #161b22, #1c2333); border: 1px solid #30363d; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+.market-snapshot h2 { font-size: 16px; color: #f0883e; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+.market-item { background: #0d1117; border: 1px solid #21262d; border-radius: 8px; padding: 12px; text-align: center; }
+.market-item .label { font-size: 11px; color: #8b949e; margin-bottom: 4px; }
+.market-item .value { font-size: 18px; font-weight: 700; }
+.market-item .value.up { color: #f85149; }
+.market-item .value.down { color: #3fb950; }
+
+.section-title { font-size: 18px; font-weight: 700; color: #f0f6fc; margin: 32px 0 16px; padding-bottom: 8px; border-bottom: 2px solid #f0883e; display: flex; align-items: center; gap: 8px; }
+
+.stock-card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 24px; margin-bottom: 20px; transition: border-color .2s; }
+.stock-card:hover { border-color: #f0883e; }
+.stock-card .rank { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; font-weight: 700; font-size: 16px; margin-right: 10px; }
+.stock-card .rank.r1 { background: linear-gradient(135deg, #f0883e, #ff6b35); color: #fff; }
+.stock-card .rank.r2 { background: linear-gradient(135deg, #c0c0c0, #a8a8a8); color: #0d1117; }
+.stock-card .rank.r3 { background: linear-gradient(135deg, #cd7f32, #b87333); color: #fff; }
+.stock-card .rank.r4 { background: #30363d; color: #f0f6fc; }
+.stock-card .rank.r5 { background: #30363d; color: #f0f6fc; }
+.stock-header { display: flex; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+.stock-header .name { font-size: 20px; font-weight: 700; color: #f0f6fc; }
+.stock-header .code { font-size: 13px; color: #8b949e; margin-left: 8px; }
+.stock-header .tag { font-size: 11px; padding: 2px 10px; border-radius: 12px; font-weight: 600; }
+.tag-concept { background: rgba(88,166,255,0.15); color: #58a6ff; }
+.tag-lhb { background: rgba(240,136,62,0.15); color: #f0883e; }
+.tag-board { background: rgba(63,185,80,0.15); color: #3fb950; }
+.price-line { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+.price-line .price { font-size: 28px; font-weight: 700; color: #f85149; }
+.price-line .change { font-size: 16px; color: #f85149; font-weight: 600; }
+.price-line .limit { font-size: 13px; color: #8b949e; background: #1c2128; padding: 2px 10px; border-radius: 10px; }
+
+.info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.info-item { background: #0d1117; border: 1px solid #21262d; border-radius: 8px; padding: 10px 12px; }
+.info-item .ilabel { font-size: 11px; color: #8b949e; }
+.info-item .ivalue { font-size: 15px; font-weight: 600; color: #f0f6fc; }
+
+.auction-box { background: linear-gradient(135deg, #1a1f2e, #161b22); border: 1px solid #f0883e; border-radius: 10px; padding: 16px; margin-top: 12px; }
+.auction-box h4 { font-size: 14px; color: #f0883e; margin-bottom: 8px; }
+.auction-box p { font-size: 14px; color: #e1e4e8; line-height: 1.8; }
+.auction-box .highlight { color: #58a6ff; font-weight: 600; }
+.auction-box .warn { color: #f0883e; font-weight: 600; }
+
+.entry-box { background: linear-gradient(135deg, #162316, #161b22); border: 1px solid #3fb950; border-radius: 10px; padding: 16px; margin-top: 8px; }
+.entry-box h4 { font-size: 14px; color: #3fb950; margin-bottom: 8px; }
+.entry-box p { font-size: 14px; color: #e1e4e8; line-height: 1.8; }
+
+.score-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.score-bar .score-label { font-size: 12px; color: #8b949e; }
+.score-bar .score-track { flex: 1; height: 6px; background: #21262d; border-radius: 3px; overflow: hidden; }
+.score-bar .score-fill { height: 100%; border-radius: 3px; }
+.score-bar .score-val { font-size: 14px; font-weight: 700; }
+
+.risk-box { background: #1a1515; border: 1px solid #f8514922; border-radius: 10px; padding: 20px; margin: 24px 0; }
+.risk-box h3 { color: #f85149; font-size: 15px; margin-bottom: 12px; }
+.risk-box ul { list-style: none; padding: 0; }
+.risk-box li { padding: 6px 0; font-size: 13px; color: #e1e4e8; border-bottom: 1px solid #21262d; }
+.risk-box li::before { content: "⚠️ "; margin-right: 4px; }
+
+.summary-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+.summary-table th { background: #1c2128; color: #f0883e; padding: 10px 12px; text-align: left; font-weight: 600; border: 1px solid #30363d; }
+.summary-table td { padding: 10px 12px; border: 1px solid #30363d; color: #e1e4e8; }
+.summary-table tr:nth-child(even) td { background: #0d111722; }
+
+.auction-summary { background: #1a1f2e; border: 1px solid #30363d; border-radius: 10px; padding: 16px; margin: 16px 0; }
+.auction-summary h3 { color: #58a6ff; font-size: 15px; margin-bottom: 8px; }
+
+.timeline { position: relative; padding-left: 24px; margin: 12px 0; }
+.timeline::before { content: ''; position: absolute; left: 6px; top: 0; bottom: 0; width: 2px; background: #30363d; }
+.timeline-item { position: relative; margin-bottom: 12px; padding-left: 20px; }
+.timeline-item::before { content: ''; position: absolute; left: -20px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: #f0883e; }
+.timeline-item .time { font-size: 11px; color: #8b949e; }
+.timeline-item .desc { font-size: 13px; color: #e1e4e8; }
+
+.footer { text-align: center; padding: 30px 0; color: #484f58; font-size: 12px; border-top: 1px solid #21262d; margin-top: 30px; }
+.footer a { color: #58a6ff; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+  <h1>🔥 涨停预测 · 明日最强5股</h1>
+  <div class="sub">基于今日热门股、资金流向、龙虎榜、热门概念多维数据交叉筛选</div>
+  <div class="date-badge">📅 预测日期：2026年6月16日（周二）| 数据截止：6月15日收盘</div>
+</div>
+
+<!-- MARKET SNAPSHOT -->
+<div class="market-snapshot">
+  <h2>📊 今日市场全景</h2>
+  <div class="market-grid">
+    <div class="market-item">
+      <div class="label">上证指数</div>
+      <div class="value up">4096.47</div>
+      <div style="font-size:12px;color:#f85149">+1.61% ↑</div>
+    </div>
+    <div class="market-item">
+      <div class="label">创业板指</div>
+      <div class="value up">4033.53</div>
+      <div style="font-size:12px;color:#f85149">+5.30% ↑</div>
+    </div>
+    <div class="market-item">
+      <div class="label">深证成指</div>
+      <div class="value up">15531.11</div>
+      <div style="font-size:12px;color:#f85149">+3.79% ↑</div>
+    </div>
+    <div class="market-item">
+      <div class="label">涨停家数</div>
+      <div class="value up">100+</div>
+      <div style="font-size:12px;color:#8b949e">超280股涨逾10%</div>
+    </div>
+    <div class="market-item">
+      <div class="label">最强板块</div>
+      <div class="value up">MLCC</div>
+      <div style="font-size:12px;color:#f85149">+9.49%</div>
+    </div>
+    <div class="market-item">
+      <div class="label">核心催化</div>
+      <div class="value" style="font-size:14px;color:#58a6ff">美伊协议</div>
+      <div style="font-size:12px;color:#8b949e">全球风险偏好↑</div>
+    </div>
+  </div>
+</div>
+
+<!-- HOT CONCEPTS TODAY -->
+<h2 class="section-title">🔥 今日热门概念 TOP10</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-bottom:24px;">
+  <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;"><span style="color:#f0883e">#1</span> MLCC <span style="color:#f85149;float:right">+9.49%</span></div>
+  <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;"><span style="color:#f0883e">#2</span> 电子布 <span style="color:#f85149;float:right">+9.99%</span></div>
+  <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;"><span style="color:#f0883e">#3</span> 半导体 <span style="color:#f85149;float:right">+6.08%</span></div>
+  <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;"><span style="color:#f0883e">#4</span> 元件 <span style="color:#f85149;float:right">+8.97%</span></div>
+  <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;"><span style="color:#f0883e">#5</span> PCB概念 <span style="color:#f85149;float:right">+7.75%</span></div>
+  <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;"><span style="color:#f0883e">#6</span> 通信设备 <span style="color:#f85149;float:right">+7.04%</span></div>
+  <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;"><span style="color:#f0883e">#7</span> 玻璃玻纤 <span style="color:#f85149;float:right">+9.82%</span></div>
+  <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;"><span style="color:#f0883e">#8</span> 小金属 <span style="color:#f85149;float:right">+6.13%</span></div>
+  <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;"><span style="color:#f0883e">#9</span> CPO <span style="color:#f85149;float:right">+7.59%</span></div>
+  <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;"><span style="color:#f0883e">#10</span> 工业金属 <span style="color:#f85149;float:right">+5.15%</span></div>
+</div>
+
+<!-- 5日最强概念 -->
+<h2 class="section-title">📈 5日最强概念（动量排名）</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-bottom:24px;">
+  <div style="background:#161b22;border:1px solid #f8514944;border-radius:8px;padding:10px;"><span style="color:#f0883e">🥇</span> 靶材 <span style="color:#f85149;float:right">+41.77%</span></div>
+  <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;"><span style="color:#c0c0c0">🥈</span> 锗镓概念 <span style="color:#f85149;float:right">+23.66%</span></div>
+  <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;"><span style="color:#cd7f32">🥉</span> 电子布 <span style="color:#f85149;float:right">+21.83%</span></div>
+  <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;">#4 有色(锡) <span style="color:#f85149;float:right">+18.23%</span></div>
+  <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;">#5 钨概念 <span style="color:#f85149;float:right">+17.14%</span></div>
+  <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;">#6 钼概念 <span style="color:#f85149;float:right">+14.88%</span></div>
+  <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;">#7 大硅片 <span style="color:#f85149;float:right">+14.09%</span></div>
+  <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;">#8 半导体材料 <span style="color:#f85149;float:right">+13.77%</span></div>
+  <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;">#9 PCB概念 <span style="color:#f85149;float:right">+10.89%</span></div>
+  <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;">#10 铜概念 <span style="color:#f85149;float:right">+9.30%</span></div>
+</div>
+
+<!-- ============ 5 STOCK CARDS ============ -->
+<h2 class="section-title">🎯 明日涨停预测 · 5强个股</h2>
+
+<!-- Stock #1: 东山精密 -->
+<div class="stock-card">
+  <div class="stock-header">
+    <span class="rank r1">1</span>
+    <span class="name">东山精密</span>
+    <span class="code">sz002384</span>
+    <span class="tag tag-concept">PCB概念</span>
+    <span class="tag tag-lhb">主力#2全市场</span>
+    <span class="tag tag-board">首板</span>
+  </div>
+  <div class="score-bar">
+    <span class="score-label">涨停概率评分</span>
+    <div class="score-track"><div class="score-fill" style="width:96%;background:linear-gradient(90deg,#3fb950,#f0883e)"></div></div>
+    <span class="score-val" style="color:#f0883e">96</span>
+  </div>
+  <div class="price-line">
+    <span class="price">239.31</span>
+    <span class="change">+10.00%</span>
+    <span class="limit">📈 涨停</span>
+  </div>
+  <div class="info-grid">
+    <div class="info-item"><div class="ilabel">主力净流入</div><div class="ivalue" style="color:#f85149">+35.28亿</div></div>
+    <div class="info-item"><div class="ilabel">超大单净流入</div><div class="ivalue" style="color:#f85149">+43.69亿</div></div>
+    <div class="info-item"><div class="ilabel">换手率</div><div class="ivalue">6.16%</div></div>
+    <div class="info-item"><div class="ilabel">总市值</div><div class="ivalue">4383亿</div></div>
+    <div class="info-item"><div class="ilabel">PE(TTM)</div><div class="ivalue">214.85</div></div>
+    <div class="info-item"><div class="ilabel">MACD DIF</div><div class="ivalue" style="color:#f85149">8.56</div></div>
+  </div>
+  <p style="font-size:14px;color:#e1e4e8;margin-bottom:8px;">
+    <strong style="color:#58a6ff">核心逻辑：</strong>PCB/FPC龙头+5G+汽车电子三重概念共振。今日主力净流入35.28亿全市场排名第2，超大单43.69亿资金深度介入。PCB概念今日+7.75%，5日+10.89%动量强劲。首板换手仅6.16%惜售明显，机构专用席位大宗交易折价买入。RSI(6)=66.5处于强势但未超买区间，MACD DIF 8.56处于上升通道。
+  </p>
+  <div class="auction-box">
+    <h4>🔔 明日竞价预期</h4>
+    <p>预期<span class="highlight">高开2%-5%</span>（约244-251元区间）。核心观察点：① 竞价量能需大于今日集合竞价量的<span class="highlight">1.2倍</span>以上；② 竞价最后一分钟不能出现<span class="warn">大额抛单砸低2%以上</span>；③ 若竞价高开超过7%需谨慎追高，等待开盘回踩确认。</p>
+  </div>
+  <div class="entry-box">
+    <h4>✅ 建议上车条件</h4>
+    <p>① 竞价高开2-5%+竞价量>昨日1.2倍 → <span style="color:#3fb950;font-weight:600">竞价可轻仓上车</span>；② 若高开高走回踩分时均线不破 → <span style="color:#3fb950;font-weight:600">回踩加仓</span>；③ 若开盘30分钟内封板且封单>5亿 → <span style="color:#58a6ff;font-weight:600">排板参与</span>；④ <span style="color:#f0883e">止损线：跌破今日涨停价239.31（即跌破5%以上）必须止损</span></p>
+  </div>
+</div>
+
+<!-- Stock #2: 风华高科 -->
+<div class="stock-card">
+  <div class="stock-header">
+    <span class="rank r2">2</span>
+    <span class="name">风华高科</span>
+    <span class="code">sz000636</span>
+    <span class="tag tag-concept">MLCC龙头</span>
+    <span class="tag tag-lhb">主力#7全市场</span>
+    <span class="tag tag-board">首板</span>
+  </div>
+  <div class="score-bar">
+    <span class="score-label">涨停概率评分</span>
+    <div class="score-track"><div class="score-fill" style="width:93%;background:linear-gradient(90deg,#3fb950,#f0883e)"></div></div>
+    <span class="score-val" style="color:#f0883e">93</span>
+  </div>
+  <div class="price-line">
+    <span class="price">65.03</span>
+    <span class="change">+10.00%</span>
+    <span class="limit">📈 涨停</span>
+  </div>
+  <div class="info-grid">
+    <div class="info-item"><div class="ilabel">主力净流入</div><div class="ivalue" style="color:#f85149">+16.88亿</div></div>
+    <div class="info-item"><div class="ilabel">超大单净流入</div><div class="ivalue" style="color:#f85149">+17.95亿</div></div>
+    <div class="info-item"><div class="ilabel">换手率</div><div class="ivalue">12.43%</div></div>
+    <div class="info-item"><div class="ilabel">总市值</div><div class="ivalue">752亿</div></div>
+    <div class="info-item"><div class="ilabel">PE(TTM)</div><div class="ivalue">244.84</div></div>
+    <div class="info-item"><div class="ilabel">5日涨幅</div><div class="ivalue" style="color:#f85149">+17.11%</div></div>
+  </div>
+  <p style="font-size:14px;color:#e1e4e8;margin-bottom:8px;">
+    <strong style="color:#58a6ff">核心逻辑：</strong>MLCC（片式多层陶瓷电容器）板块今日+9.49%全市场涨幅第一！风华高科是国内MLCC绝对龙头，今日首板涨停。主力净流入16.88亿全市场排名第7，超大单+17.95亿。被动元件概念5日+26.11%、20日+58.67%，属于当前最强产业趋势。换手12.43%量价配合合理，MACD DIF 8.69呈多头排列。
+  </p>
+  <div class="auction-box">
+    <h4>🔔 明日竞价预期</h4>
+    <p>预期<span class="highlight">高开3%-6%</span>（约67-69元区间）。MLCC板块热度极高，有望出现<span class="highlight">一字板或接近一字板</span>开盘。核心观察：① 若一字板开盘，关注封单金额是否>3亿；② 若非一字板，竞价量需>昨日集合竞价的<span class="highlight">1.5倍</span>；③ <span class="warn">警惕高开低走</span>：若高开>7%但开盘15分钟内无法封板，则当日概率大降。</p>
+  </div>
+  <div class="entry-box">
+    <h4>✅ 建议上车条件</h4>
+    <p>① 竞价一字板+封单>3亿 → <span style="color:#58a6ff;font-weight:600">排板参与</span>；② 高开3-6%+竞价放量 → <span style="color:#3fb950;font-weight:600">竞价上车半仓</span>；③ 若高开后回踩不破分时均线 → <span style="color:#3fb950;font-weight:600">回踩加仓</span>；④ <span style="color:#f0883e">止损线：跌破62元（今日均价附近）必须止损</span></p>
+  </div>
+</div>
+
+<!-- Stock #3: 太辰光 -->
+<div class="stock-card">
+  <div class="stock-header">
+    <span class="rank r3">3</span>
+    <span class="name">太辰光</span>
+    <span class="code">sz300570</span>
+    <span class="tag tag-concept">CPO龙头</span>
+    <span class="tag tag-lhb">机构4席买入</span>
+    <span class="tag tag-board">20cm首板</span>
+  </div>
+  <div class="score-bar">
+    <span class="score-label">涨停概率评分</span>
+    <div class="score-track"><div class="score-fill" style="width:89%;background:linear-gradient(90deg,#3fb950,#f0883e)"></div></div>
+    <span class="score-val" style="color:#f0883e">89</span>
+  </div>
+  <div class="price-line">
+    <span class="price">222.10</span>
+    <span class="change">+20.00%</span>
+    <span class="limit">🚀 20cm涨停</span>
+  </div>
+  <div class="info-grid">
+    <div class="info-item"><div class="ilabel">主力净流入</div><div class="ivalue" style="color:#f85149">+6.62亿</div></div>
+    <div class="info-item"><div class="ilabel">机构净买入</div><div class="ivalue" style="color:#f85149">+2.87亿(4席位)</div></div>
+    <div class="info-item"><div class="ilabel">换手率</div><div class="ivalue">15.73%</div></div>
+    <div class="info-item"><div class="ilabel">总市值</div><div class="ivalue">504亿</div></div>
+    <div class="info-item"><div class="ilabel">PE(TTM)</div><div class="ivalue">176.77</div></div>
+    <div class="info-item"><div class="ilabel">60日涨幅</div><div class="ivalue" style="color:#f85149">+95.1%</div></div>
+  </div>
+  <p style="font-size:14px;color:#e1e4e8;margin-bottom:8px;">
+    <strong style="color:#58a6ff">核心逻辑：</strong>CPO（共封装光模块）概念今日+7.59%，5日+7.29%，60日+65%为中长期最强主线之一。太辰光今日20cm涨停，龙虎榜机构4席位净买入2.87亿，高胜率席位国泰海通武汉紫阳东路(51.3%胜率)+2.86亿买入。CPO+光通信双概念叠加AI算力需求持续爆发。RSI(6)=78.95强势但未极度超买，MACD DIF 10.53加速上行。
+  </p>
+  <div class="auction-box">
+    <h4>🔔 明日竞价预期</h4>
+    <p>预期<span class="highlight">高开5%-10%</span>（约233-244元区间）。20cm股波动大，竞价需格外谨慎。核心观察：① 若高开<8%且竞价量>昨日1.3倍 → 强势信号；② 若高开>12%需警惕获利盘涌出；③ <span class="warn">20cm股连板概率低</span>，更可能走趋势而非连续涨停，预期明日涨幅5-15%而非必然封板。</p>
+  </div>
+  <div class="entry-box">
+    <h4>✅ 建议上车条件</h4>
+    <p>① 高开5-8%+竞价放量>1.3倍 → <span style="color:#3fb950;font-weight:600">竞价轻仓1/3</span>；② 开盘后若回踩分时均线获得支撑 → <span style="color:#3fb950;font-weight:600">回踩加仓1/3</span>；③ 午后若能封板且封单稳定 → <span style="color:#58a6ff;font-weight:600">最后1/3排板</span>；④ <span style="color:#f0883e">止损线：跌破205元（今日开盘价附近）必须止损，20cm波动大止损要果断</span></p>
+  </div>
+</div>
+
+<!-- Stock #4: 云南锗业 -->
+<div class="stock-card">
+  <div class="stock-header">
+    <span class="rank r4">4</span>
+    <span class="name">云南锗业</span>
+    <span class="code">sz002428</span>
+    <span class="tag tag-concept">锗镓龙头</span>
+    <span class="tag tag-lhb">机构3天+21亿</span>
+    <span class="tag tag-board">持续强势</span>
+  </div>
+  <div class="score-bar">
+    <span class="score-label">涨停概率评分</span>
+    <div class="score-track"><div class="score-fill" style="width:87%;background:linear-gradient(90deg,#f0c040,#f0883e)"></div></div>
+    <span class="score-val" style="color:#f0c040">87</span>
+  </div>
+  <div class="price-line">
+    <span class="price">101.49</span>
+    <span class="change">+10.00%</span>
+    <span class="limit">📈 涨停</span>
+  </div>
+  <div class="info-grid">
+    <div class="info-item"><div class="ilabel">主力净流入</div><div class="ivalue" style="color:#f85149">+13.26亿</div></div>
+    <div class="info-item"><div class="ilabel">机构3天净买</div><div class="ivalue" style="color:#f85149">+21.14亿(5席位)</div></div>
+    <div class="info-item"><div class="ilabel">换手率</div><div class="ivalue">15.04%</div></div>
+    <div class="info-item"><div class="ilabel">总市值</div><div class="ivalue">663亿</div></div>
+    <div class="info-item"><div class="ilabel">5日涨幅</div><div class="ivalue" style="color:#f85149">+29.06%</div></div>
+    <div class="info-item"><div class="ilabel">锗镓概念5日</div><div class="ivalue" style="color:#f85149">+23.66%</div></div>
+  </div>
+  <p style="font-size:14px;color:#e1e4e8;margin-bottom:8px;">
+    <strong style="color:#58a6ff">核心逻辑：</strong>锗镓概念5日+23.66%全市场排名第2！云南锗业是锗镓绝对龙头，3天连续上榜龙虎榜机构榜，机构5席位合计净买入21.14亿。今日主力净流入13.26亿。MACD DIF=3.33即将金叉DEA=3.10，RSI(6)=72.6强势但不极端。<span style="color:#f0883e">风险提示：已连续大涨，5日涨幅29%，短期获利盘压力较大。</span>
+  </p>
+  <div class="auction-box">
+    <h4>🔔 明日竞价预期</h4>
+    <p>预期<span class="highlight">高开3%-7%</span>（约104-109元区间）。连续3天强势后，可能出现两种情形：① <span class="highlight">一字板加速</span>（概率约30%）——机构持续买入+概念热度极高；② <span class="highlight">高开震荡</span>（概率约50%）——获利盘兑现+换手洗盘。核心观察：<span class="warn">若竞价量能萎缩超过30%，警惕短期见顶信号</span>。</p>
+  </div>
+  <div class="entry-box">
+    <h4>✅ 建议上车条件</h4>
+    <p>① <span style="color:#f0883e">已连续大涨，不建议重仓追高</span>；② 若一字板开盘+封单>5亿 → <span style="color:#58a6ff;font-weight:600">排板轻仓</span>；③ 若高开后回踩5%以上获得强力支撑 → <span style="color:#3fb950;font-weight:600">回踩轻仓尝试</span>；④ <span style="color:#f0883e">止损线：跌破95元（今日开盘价）必须止损，5日涨幅已大，止损要更严格</span></p>
+  </div>
+</div>
+
+<!-- Stock #5: 生益科技 -->
+<div class="stock-card">
+  <div class="stock-header">
+    <span class="rank r5">5</span>
+    <span class="name">生益科技</span>
+    <span class="code">sh600183</span>
+    <span class="tag tag-concept">PCB覆铜板</span>
+    <span class="tag tag-board">首板惜售</span>
+  </div>
+  <div class="score-bar">
+    <span class="score-label">涨停概率评分</span>
+    <div class="score-track"><div class="score-fill" style="width:85%;background:linear-gradient(90deg,#f0c040,#f0883e)"></div></div>
+    <span class="score-val" style="color:#f0c040">85</span>
+  </div>
+  <div class="price-line">
+    <span class="price">166.41</span>
+    <span class="change">+10.00%</span>
+    <span class="limit">📈 涨停</span>
+  </div>
+  <div class="info-grid">
+    <div class="info-item"><div class="ilabel">换手率</div><div class="ivalue">2.26%</div></div>
+    <div class="info-item"><div class="ilabel">总市值</div><div class="ivalue">4042亿</div></div>
+    <div class="info-item"><div class="ilabel">PE(TTM)</div><div class="ivalue">102.90</div></div>
+    <div class="info-item"><div class="ilabel">20日涨幅</div><div class="ivalue" style="color:#f85149">+69.55%</div></div>
+    <div class="info-item"><div class="ilabel">60日涨幅</div><div class="ivalue" style="color:#f85149">+172.45%</div></div>
+    <div class="info-item"><div class="ilabel">52周最高</div><div class="ivalue" style="color:#3fb950">166.41(今日新高)</div></div>
+  </div>
+  <p style="font-size:14px;color:#e1e4e8;margin-bottom:8px;">
+    <strong style="color:#58a6ff">核心逻辑：</strong>PCB覆铜板(CCL)全球龙头，4000亿市值大盘股首板涨停意义重大。今日换手仅2.26%极度惜售，说明筹码锁定极好。PCB概念今日+7.75%+5日+10.89%，电子布今日+9.99%。今日创52周新高，突破所有技术阻力。PE 102相对合理，是5只票中基本面最扎实的。<span style="color:#f0883e">风险：大盘股连板难度高，更可能走趋势。</span>
+  </p>
+  <div class="auction-box">
+    <h4>🔔 明日竞价预期</h4>
+    <p>预期<span class="highlight">高开2%-4%</span>（约169-173元区间）。大盘股不太可能一字板。核心观察：① 竞价量需>昨日<span class="highlight">1.5倍</span>（因昨日换手极低）；② 高开后若大单持续买入 → 趋势延续信号；③ <span class="warn">若高开低走+放量滞涨</span>，大盘股容易一日游。</p>
+  </div>
+  <div class="entry-box">
+    <h4>✅ 建议上车条件</h4>
+    <p>① 高开2-4%+竞价放量>1.5倍 → <span style="color:#3fb950;font-weight:600">竞价可轻仓</span>；② 若开盘后稳步推升不破分时均线 → <span style="color:#3fb950;font-weight:600">加仓</span>；③ 大盘股更适合<span style="color:#58a6ff;font-weight:600">趋势持有</span>而非博弈连板，可将止损放宽；④ <span style="color:#f0883e">止损线：跌破160元（今日开盘价159.11附近支撑）减半仓，跌破151元（昨收）清仓</span></p>
+  </div>
+</div>
+
+<!-- SUMMARY TABLE -->
+<h2 class="section-title">📋 5股汇总对比</h2>
+<table class="summary-table">
+  <thead>
+    <tr>
+      <th>排名</th><th>股票</th><th>代码</th><th>概念</th><th>主力净流入</th><th>评分</th><th>竞价预期</th><th>风险等级</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>🥇</td><td>东山精密</td><td>sz002384</td><td>PCB/FPC</td><td style="color:#f85149">+35.28亿</td><td>96</td><td>高开2-5%</td><td style="color:#f0c040">中低</td>
+    </tr>
+    <tr>
+      <td>🥈</td><td>风华高科</td><td>sz000636</td><td>MLCC</td><td style="color:#f85149">+16.88亿</td><td>93</td><td>高开3-6%/可能一字</td><td style="color:#f0c040">中</td>
+    </tr>
+    <tr>
+      <td>🥉</td><td>太辰光</td><td>sz300570</td><td>CPO/光通信</td><td style="color:#f85149">+6.62亿</td><td>89</td><td>高开5-10%</td><td style="color:#f0883e">中高(20cm)</td>
+    </tr>
+    <tr>
+      <td>#4</td><td>云南锗业</td><td>sz002428</td><td>锗镓</td><td style="color:#f85149">+13.26亿</td><td>87</td><td>高开3-7%</td><td style="color:#f0883e">高(已涨29%)</td>
+    </tr>
+    <tr>
+      <td>#5</td><td>生益科技</td><td>sh600183</td><td>PCB覆铜板</td><td style="color:#8b949e">未单独上榜</td><td>85</td><td>高开2-4%</td><td style="color:#3fb950">低(大盘股)</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- AUCTION SUMMARY -->
+<div class="auction-summary">
+  <h3>⏰ 明日竞价统一观察框架（9:15-9:25）</h3>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="time">9:15-9:20</div>
+      <div class="desc">观察5股竞价量能是否放大（对比昨日集合竞价量），关注是否有大单试盘。此阶段可撤单，价格信号参考价值有限。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">9:20-9:25</div>
+      <div class="desc"><strong>关键5分钟</strong>——不可撤单阶段，价格和量能信号真实。确认竞价方向：若多只票同时被砸低2%+，当日整体情绪可能转弱，考虑减仓或观望。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">9:25</div>
+      <div class="desc">竞价结束，对比实际开盘价与预期区间。若集体低于预期下限，市场情绪偏弱，降低仓位。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">9:30-10:00</div>
+      <div class="desc">开盘30分钟定胜负：若3只及以上在30分钟内封板，当日主线确认，可积极参与；若无一封板，降低预期。</div>
+    </div>
+  </div>
+</div>
+
+<!-- RISK -->
+<div class="risk-box">
+  <h3>⚠️ 风险提示与风控纪律</h3>
+  <ul>
+    <li><strong>大盘风险：</strong>沪指6连阳逼近4100，创业板单日+5.3%后短期超买，明日可能出现震荡或回调。若上证跌破4050，创业板跌破3950，整体策略转为防守。</li>
+    <li><strong>美伊协议持续性：</strong>今日大涨的核心催化是美伊协议，若出现反复或执行层面问题，市场情绪可能快速逆转。</li>
+    <li><strong>超级央行周：</strong>本周美联储等重要央行议息，北京时间周四凌晨美联储决议可能引发全球波动。</li>
+    <li><strong>板块轮动风险：</strong>MLCC/PCB/CPO今日集体爆发后，明日可能出现分化，后排股追高风险大。</li>
+    <li><strong>仓位纪律：</strong>单票不超过总仓位20%，5只合计不超过70%，保留30%现金应对不确定性。</li>
+    <li><strong>止损铁律：</strong>任何一只跌破建议止损线，必须无条件执行止损，不抱幻想。</li>
+    <li><strong>竞价集体低开：</strong>若3只以上竞价低开，则当日预测失效，全部观望不开仓。</li>
+  </ul>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>📊 数据来源：腾讯自选股 · 龙虎榜 · 通达信 | ⏰ 生成时间：2026-06-15 20:44</p>
+  <p style="color:#f85149;margin-top:8px;">⚠️ 以上内容由AI基于公开信息整理生成，仅供参考，不构成任何投资建议或个股推荐。投资有风险，决策需谨慎。</p>
+  <p style="margin-top:8px;"><a href="https://github.com/zazzzf/AStockEveryDay" target="_blank">View on GitHub</a></p>
+</div>
+
+</div>
+</body>
+</html>
