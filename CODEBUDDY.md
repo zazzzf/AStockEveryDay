@@ -9,7 +9,7 @@ AStockEveryDay is a daily A-share "limit-up" (涨停) prediction web app — a s
 Since there is no build tooling, framework, or test suite:
 
 - **Serve locally**: `python -m http.server 8080` (or any static file server) from the repo root, then open `http://localhost:8080`.
-- **Validate data**: manually check that each `data/*.json` file is well-formed JSON. A quick sanity check: `python -c "import json; [json.load(open(f'data/{f}')) for f in ['predictions.json','20260610.json','20260611.json','20260613.json','20260615.json','20260616.json']]"` will throw on parse errors.
+- **Validate data**: manually check that each `data/*.json` file is well-formed JSON. A quick sanity check: `python -c "import json; [json.load(open(f'data/{f}')) for f in ['predictions.json','20260610.json','20260611.json','20260615.json','20260616.json']]"` will throw on parse errors.
 - **Add a new prediction day**: create a `data/YYYYMMDD.json` file (schema below), then prepend its metadata entry to `data/predictions.json`. No other files need changes.
 
 ## Architecture
