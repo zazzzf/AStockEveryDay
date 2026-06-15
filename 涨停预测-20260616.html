@@ -4,100 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>涨停预测 · 2026年6月16日（周二）</title>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; background: #0f1117; color: #e1e4e8; line-height: 1.7; }
-.container { max-width: 860px; margin: 0 auto; padding: 20px 16px; }
-.header { text-align: center; padding: 40px 0 30px; border-bottom: 1px solid #21262d; margin-bottom: 30px; }
-.header h1 { font-size: 28px; font-weight: 700; background: linear-gradient(135deg, #f0883e, #e04040); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
-.header .sub { color: #8b949e; font-size: 14px; }
-.header .date-badge { display: inline-block; background: #1c2128; border: 1px solid #30363d; border-radius: 20px; padding: 4px 16px; font-size: 13px; color: #58a6ff; margin-top: 12px; }
-
-.market-snapshot { background: linear-gradient(135deg, #161b22, #1c2333); border: 1px solid #30363d; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
-.market-snapshot h2 { font-size: 16px; color: #f0883e; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-.market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
-.market-item { background: #0d1117; border: 1px solid #21262d; border-radius: 8px; padding: 12px; text-align: center; }
-.market-item .label { font-size: 11px; color: #8b949e; margin-bottom: 4px; }
-.market-item .value { font-size: 18px; font-weight: 700; }
-.market-item .value.up { color: #f85149; }
-.market-item .value.down { color: #3fb950; }
-
-.section-title { font-size: 18px; font-weight: 700; color: #f0f6fc; margin: 32px 0 16px; padding-bottom: 8px; border-bottom: 2px solid #f0883e; display: flex; align-items: center; gap: 8px; }
-
-.stock-card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 24px; margin-bottom: 20px; transition: border-color .2s; }
-.stock-card:hover { border-color: #f0883e; }
-.stock-card .rank { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; font-weight: 700; font-size: 16px; margin-right: 10px; }
-.stock-card .rank.r1 { background: linear-gradient(135deg, #f0883e, #ff6b35); color: #fff; }
-.stock-card .rank.r2 { background: linear-gradient(135deg, #c0c0c0, #a8a8a8); color: #0d1117; }
-.stock-card .rank.r3 { background: linear-gradient(135deg, #cd7f32, #b87333); color: #fff; }
-.stock-card .rank.r4 { background: #30363d; color: #f0f6fc; }
-.stock-card .rank.r5 { background: #30363d; color: #f0f6fc; }
-.stock-header { display: flex; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
-.stock-header .name { font-size: 20px; font-weight: 700; color: #f0f6fc; }
-.stock-header .code { font-size: 13px; color: #8b949e; margin-left: 8px; }
-.stock-header .tag { font-size: 11px; padding: 2px 10px; border-radius: 12px; font-weight: 600; }
-.tag-concept { background: rgba(88,166,255,0.15); color: #58a6ff; }
-.tag-lhb { background: rgba(240,136,62,0.15); color: #f0883e; }
-.tag-board { background: rgba(63,185,80,0.15); color: #3fb950; }
-.price-line { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
-.price-line .price { font-size: 28px; font-weight: 700; color: #f85149; }
-.price-line .change { font-size: 16px; color: #f85149; font-weight: 600; }
-.price-line .limit { font-size: 13px; color: #8b949e; background: #1c2128; padding: 2px 10px; border-radius: 10px; }
-
-.info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 16px; }
-.info-item { background: #0d1117; border: 1px solid #21262d; border-radius: 8px; padding: 10px 12px; }
-.info-item .ilabel { font-size: 11px; color: #8b949e; }
-.info-item .ivalue { font-size: 15px; font-weight: 600; color: #f0f6fc; }
-
-.auction-box { background: linear-gradient(135deg, #1a1f2e, #161b22); border: 1px solid #f0883e; border-radius: 10px; padding: 16px; margin-top: 12px; }
-.auction-box h4 { font-size: 14px; color: #f0883e; margin-bottom: 8px; }
-.auction-box p { font-size: 14px; color: #e1e4e8; line-height: 1.8; }
-.auction-box .highlight { color: #58a6ff; font-weight: 600; }
-.auction-box .warn { color: #f0883e; font-weight: 600; }
-
-.entry-box { background: linear-gradient(135deg, #162316, #161b22); border: 1px solid #3fb950; border-radius: 10px; padding: 16px; margin-top: 8px; }
-.entry-box h4 { font-size: 14px; color: #3fb950; margin-bottom: 8px; }
-.entry-box p { font-size: 14px; color: #e1e4e8; line-height: 1.8; }
-
-.score-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-.score-bar .score-label { font-size: 12px; color: #8b949e; }
-.score-bar .score-track { flex: 1; height: 6px; background: #21262d; border-radius: 3px; overflow: hidden; }
-.score-bar .score-fill { height: 100%; border-radius: 3px; }
-.score-bar .score-val { font-size: 14px; font-weight: 700; }
-
-.risk-box { background: #1a1515; border: 1px solid #f8514922; border-radius: 10px; padding: 20px; margin: 24px 0; }
-.risk-box h3 { color: #f85149; font-size: 15px; margin-bottom: 12px; }
-.risk-box ul { list-style: none; padding: 0; }
-.risk-box li { padding: 6px 0; font-size: 13px; color: #e1e4e8; border-bottom: 1px solid #21262d; }
-.risk-box li::before { content: "⚠️ "; margin-right: 4px; }
-
-.summary-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
-.summary-table th { background: #1c2128; color: #f0883e; padding: 10px 12px; text-align: left; font-weight: 600; border: 1px solid #30363d; }
-.summary-table td { padding: 10px 12px; border: 1px solid #30363d; color: #e1e4e8; }
-.summary-table tr:nth-child(even) td { background: #0d111722; }
-
-.auction-summary { background: #1a1f2e; border: 1px solid #30363d; border-radius: 10px; padding: 16px; margin: 16px 0; }
-.auction-summary h3 { color: #58a6ff; font-size: 15px; margin-bottom: 8px; }
-
-.timeline { position: relative; padding-left: 24px; margin: 12px 0; }
-.timeline::before { content: ''; position: absolute; left: 6px; top: 0; bottom: 0; width: 2px; background: #30363d; }
-.timeline-item { position: relative; margin-bottom: 12px; padding-left: 20px; }
-.timeline-item::before { content: ''; position: absolute; left: -20px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: #f0883e; }
-.timeline-item .time { font-size: 11px; color: #8b949e; }
-.timeline-item .desc { font-size: 13px; color: #e1e4e8; }
-
-.footer { text-align: center; padding: 30px 0; color: #484f58; font-size: 12px; border-top: 1px solid #21262d; margin-top: 30px; }
-.footer a { color: #58a6ff; text-decoration: none; }
-</style>
+<link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 <div class="container">
 
 <!-- HEADER -->
-<div class="header">
+<div class="report-header">
   <h1>🔥 涨停预测 · 明日最强5股</h1>
-  <div class="sub">基于今日热门股、资金流向、龙虎榜、热门概念多维数据交叉筛选</div>
-  <div class="date-badge">📅 预测日期：2026年6月16日（周二）| 数据截止：6月15日收盘</div>
+  <p class="sub">基于今日热门股、资金流向、龙虎榜、热门概念多维数据交叉筛选</p>
+  <div class="meta-row">
+    <span class="badge badge-accent">📅 预测日期：2026年6月16日（周二）| 数据截止：6月15日收盘</span>
+  </div>
 </div>
 
 <!-- MARKET SNAPSHOT -->
@@ -439,9 +357,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft
 </div>
 
 <!-- FOOTER -->
-<div class="footer">
+<div class="site-footer">
   <p>📊 数据来源：腾讯自选股 · 龙虎榜 · 通达信 | ⏰ 生成时间：2026-06-15 20:44</p>
-  <p style="color:#f85149;margin-top:8px;">⚠️ 以上内容由AI基于公开信息整理生成，仅供参考，不构成任何投资建议或个股推荐。投资有风险，决策需谨慎。</p>
+  <p class="disclaimer">⚠️ 以上内容由AI基于公开信息整理生成，仅供参考，不构成任何投资建议或个股推荐。投资有风险，决策需谨慎。</p>
   <p style="margin-top:8px;"><a href="https://github.com/zazzzf/AStockEveryDay" target="_blank">View on GitHub</a></p>
 </div>
 
