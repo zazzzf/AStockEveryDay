@@ -95,14 +95,14 @@ function home() {
   const latest = predictionsIndex[0];
   const history = predictionsIndex.slice(1);
   $('#app').innerHTML = `
-<!-- DARK HERO -->
-<div class="bg-near-black text-warm-silver py-14 sm:py-20 px-4 text-center border-b border-dark-surface">
+<!-- HERO -->
+<div class="bg-warm-sand/30 py-14 sm:py-20 px-4 text-center border-b border-border-cream">
   <div class="max-w-2xl mx-auto">
-    <div class="inline-flex items-center gap-2.5 text-xs text-warm-silver tracking-[2px] uppercase mb-8 font-sans opacity-60 select-none">
+    <div class="inline-flex items-center gap-2.5 text-xs text-stone-gray tracking-[2px] uppercase mb-8 font-sans select-none">
       <span class="w-[28px] h-[28px] bg-terracotta rounded-lg inline-flex items-center justify-center text-[14px] text-ivory font-bold font-serif">S</span> Stock Partner
     </div>
-    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-serif font-normal leading-[1.15] text-ivory mb-6 tracking-tight">A股每日涨停预测</h1>
-    <p class="text-base sm:text-lg text-warm-silver max-w-lg mx-auto leading-relaxed font-sans opacity-80">基于热门股、资金流向、龙虎榜、热门概念多维数据，每日筛选最具涨停潜力的5只个股</p>
+    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-serif font-normal leading-[1.15] text-near-black mb-6 tracking-tight">A股每日涨停预测</h1>
+    <p class="text-base sm:text-lg text-olive-gray max-w-lg mx-auto leading-relaxed font-sans">基于热门股、资金流向、龙虎榜、热门概念多维数据，每日筛选最具涨停潜力的5只个股</p>
     <div class="flex items-center justify-center gap-3 mt-8 flex-wrap">
       <span class="inline-flex items-center gap-1.5 text-xs text-terracotta bg-terracotta/10 border border-terracotta/20 rounded-full px-4 py-1.5 font-sans">每个交易日 20:00 自动更新</span>
     </div>
@@ -225,14 +225,13 @@ function renderPrediction(d) {
 function renderMarketSnapshot(d) {
   if (!d.marketSnapshot || !d.marketSnapshot.indices) return '';
   const idx = d.marketSnapshot.indices;
-  return `<div class="bg-near-black border border-dark-surface rounded-2xl p-6 sm:p-7 mb-8 relative overflow-hidden">
-    <div class="absolute top-[-40%] right-[-15%] w-[350px] h-[350px] bg-[radial-gradient(circle,rgba(201,100,66,0.06),transparent_65%)] pointer-events-none"></div>
-    <h2 class="text-[15px] font-serif font-normal text-terracotta mb-5 flex items-center gap-2 relative">今日市场全景</h2>
-    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 relative">${idx.map(i=>`
-      <div class="bg-dark-surface border border-[#3d3d3a] rounded-xl p-3.5 text-center hover:border-terracotta/20 transition-warm">
-        <div class="text-[11px] text-warm-silver uppercase tracking-wide font-sans">${i.label}</div>
+  return `<div class="bg-ivory border border-border-cream rounded-2xl p-6 sm:p-7 mb-8 whisper">
+    <h2 class="text-[15px] font-serif font-normal text-terracotta mb-5 flex items-center gap-2">今日市场全景</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">${idx.map(i=>`
+      <div class="bg-parchment border border-border-cream rounded-xl p-3.5 text-center hover:border-terracotta/20 transition-warm">
+        <div class="text-[11px] text-stone-gray uppercase tracking-wide font-sans">${i.label}</div>
         <div class="text-lg font-sans font-bold ${i.isUp?'text-rise-red':'text-fall-green'} tabular-nums mt-1">${i.value}</div>
-        ${i.change?`<div class="text-xs ${i.isUp?'text-rise-red':'text-warm-silver'} font-sans mt-0.5">${i.change}</div>`:''}
+        ${i.change?`<div class="text-xs ${i.isUp?'text-rise-red':'text-stone-gray'} font-sans mt-0.5">${i.change}</div>`:''}
       </div>`).join('')}</div></div>`;
 }
 
