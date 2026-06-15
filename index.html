@@ -89,7 +89,7 @@ const tagClr = t => {
   if (t==='lhb') return 'bg-[#c96442]/8 text-[#c96442] border-[#c96442]/15';
   return 'bg-[#5a9e6b]/8 text-[#5a9e6b] border-[#5a9e6b]/15';
 };
-const baiduUrl = c => `https://finance.baidu.com/stock/${c.replace(/^(sz|sh|bj)/,'')}.html`;
+const baiduUrl = c => `https://finance.baidu.com/stock/ab-${c.replace(/^(sz|sh|bj)/,'')}`;
 
 // ==================== HOME PAGE ====================
 function home() {
