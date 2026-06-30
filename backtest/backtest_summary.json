@@ -1,0 +1,206 @@
+{
+  "generated": "2026-06-30 21:00",
+  "description": "涨停预测回测数据 - 跟踪每期预测5只股票在预测日后的实际表现",
+  "methodology": "记录预测日下一个交易日起的每日收盘价和累计收益，最多跟踪10个交易日",
+  "backtest": [
+    {
+      "predictionDate": "2026-06-29",
+      "predictionFor": "2026-06-30",
+      "stocks": [
+        {
+          "code": "000988", "name": "华工科技", "predPrice": 177.03,
+          "days": [
+            {"date":"2026-06-30","close":184.61,"chg":"+4.28%","cumChg":"+4.28%","dayNum":1}
+          ]
+        },
+        {
+          "code": "603986", "name": "兆易创新", "predPrice": 840.00,
+          "days": [
+            {"date":"2026-06-30","close":815.00,"chg":"-2.98%","cumChg":"-2.98%","dayNum":1}
+          ]
+        },
+        {
+          "code": "605376", "name": "博迁新材", "predPrice": 279.50,
+          "days": [
+            {"date":"2026-06-30","close":271.30,"chg":"-2.93%","cumChg":"-2.93%","dayNum":1}
+          ]
+        },
+        {
+          "code": "603650", "name": "彤程新材", "predPrice": 94.41,
+          "days": [
+            {"date":"2026-06-30","close":97.98,"chg":"+3.78%","cumChg":"+3.78%","dayNum":1}
+          ]
+        },
+        {
+          "code": "000021", "name": "深科技", "predPrice": 58.86,
+          "days": [
+            {"date":"2026-06-30","close":64.27,"chg":"+9.19%","cumChg":"+9.19%","dayNum":1}
+          ]
+        }
+      ],
+      "summary": "5只股票中3涨2跌，平均涨幅+2.27%。深科技(+9.19%)接近涨停表现最好，博迁新材(-2.93%)表现最差。"
+    },
+    {
+      "predictionDate": "2026-06-26",
+      "predictionFor": "2026-06-29",
+      "stocks": [
+        {
+          "code": "002354", "name": "天娱数科", "predPrice": 8.83,
+          "days": [
+            {"date":"2026-06-29","close":9.11,"chg":"+3.17%","cumChg":"+3.17%","dayNum":1},
+            {"date":"2026-06-30","close":9.30,"chg":"+2.09%","cumChg":"+5.32%","dayNum":2}
+          ]
+        },
+        {
+          "code": "002129", "name": "TCL中环", "predPrice": 20.28,
+          "days": [
+            {"date":"2026-06-29","close":"待查","chg":"待查","cumChg":"待查","dayNum":1},
+            {"date":"2026-06-30","close":"待查","chg":"待查","cumChg":"待查","dayNum":2}
+          ]
+        },
+        {
+          "code": "600552", "name": "凯盛科技", "predPrice": 32.58,
+          "days": [
+            {"date":"2026-06-29","close":"待查","chg":"待查","cumChg":"待查","dayNum":1},
+            {"date":"2026-06-30","close":"待查","chg":"待查","cumChg":"待查","dayNum":2}
+          ]
+        },
+        {
+          "code": "688432", "name": "有研硅", "predPrice": "待查",
+          "days": [
+            {"date":"2026-06-29","close":"待查","chg":"待查","cumChg":"待查","dayNum":1},
+            {"date":"2026-06-30","close":"待查","chg":"待查","cumChg":"待查","dayNum":2}
+          ]
+        },
+        {
+          "code": "002119", "name": "康强电子", "predPrice": 37.02,
+          "days": [
+            {"date":"2026-06-29","close":36.29,"chg":"-1.97%","cumChg":"-1.97%","dayNum":1},
+            {"date":"2026-06-30","close":39.92,"chg":"+10.00%","cumChg":"+7.83%","dayNum":2}
+          ]
+        }
+      ],
+      "summary": "部分数据待补充。康强电子2日累计+7.83%(今日涨停)，天娱数科2日+5.32%表现稳健。"
+    },
+    {
+      "predictionDate": "2026-06-25",
+      "predictionFor": "2026-06-26",
+      "stocks": [
+        {
+          "code": "603019", "name": "中科曙光", "predPrice": 97.86,
+          "days": [
+            {"date":"2026-06-26","close":"待查","chg":"待查","cumChg":"待查","dayNum":1},
+            {"date":"2026-06-29","close":"待查","chg":"待查","cumChg":"待查","dayNum":2},
+            {"date":"2026-06-30","close":"待查","chg":"待查","cumChg":"待查","dayNum":3}
+          ]
+        },
+        {
+          "code": "000636", "name": "风华高科", "predPrice": 80.40,
+          "days": [
+            {"date":"2026-06-26","close":"待查","chg":"待查","cumChg":"待查","dayNum":1},
+            {"date":"2026-06-29","close":"待查","chg":"待查","cumChg":"待查","dayNum":2},
+            {"date":"2026-06-30","close":72.24,"chg":"待查","cumChg":"待查","dayNum":3}
+          ]
+        },
+        {
+          "code": "300223", "name": "北京君正", "predPrice": 146.55,
+          "days": [
+            {"date":"2026-06-26","close":"待查","chg":"待查","cumChg":"待查","dayNum":1},
+            {"date":"2026-06-29","close":"待查","chg":"待查","cumChg":"待查","dayNum":2},
+            {"date":"2026-06-30","close":"待查","chg":"待查","cumChg":"待查","dayNum":3}
+          ]
+        },
+        {
+          "code": "000100", "name": "TCL科技", "predPrice": 5.34,
+          "days": [
+            {"date":"2026-06-26","close":5.40,"chg":"+1.12%","cumChg":"+1.12%","dayNum":1},
+            {"date":"2026-06-29","close":5.29,"chg":"-2.04%","cumChg":"-0.94%","dayNum":2},
+            {"date":"2026-06-30","close":5.82,"chg":"+10.02%","cumChg":"+8.99%","dayNum":3}
+          ]
+        },
+        {
+          "code": "600522", "name": "中天科技", "predPrice": 52.05,
+          "days": [
+            {"date":"2026-06-26","close":"待查","chg":"待查","cumChg":"待查","dayNum":1},
+            {"date":"2026-06-29","close":"待查","chg":"待查","cumChg":"待查","dayNum":2},
+            {"date":"2026-06-30","close":"待查","chg":"待查","cumChg":"待查","dayNum":3}
+          ]
+        }
+      ],
+      "summary": "部分数据待补充。TCL科技3日累计+8.99%——今日涨停封板是本次选股的最佳验证。"
+    },
+    {
+      "predictionDate": "2026-06-24",
+      "predictionFor": "2026-06-25",
+      "stocks": [
+        {
+          "code": "600584", "name": "长电科技", "predPrice": 143.67,
+          "days": [
+            {"date":"2026-06-25","close":"待查","chg":"待查","cumChg":"待查","dayNum":1},
+            {"date":"2026-06-26","close":"待查","chg":"待查","cumChg":"待查","dayNum":2},
+            {"date":"2026-06-29","close":"待查","chg":"待查","cumChg":"待查","dayNum":3},
+            {"date":"2026-06-30","close":"待查","chg":"待查","cumChg":"待查","dayNum":4}
+          ]
+        },
+        {
+          "code": "002428", "name": "云南锗业", "predPrice": 114.02,
+          "days": [
+            {"date":"2026-06-25","close":"待查","chg":"待查","cumChg":"待查","dayNum":1},
+            {"date":"2026-06-26","close":"待查","chg":"待查","cumChg":"待查","dayNum":2},
+            {"date":"2026-06-29","close":"待查","chg":"待查","cumChg":"待查","dayNum":3},
+            {"date":"2026-06-30","close":"待查","chg":"待查","cumChg":"待查","dayNum":4}
+          ]
+        },
+        {
+          "code": "002600", "name": "领益智造", "predPrice": 17.66,
+          "days": [
+            {"date":"2026-06-25","close":"待查","chg":"待查","cumChg":"待查","dayNum":1},
+            {"date":"2026-06-26","close":"待查","chg":"待查","cumChg":"待查","dayNum":2},
+            {"date":"2026-06-29","close":15.76,"chg":"待查","cumChg":"待查","dayNum":3},
+            {"date":"2026-06-30","close":17.34,"chg":"+10.03%","cumChg":"待查","dayNum":4}
+          ]
+        },
+        {
+          "code": "002409", "name": "雅克科技", "predPrice": 103.87,
+          "days": [
+            {"date":"2026-06-25","close":"待查","chg":"待查","cumChg":"待查","dayNum":1},
+            {"date":"2026-06-26","close":"待查","chg":"待查","cumChg":"待查","dayNum":2},
+            {"date":"2026-06-29","close":"待查","chg":"待查","cumChg":"待查","dayNum":3},
+            {"date":"2026-06-30","close":"待查","chg":"待查","cumChg":"待查","dayNum":4}
+          ]
+        },
+        {
+          "code": "000021", "name": "深科技", "predPrice": 50.27,
+          "days": [
+            {"date":"2026-06-25","close":53.20,"chg":"+5.83%","cumChg":"+5.83%","dayNum":1},
+            {"date":"2026-06-26","close":53.51,"chg":"+0.58%","cumChg":"+6.45%","dayNum":2},
+            {"date":"2026-06-29","close":58.86,"chg":"+10.00%","cumChg":"+17.09%","dayNum":3},
+            {"date":"2026-06-30","close":64.27,"chg":"+9.19%","cumChg":"+27.85%","dayNum":4}
+          ]
+        }
+      ],
+      "summary": "部分数据待补充。深科技4日累计+27.85%——两个涨停(6/29首板+6/30续涨9.19%)，是本次回测的冠军品种！"
+    },
+    {
+      "predictionDate": "2026-06-23",
+      "predictionFor": "2026-06-24",
+      "daysTracked": "5个交易日",
+      "stocks": [
+        {"code":"002008","name":"大族激光","predPrice":"待查","note":"数据待补充"},
+        {"code":"300085","name":"银之杰","predPrice":"待查","note":"数据待补充"},
+        {"code":"600172","name":"黄河旋风","predPrice":"待查","note":"数据待补充"},
+        {"code":"601869","name":"长飞光纤","predPrice":"待查","note":"数据待补充"},
+        {"code":"002167","name":"东方锆业","predPrice":"待查","note":"数据待补充"}
+      ],
+      "summary": "数据待补充"
+    }
+  ],
+  "performanceSummary": {
+    "totalPredictions": 9,
+    "withBacktestData": 5,
+    "bestPerformer": "深科技(+27.85% from 6/24 pred, 4 days)",
+    "bestSingleDay": "康强电子(+10.00% on 6/30) / TCL科技(+10.02% on 6/30)",
+    "avg1DayReturn_0629": "+2.27%",
+    "notes": "更多历史数据的逐日回测将在后续运行中增量补充。按10交易日封顶规则，6/16之前的预测(06/10~06/15)已超过10个交易日，回测封顶10日数据待补充。"
+  }
+}
