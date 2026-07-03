@@ -1,10 +1,75 @@
 {
-  "generated": "2026-07-02",
-  "total_predictions": 75,
+  "generated": "2026-07-03",
+  "total_predictions": 80,
   "win_count": 41,
-  "win_rate": 0.5467,
-  "avg_return": 8.41,
+  "win_rate": 0.5125,
+  "avg_return": 7.5,
   "results": [
+    {
+      "pred_date": "2026-07-03",
+      "code": "sz002354",
+      "name": "天娱数科",
+      "rank": 1,
+      "entry_date": "2026-07-03",
+      "exit_date": "2026-07-03",
+      "entry_open": 10.32,
+      "exit_close": 9.37,
+      "days_held": 1,
+      "is_recent": true,
+      "return_pct": -9.21
+    },
+    {
+      "pred_date": "2026-07-03",
+      "code": "sh600172",
+      "name": "黄河旋风",
+      "rank": 2,
+      "entry_date": "2026-07-03",
+      "exit_date": "2026-07-03",
+      "entry_open": 17.66,
+      "exit_close": 16.86,
+      "days_held": 1,
+      "is_recent": true,
+      "return_pct": -4.53
+    },
+    {
+      "pred_date": "2026-07-03",
+      "code": "sz002842",
+      "name": "翔鹭钨业",
+      "rank": 3,
+      "entry_date": "2026-07-03",
+      "exit_date": "2026-07-03",
+      "entry_open": 50.06,
+      "exit_close": 45.15,
+      "days_held": 1,
+      "is_recent": true,
+      "return_pct": -9.81
+    },
+    {
+      "pred_date": "2026-07-03",
+      "code": "sh600641",
+      "name": "先导基电",
+      "rank": 4,
+      "entry_date": "2026-07-03",
+      "exit_date": "2026-07-03",
+      "entry_open": 47.76,
+      "exit_close": 47.51,
+      "days_held": 1,
+      "is_recent": true,
+      "return_pct": -0.52
+    },
+    {
+      "pred_date": "2026-07-03",
+      "code": "sz002326",
+      "name": "永太科技",
+      "rank": 5,
+      "entry_date": "2026-07-03",
+      "exit_date": "2026-07-03",
+      "entry_open": 27.81,
+      "exit_close": 25.81,
+      "days_held": 1,
+      "is_recent": true,
+      "return_pct": -7.19
+    },
     {
       "pred_date": "2026-07-02",
       "code": "sz002407",
@@ -38,7 +103,7 @@
       "rank": 3,
       "entry_date": "2026-07-02",
       "exit_date": "2026-07-02",
-      "entry_open": 216.00,
+      "entry_open": 216.0,
       "exit_close": 212.48,
       "days_held": 1,
       "is_recent": true,
@@ -55,7 +120,7 @@
       "exit_close": 26.05,
       "days_held": 1,
       "is_recent": true,
-      "return_pct": 10.80
+      "return_pct": 10.8
     },
     {
       "pred_date": "2026-07-02",
@@ -65,7 +130,7 @@
       "entry_date": "2026-07-02",
       "exit_date": "2026-07-02",
       "entry_open": 42.81,
-      "exit_close": 40.70,
+      "exit_close": 40.7,
       "days_held": 1,
       "is_recent": true,
       "return_pct": -4.93
