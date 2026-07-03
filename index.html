@@ -453,7 +453,7 @@ function renderBacktestDetail() {
 
 async function init() {
   try {
-    const [predRes, btRes] = await Promise.all([fetch('data/predictions.json'), fetch('backtest_results.json')]);
+    const [predRes, btRes] = await Promise.all([fetch('data/predictions.json'), fetch('data/backtest_results.json')]);
     predictionsIndex = await predRes.json();
     backtestData = await btRes.json();
   } catch(e) {
