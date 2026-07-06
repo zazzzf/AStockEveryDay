@@ -1,12 +1,12 @@
 {
   "generated": "2026-07-06",
   "total_predictions": 85,
-  "win_count": 33,
-  "win_rate": 0.3882,
-  "avg_return": 1.99,
+  "win_count": 34,
+  "win_rate": 0.4,
+  "avg_return": 1.7,
   "results": [
     {
-      "pred_date": "2026-07-03",
+      "pred_date": "2026-07-06",
       "code": "sh688017",
       "name": "绿的谐波",
       "rank": 1,
@@ -19,7 +19,7 @@
       "return_pct": -4.43
     },
     {
-      "pred_date": "2026-07-03",
+      "pred_date": "2026-07-06",
       "code": "sh601689",
       "name": "拓普集团",
       "rank": 2,
@@ -32,7 +32,7 @@
       "return_pct": -3.73
     },
     {
-      "pred_date": "2026-07-03",
+      "pred_date": "2026-07-06",
       "code": "sz002472",
       "name": "双环传动",
       "rank": 3,
@@ -45,7 +45,7 @@
       "return_pct": -3.71
     },
     {
-      "pred_date": "2026-07-03",
+      "pred_date": "2026-07-06",
       "code": "sh600580",
       "name": "卧龙电驱",
       "rank": 4,
@@ -58,7 +58,7 @@
       "return_pct": -0.24
     },
     {
-      "pred_date": "2026-07-03",
+      "pred_date": "2026-07-06",
       "code": "sz002747",
       "name": "埃斯顿",
       "rank": 5,
@@ -76,12 +76,12 @@
       "name": "天娱数科",
       "rank": 1,
       "entry_date": "2026-07-03",
-      "exit_date": "2026-07-03",
+      "exit_date": "2026-07-06",
       "entry_open": 10.32,
-      "exit_close": 9.37,
+      "exit_close": 8.43,
       "days_held": 1,
       "is_recent": true,
-      "return_pct": -9.21
+      "return_pct": -18.31
     },
     {
       "pred_date": "2026-07-03",
@@ -89,12 +89,12 @@
       "name": "黄河旋风",
       "rank": 2,
       "entry_date": "2026-07-03",
-      "exit_date": "2026-07-03",
+      "exit_date": "2026-07-06",
       "entry_open": 17.66,
-      "exit_close": 16.86,
+      "exit_close": 18.55,
       "days_held": 1,
       "is_recent": true,
-      "return_pct": -4.53
+      "return_pct": 5.04
     },
     {
       "pred_date": "2026-07-03",
@@ -102,12 +102,12 @@
       "name": "翔鹭钨业",
       "rank": 3,
       "entry_date": "2026-07-03",
-      "exit_date": "2026-07-03",
+      "exit_date": "2026-07-06",
       "entry_open": 50.06,
-      "exit_close": 45.15,
+      "exit_close": 40.64,
       "days_held": 1,
       "is_recent": true,
-      "return_pct": -9.81
+      "return_pct": -18.82
     },
     {
       "pred_date": "2026-07-03",
@@ -115,12 +115,12 @@
       "name": "先导基电",
       "rank": 4,
       "entry_date": "2026-07-03",
-      "exit_date": "2026-07-03",
+      "exit_date": "2026-07-06",
       "entry_open": 47.76,
-      "exit_close": 47.51,
+      "exit_close": 43.44,
       "days_held": 1,
       "is_recent": true,
-      "return_pct": -0.52
+      "return_pct": -9.05
     },
     {
       "pred_date": "2026-07-03",
@@ -128,12 +128,12 @@
       "name": "永太科技",
       "rank": 5,
       "entry_date": "2026-07-03",
-      "exit_date": "2026-07-03",
+      "exit_date": "2026-07-06",
       "entry_open": 27.81,
-      "exit_close": 25.81,
+      "exit_close": 23.81,
       "days_held": 1,
       "is_recent": true,
-      "return_pct": -7.19
+      "return_pct": -14.38
     },
     {
       "pred_date": "2026-07-02",
