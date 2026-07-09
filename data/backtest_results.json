@@ -1,10 +1,75 @@
 {
-  "generated": "2026-07-08",
-  "total_predictions": 95,
-  "win_count": 33,
-  "win_rate": 0.3474,
-  "avg_return": 0.8,
+  "generated": "2026-07-09",
+  "total_predictions": 100,
+  "win_count": 38,
+  "win_rate": 0.38,
+  "avg_return": 1.02,
   "results": [
+    {
+      "pred_date": "2026-07-09",
+      "code": "sz000977",
+      "name": "浪潮信息",
+      "rank": 1,
+      "entry_date": "2026-07-09",
+      "exit_date": "2026-07-09",
+      "entry_open": 83.0,
+      "exit_close": 85.99,
+      "days_held": 1,
+      "is_recent": true,
+      "return_pct": 3.6
+    },
+    {
+      "pred_date": "2026-07-09",
+      "code": "sz000938",
+      "name": "紫光股份",
+      "rank": 2,
+      "entry_date": "2026-07-09",
+      "exit_date": "2026-07-09",
+      "entry_open": 33.33,
+      "exit_close": 35.68,
+      "days_held": 1,
+      "is_recent": true,
+      "return_pct": 7.05
+    },
+    {
+      "pred_date": "2026-07-09",
+      "code": "sz300454",
+      "name": "深信服",
+      "rank": 3,
+      "entry_date": "2026-07-09",
+      "exit_date": "2026-07-09",
+      "entry_open": 104.49,
+      "exit_close": 107.28,
+      "days_held": 1,
+      "is_recent": true,
+      "return_pct": 2.67
+    },
+    {
+      "pred_date": "2026-07-09",
+      "code": "sz300017",
+      "name": "网宿科技",
+      "rank": 4,
+      "entry_date": "2026-07-09",
+      "exit_date": "2026-07-09",
+      "entry_open": 14.61,
+      "exit_close": 15.33,
+      "days_held": 1,
+      "is_recent": true,
+      "return_pct": 4.93
+    },
+    {
+      "pred_date": "2026-07-09",
+      "code": "sz002396",
+      "name": "星网锐捷",
+      "rank": 5,
+      "entry_date": "2026-07-09",
+      "exit_date": "2026-07-09",
+      "entry_open": 27.0,
+      "exit_close": 28.96,
+      "days_held": 1,
+      "is_recent": true,
+      "return_pct": 7.26
+    },
     {
       "pred_date": "2026-07-08",
       "code": "sz002185",
@@ -15,7 +80,7 @@
       "entry_open": 22.97,
       "exit_close": 21.57,
       "days_held": 1,
-      "is_recent": true,
+      "is_recent": false,
       "return_pct": -6.09
     },
     {
@@ -28,7 +93,7 @@
       "entry_open": 11.28,
       "exit_close": 10.69,
       "days_held": 1,
-      "is_recent": true,
+      "is_recent": false,
       "return_pct": -5.23
     },
     {
@@ -41,7 +106,7 @@
       "entry_open": 57.8,
       "exit_close": 53.98,
       "days_held": 1,
-      "is_recent": true,
+      "is_recent": false,
       "return_pct": -6.61
     },
     {
@@ -54,7 +119,7 @@
       "entry_open": 24.08,
       "exit_close": 22.19,
       "days_held": 1,
-      "is_recent": true,
+      "is_recent": false,
       "return_pct": -7.85
     },
     {
@@ -67,7 +132,7 @@
       "entry_open": 18.67,
       "exit_close": 19.12,
       "days_held": 1,
-      "is_recent": true,
+      "is_recent": false,
       "return_pct": 2.41
     },
     {
