@@ -1,10 +1,65 @@
 {
-  "generated": "2026-07-09",
-  "total_predictions": 100,
+  "generated": "2026-07-10",
+  "total_predictions": 105,
   "win_count": 38,
-  "win_rate": 0.38,
-  "avg_return": 1.02,
+  "win_rate": 0.36,
+  "avg_return": 0.76,
   "results": [
+    {
+      "pred_date": "2026-07-10",
+      "code": "sh600584",
+      "name": "长电科技",
+      "rank": 1,
+      "entry_open": 108.88,
+      "exit_close": 101.11,
+      "days_held": 1,
+      "is_recent": false,
+      "return_pct": -7.14
+    },
+    {
+      "pred_date": "2026-07-10",
+      "code": "sh603986",
+      "name": "兆易创新",
+      "rank": 2,
+      "entry_open": 688.0,
+      "exit_close": 612.0,
+      "days_held": 1,
+      "is_recent": false,
+      "return_pct": -11.05
+    },
+    {
+      "pred_date": "2026-07-10",
+      "code": "sz000977",
+      "name": "浪潮信息",
+      "rank": 3,
+      "entry_open": 92.0,
+      "exit_close": 89.52,
+      "days_held": 1,
+      "is_recent": false,
+      "return_pct": -2.7
+    },
+    {
+      "pred_date": "2026-07-10",
+      "code": "sz002384",
+      "name": "东山精密",
+      "rank": 4,
+      "entry_open": 269.37,
+      "exit_close": 242.3,
+      "days_held": 1,
+      "is_recent": false,
+      "return_pct": -10.05
+    },
+    {
+      "pred_date": "2026-07-10",
+      "code": "sz002156",
+      "name": "通富微电",
+      "rank": 5,
+      "entry_open": 74.0,
+      "exit_close": 70.95,
+      "days_held": 1,
+      "is_recent": false,
+      "return_pct": -4.12
+    },
     {
       "pred_date": "2026-07-09",
       "code": "sz000977",
@@ -13,10 +68,10 @@
       "entry_date": "2026-07-09",
       "exit_date": "2026-07-09",
       "entry_open": 83.0,
-      "exit_close": 85.99,
-      "days_held": 1,
-      "is_recent": true,
-      "return_pct": 3.6
+      "exit_close": 89.52,
+      "days_held": 2,
+      "is_recent": false,
+      "return_pct": 7.86
     },
     {
       "pred_date": "2026-07-09",
@@ -26,10 +81,10 @@
       "entry_date": "2026-07-09",
       "exit_date": "2026-07-09",
       "entry_open": 33.33,
-      "exit_close": 35.68,
-      "days_held": 1,
-      "is_recent": true,
-      "return_pct": 7.05
+      "exit_close": 38.41,
+      "days_held": 2,
+      "is_recent": false,
+      "return_pct": 15.24
     },
     {
       "pred_date": "2026-07-09",
@@ -40,8 +95,8 @@
       "exit_date": "2026-07-09",
       "entry_open": 104.49,
       "exit_close": 107.28,
-      "days_held": 1,
-      "is_recent": true,
+      "days_held": 2,
+      "is_recent": false,
       "return_pct": 2.67
     },
     {
@@ -53,8 +108,8 @@
       "exit_date": "2026-07-09",
       "entry_open": 14.61,
       "exit_close": 15.33,
-      "days_held": 1,
-      "is_recent": true,
+      "days_held": 2,
+      "is_recent": false,
       "return_pct": 4.93
     },
     {
@@ -66,8 +121,8 @@
       "exit_date": "2026-07-09",
       "entry_open": 27.0,
       "exit_close": 28.96,
-      "days_held": 1,
-      "is_recent": true,
+      "days_held": 2,
+      "is_recent": false,
       "return_pct": 7.26
     },
     {
