@@ -91,6 +91,12 @@ const tagClr = t => {
   return 'bg-[#5a9e6b]/8 text-[#5a9e6b] border-[#5a9e6b]/15';
 };
 const baiduUrl = c => `https://finance.baidu.com/stock/ab-${c.replace(/^(sz|sh|bj)/,'')}`;
+// Look up backtest return for a prediction date + stock code (code may have sz/sh prefix)
+const btRet = (predId, code) => {
+  if (!backtestData || !backtestData.results) return null;
+  const r = backtestData.results.find(e => e.pred_date === predId && (e.code === code || e.code.endsWith(code)));
+  return r ? r.return_pct : null;
+};
 
 // ==================== HOME PAGE ====================
 function home() {
@@ -162,12 +168,18 @@ function home() {
       </div>
       <!-- Stock pills -->
       <div class="flex items-center gap-1.5 flex-wrap">
-        ${(h.topStocks||[]).map((n,j)=>`
+        ${(h.topStocks||[]).map((n,j)=>{
+          const c = (h.topCodes||[])[j]||'';
+          const ret = btRet(h.id, c);
+          const retClr = ret === null ? '' : (ret >= 0 ? 'text-rise-red' : 'text-fall-green');
+          const retStr = ret === null ? '' : `${ret>=0?'+':''}${ret.toFixed(1)}%`;
+          return `
         <a href="#${h.id.slice(4)}" class="inline-flex items-center gap-1 bg-parchment border border-border-cream rounded-lg px-2.5 py-1.5 text-xs hover:border-terracotta/30 hover:bg-terracotta/[0.03] transition-warm">
           <span class="inline-flex items-center justify-center w-4 h-4 rounded-md shrink-0 ${j===0?'bg-terracotta text-ivory':j===1?'bg-stone-gray text-ivory':j===2?'bg-warn-amber text-ivory':'bg-warm-sand text-stone-gray'} text-[10px] font-bold font-sans">${j+1}</span>
           <span class="font-medium text-near-black font-sans">${n}</span>
-          <span class="text-[10px] text-stone-gray font-mono ml-0.5">${(h.topCodes||[])[j]||''}</span>
-        </a>`).join('')}
+          ${ret!==null?`<span class="text-[10px] font-mono ml-0.5 ${retClr}">${retStr}</span>`:''}
+          <span class="text-[10px] text-stone-gray font-mono ml-0.5">${c}</span>
+        </a>`}).join('')}
       </div>
     </div>`).join('')}
   </div>`:'<p class="text-sm text-stone-gray text-center py-10 font-sans">暂无往期记录</p>'}
