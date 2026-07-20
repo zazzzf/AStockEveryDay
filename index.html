@@ -174,7 +174,7 @@ function home() {
           const retClr = ret === null ? '' : (ret >= 0 ? 'text-rise-red' : 'text-fall-green');
           const retStr = ret === null ? '' : `${ret>=0?'+':''}${ret.toFixed(1)}%`;
           return `
-        <a href="#${h.id.slice(4)}" class="inline-flex items-center gap-1.5 bg-parchment border border-border-cream rounded-lg px-3 py-2 text-sm hover:border-terracotta/30 hover:bg-terracotta/[0.03] transition-warm">
+        <a href="${baiduUrl(c)}" target="_blank" class="inline-flex items-center gap-1.5 bg-parchment border border-border-cream rounded-lg px-3 py-2 text-sm hover:border-terracotta/30 hover:bg-terracotta/[0.03] transition-warm" title="百度行情">
           <span class="inline-flex items-center justify-center w-5 h-5 rounded-md shrink-0 ${j===0?'bg-terracotta text-ivory':j===1?'bg-stone-gray text-ivory':j===2?'bg-warn-amber text-ivory':'bg-warm-sand text-stone-gray'} text-xs font-bold font-sans">${j+1}</span>
           <span class="font-medium text-near-black font-sans">${n}</span>
           ${ret!==null?`<span class="text-xs font-mono font-semibold ml-0.5 ${retClr}">${retStr}</span>`:''}
