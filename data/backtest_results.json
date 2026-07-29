@@ -1,9 +1,9 @@
 {
-  "generated": "2026-07-28",
+  "generated": "2026-07-29",
   "total_predictions": 33,
-  "win_count": 56,
-  "win_rate": 33.9,
-  "avg_return": -3.14,
+  "win_count": 54,
+  "win_rate": 32.7,
+  "avg_return": -3.26,
   "results": [
     {
       "pred_date": "20260728",
@@ -11,11 +11,11 @@
       "name": "雅克科技",
       "rank": 1,
       "entry_open": 163.7,
-      "exit_close": 166.43,
-      "days_held": 1,
+      "exit_close": 152.18,
+      "days_held": 2,
       "is_recent": true,
-      "return_pct": 1.67,
-      "exit_date": "2026-07-28"
+      "return_pct": -7.04,
+      "exit_date": "2026-07-29"
     },
     {
       "pred_date": "20260728",
@@ -23,11 +23,11 @@
       "name": "国际复材",
       "rank": 2,
       "entry_open": 30.9,
-      "exit_close": 28.87,
-      "days_held": 1,
+      "exit_close": 30.2,
+      "days_held": 2,
       "is_recent": true,
-      "return_pct": -6.57,
-      "exit_date": "2026-07-28"
+      "return_pct": -2.27,
+      "exit_date": "2026-07-29"
     },
     {
       "pred_date": "20260728",
@@ -35,11 +35,11 @@
       "name": "风华高科",
       "rank": 3,
       "entry_open": 43.11,
-      "exit_close": 43.19,
-      "days_held": 1,
+      "exit_close": 47.51,
+      "days_held": 2,
       "is_recent": true,
-      "return_pct": 0.19,
-      "exit_date": "2026-07-28"
+      "return_pct": 10.21,
+      "exit_date": "2026-07-29"
     },
     {
       "pred_date": "20260728",
@@ -47,11 +47,11 @@
       "name": "太极实业",
       "rank": 4,
       "entry_open": 17.92,
-      "exit_close": 18.37,
-      "days_held": 1,
+      "exit_close": 17.4,
+      "days_held": 2,
       "is_recent": true,
-      "return_pct": 2.51,
-      "exit_date": "2026-07-28"
+      "return_pct": -2.9,
+      "exit_date": "2026-07-29"
     },
     {
       "pred_date": "20260728",
@@ -59,11 +59,11 @@
       "name": "长城军工",
       "rank": 5,
       "entry_open": 37.5,
-      "exit_close": 33.55,
-      "days_held": 1,
+      "exit_close": 33.33,
+      "days_held": 2,
       "is_recent": true,
-      "return_pct": -10.53,
-      "exit_date": "2026-07-28"
+      "return_pct": -11.12,
+      "exit_date": "2026-07-29"
     },
     {
       "pred_date": "20260727",
@@ -71,11 +71,11 @@
       "name": "深科技",
       "rank": 5,
       "entry_open": 41.16,
-      "exit_close": 39.56,
-      "days_held": 2,
+      "exit_close": 40.15,
+      "days_held": 3,
       "is_recent": true,
-      "return_pct": -3.89,
-      "exit_date": "2026-07-28"
+      "return_pct": -2.45,
+      "exit_date": "2026-07-29"
     },
     {
       "pred_date": "20260727",
@@ -83,11 +83,11 @@
       "name": "华天科技",
       "rank": 4,
       "entry_open": 18.3,
-      "exit_close": 17.47,
-      "days_held": 2,
+      "exit_close": 16.57,
+      "days_held": 3,
       "is_recent": true,
-      "return_pct": -4.54,
-      "exit_date": "2026-07-28"
+      "return_pct": -9.45,
+      "exit_date": "2026-07-29"
     },
     {
       "pred_date": "20260727",
@@ -95,11 +95,11 @@
       "name": "至纯科技",
       "rank": 3,
       "entry_open": 23.76,
-      "exit_close": 26.0,
-      "days_held": 2,
+      "exit_close": 24.77,
+      "days_held": 3,
       "is_recent": true,
-      "return_pct": 9.43,
-      "exit_date": "2026-07-28"
+      "return_pct": 4.25,
+      "exit_date": "2026-07-29"
     },
     {
       "pred_date": "20260727",
@@ -107,11 +107,11 @@
       "name": "长城军工",
       "rank": 2,
       "entry_open": 32.26,
-      "exit_close": 33.55,
-      "days_held": 2,
+      "exit_close": 33.33,
+      "days_held": 3,
       "is_recent": true,
-      "return_pct": 4.0,
-      "exit_date": "2026-07-28"
+      "return_pct": 3.32,
+      "exit_date": "2026-07-29"
     },
     {
       "pred_date": "20260727",
@@ -119,11 +119,11 @@
       "name": "通富微电",
       "rank": 1,
       "entry_open": 72.88,
-      "exit_close": 69.0,
-      "days_held": 2,
+      "exit_close": 62.1,
+      "days_held": 3,
       "is_recent": true,
-      "return_pct": -5.32,
-      "exit_date": "2026-07-28"
+      "return_pct": -14.79,
+      "exit_date": "2026-07-29"
     },
     {
       "pred_date": "20260724",
