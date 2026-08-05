@@ -150,6 +150,26 @@ def check_date_file(d, path, stem, rep):
     # footer 软检查：字符串仍能过，但提示应改为对象
     if isinstance(d.get("footer"), str):
         rep.soft_warn(path, "footer 建议改为对象 {source, time}（当前字符串导致页脚来源为空）")
+    # sectorFocus（可选功能）硬检查：若提供则结构必须正确，否则页面渲染异常
+    sf = d.get("sectorFocus")
+    if sf is not None:
+        if not isinstance(sf, dict):
+            rep.hard_err(path, "sectorFocus 必须是对象")
+        else:
+            if not sf.get("verdict"):
+                rep.hard_err(path, "sectorFocus.verdict 缺失（页面标题为空）")
+            for grp in ("defense", "offense"):
+                items = sf.get(grp)
+                if items is not None:
+                    if not isinstance(items, list):
+                        rep.hard_err(path, f"sectorFocus.{grp} 必须是数组")
+                    else:
+                        for j, it in enumerate(items):
+                            if not isinstance(it, dict) or "name" not in it or "reason" not in it:
+                                rep.hard_err(path, f"sectorFocus.{grp}[{j}] 必须是含 name/reason 的对象")
+            av = sf.get("avoid")
+            if av is not None and not isinstance(av, list):
+                rep.hard_err(path, "sectorFocus.avoid 必须是数组")
     # 兜底：旧版数组字段类型
     for arr in ("hotConcepts", "fiveDayConcepts", "summaryTable",
                 "auctionTimeline", "riskItems", "marketSnapshot"):

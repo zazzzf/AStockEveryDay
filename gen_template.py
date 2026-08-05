@@ -81,6 +81,23 @@ D = {
         "🚨 <b>高风险提示 1</b>",
         "⚠️ <b>中风险提示 1</b>",
     ],
+    # index.html 使用 d.sectorFocus.{verdict,logic,defense,offense,avoid}
+    # 基于今日市场情绪特征，推断明日应侧重的方向。纯情绪周期推断，非确定性建议。
+    "sectorFocus": {
+        "verdict": "明日分化在即——防守优先、进攻精选",
+        "logic": "（说明推断逻辑：如连续百股涨停→次日分化概率高→资金高低切→防御方向优先）",
+        "defense": [
+            {"name": "医药(创新药/中药)", "reason": "防御属性，退潮期相对抗跌"},
+            {"name": "银行/高股息红利", "reason": "低估值+稳定分红，避险首选"},
+        ],
+        "offense": [
+            {"name": "PCB/算力(机构真金白银品种)", "reason": "仅限机构重仓，回避纯题材"},
+        ],
+        "avoid": [
+            "纯题材高位连板(换手>30%分歧巨大)",
+            "无机构背书的纯情绪票",
+        ],
+    },
     # index.html 使用 d.footer.source / d.footer.time
     "footer": {
         "source": "腾讯自选股 · 龙虎榜 · 通达信",
