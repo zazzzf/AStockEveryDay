@@ -99,9 +99,19 @@ const btRet = (predId, code) => {
 };
 
 // ==================== HOME PAGE ====================
-function home() {
+async function home() {
   const latest = predictionsIndex[0];
   const history = predictionsIndex.slice(1);
+
+  // 拉取最新一期完整数据，用于在「最新一期」tab 内联展示「明日板块侧重」
+  let latestDetail = null;
+  try {
+    const r = await fetch(`data/${latest.id}.json`);
+    if (r.ok) latestDetail = await r.json();
+  } catch(e) { latestDetail = null; }
+  const focusHtml = (latestDetail && latestDetail.sectorFocus && latestDetail.sectorFocus.verdict)
+    ? renderSectorFocus(latestDetail) : '';
+
   $('#app').innerHTML = `
 <!-- HERO -->
 <div class="bg-warm-sand/30 py-10 sm:py-14 px-4 text-center border-b border-border-cream">
@@ -151,6 +161,7 @@ function home() {
       <a href="https://github.com/zazzzf/AStockEveryDay" target="_blank" class="inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-xl text-sm font-sans font-medium bg-warm-sand text-charcoal-warm border border-border-warm hover:border-terracotta/30 transition-warm">GitHub 仓库</a>
     </div>
   </div>
+  ${focusHtml}
 </div>
 
 <!-- TAB: HISTORY -->
