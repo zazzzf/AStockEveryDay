@@ -1,0 +1,16 @@
+name: Validate Data JSON
+# 每次 push/PR 自动校验 data/*.json：拦截解析失败、乱码、id不符、stocks≠5 等硬伤。
+# 作为本地 pre-commit 钩子的兜底，确保任何绕过钩子的提交都不会把坏数据推上 GitHub。
+on:
+  push:
+  pull_request:
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate all data files
+        run: python validate_data.py --all

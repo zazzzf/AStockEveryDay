@@ -87,3 +87,13 @@ Each stock in `stocks[]`: `rank`, `name`, `code` (e.g. `"sz002384"`), `score` (0
 1. Create `data/YYYYMMDD.json` following the detail schema above.
 2. Prepend a new entry to `data/predictions.json` — set `id` to match the date, populate `topStocks` and `topCodes` with the top 5 stock names and codes respectively.
 3. The app auto-discovers the new entry on next load via `predictions.json`.
+
+## Data Integrity Rules (数据完整性铁律)
+
+> 历史上多次出现"手写 JSON → 未转义引号/编码乱码 → 详情页打不开 → 推到 GitHub 才发现"的事故（20260806、20260710 均为未转义 ASCII 双引号导致 JSON 断裂）。以下规则必须严格遵守：
+
+1. **禁止用字符串拼接 / Write 工具直接写 JSON 原文。** 必须先在 Python 里构造 `dict`，再用 `json.dump(obj, f, ensure_ascii=False, indent=2)` 序列化——它会自动转义引号、换行、控制字符。参见 `rebuild_0806.py` 的规范写法。
+2. **锁定编码**：一律 `open(path, "w", encoding="utf-8")` + `json.dump(..., ensure_ascii=False)`。绝不依赖平台默认编码（Windows 上可能是 GBK，会产生乱码 `�`）。
+3. **提交前必须过校验**：仓库已装 pre-commit 钩子，会在 `git commit` 时自动对暂存区里 `data/*.json` 跑 `validate_data.py`，出现硬伤（解析失败 / U+FFFD 乱码 / 非法控制字符 / `id`≠文件名 / `date` 非 YYYY-MM-DD / `stocks`≠5 / 个股缺字段）直接阻止提交。手动全量审计：`python validate_data.py --all`。
+4. **文件已损坏时**：不要手工改坏文件。用 Python dict 重建（参考 `rebuild_0806.py`），或用"读文本→状态机转义内部引号→`json.loads`→重 dump"的方式修复。
+5. **Schema 约束**：`id` 必须等于文件名（YYYYMMDD）；`stocks` 必须恰好 5 条；`summaryTable` 为 `[{label, value}]` 数组（新版 schema）；`predictions.json` 条目最新在前，`topStocks`/`topCodes` 长度 5。
