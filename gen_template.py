@@ -83,15 +83,17 @@ D = {
     ],
     # index.html 使用 d.sectorFocus.{verdict,logic,defense,offense,avoid}
     # 基于今日市场情绪特征，推断明日应侧重的方向。纯情绪周期推断，非确定性建议。
+    # 规范：defense 固定 2 个；defense/offense 每个板块下 stocks 必须恰好 2 只个股（含 name+code）
     "sectorFocus": {
         "verdict": "明日分化在即——防守优先、进攻精选",
         "logic": "（说明推断逻辑：如连续百股涨停→次日分化概率高→资金高低切→防御方向优先）",
         "defense": [
-            {"name": "医药(创新药/中药)", "reason": "防御属性，退潮期相对抗跌"},
-            {"name": "银行/高股息红利", "reason": "低估值+稳定分红，避险首选"},
+            {"name": "医药(创新药/中药)", "reason": "防御属性，退潮期相对抗跌", "stocks": [{"name": "恒瑞医药", "code": "sh600276"}, {"name": "药明康德", "code": "sh603259"}]},
+            {"name": "银行/高股息红利", "reason": "低估值+稳定分红，避险首选", "stocks": [{"name": "工商银行", "code": "sh601398"}, {"name": "长江电力", "code": "sh600900"}]},
         ],
         "offense": [
-            {"name": "PCB/算力(机构真金白银品种)", "reason": "仅限机构重仓，回避纯题材"},
+            {"name": "PCB/算力(机构真金白银品种)", "reason": "仅限机构重仓，回避纯题材", "stocks": [{"name": "东山精密", "code": "sz002384"}, {"name": "工业富联", "code": "sh601138"}]},
+            {"name": "半导体材料(靶材/大硅片)", "reason": "首板起爆，需看封单确认", "stocks": [{"name": "有研新材", "code": "sh600206"}, {"name": "风华高科", "code": "sz000636"}]},
         ],
         "avoid": [
             "纯题材高位连板(换手>30%分歧巨大)",
