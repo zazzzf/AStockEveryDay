@@ -81,12 +81,14 @@ D = {
         "🚨 <b>高风险提示 1</b>",
         "⚠️ <b>中风险提示 1</b>",
     ],
-    # index.html 使用 d.sectorFocus.{verdict,logic,defense,offense,avoid}
+    # index.html 使用 d.sectorFocus.{verdict,logic,bias,defense,offense,avoid}
     # 基于今日市场情绪特征，推断明日应侧重的方向。纯情绪周期推断，非确定性建议。
-    # 规范：defense 固定 2 个；defense/offense 每个板块下 stocks 必须恰好 2 只个股（含 name+code）
+    # 规范：defense 固定 2 个；defense/offense 每个板块下 stocks 必须恰好 2 只个股（含 name+code）；
+    #       bias 必须存在且为 {defense:N, offense:M} 百分比（防御/进攻倾向，二者合计约 100）
     "sectorFocus": {
         "verdict": "明日分化在即——防守优先、进攻精选",
         "logic": "（说明推断逻辑：如连续百股涨停→次日分化概率高→资金高低切→防御方向优先）",
+        "bias": {"defense": 60, "offense": 40},
         "defense": [
             {"name": "医药(创新药/中药)", "reason": "防御属性，退潮期相对抗跌", "stocks": [{"name": "恒瑞医药", "code": "sh600276"}, {"name": "药明康德", "code": "sh603259"}]},
             {"name": "银行/高股息红利", "reason": "低估值+稳定分红，避险首选", "stocks": [{"name": "工商银行", "code": "sh601398"}, {"name": "长江电力", "code": "sh600900"}]},

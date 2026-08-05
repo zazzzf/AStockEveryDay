@@ -339,6 +339,17 @@ function renderSectorFocus(d) {
   const f = d.sectorFocus;
   if (!f) return '';
   const stockChips = (stocks, hover) => (stocks && stocks.length) ? `<div class="flex flex-wrap gap-1.5 mt-2">${stocks.map(st=>`<span class="inline-flex items-center gap-1 text-[11px] font-sans bg-ivory border border-border-cream rounded-full px-2 py-0.5 text-near-black"><a href="${baiduUrl(st.code)}" target="_blank" class="hover:${hover} transition-warm">${st.name}</a><span class="text-stone-gray font-mono text-[10px]">${st.code}</span></span>`).join('')}</div>` : '';
+  const bias = (f.bias && typeof f.bias.defense === 'number') ? f.bias : { defense: 50, offense: 50 };
+  const biasBlock = `<div class="flex items-center gap-3 mb-4">
+      <div class="flex-1 h-2.5 rounded-full overflow-hidden flex bg-parchment border border-border-cream">
+        <div style="width:${bias.defense}%;background:#5a9e6b"></div>
+        <div style="width:${bias.offense}%;background:#d94a3a"></div>
+      </div>
+    </div>
+    <div class="flex items-center justify-between text-[11px] font-sans mb-4">
+      <span class="text-[#5a9e6b] font-medium">🛡 防御倾向 ${bias.defense}%</span>
+      <span class="text-[#d94a3a] font-medium">⚔ 进攻倾向 ${bias.offense}%</span>
+    </div>`;
   const defend = (f.defense || []).map(s=>`
       <div class="bg-[#5a9e6b]/[0.06] border border-[#5a9e6b]/20 rounded-xl p-3">
         <div class="text-[13px] font-medium text-[#5a9e6b] font-sans">🛡 ${s.name}</div>
@@ -355,6 +366,7 @@ function renderSectorFocus(d) {
   return `<div class="bg-ivory border border-border-cream rounded-2xl p-6 sm:p-7 mb-8 whisper">
     <h2 class="text-[15px] font-serif font-normal text-near-black mb-3 flex items-center gap-2">明日板块侧重 <span class="text-[10px] font-sans text-stone-gray bg-warm-sand/60 border border-border-cream rounded-full px-2 py-0.5 tracking-wide">情绪周期推断 · 仅供参考</span></h2>
     <div class="text-base font-serif font-medium text-terracotta mb-3 font-sans">${f.verdict}</div>
+    ${biasBlock}
     <p class="text-xs text-olive-gray leading-relaxed mb-5 font-sans">${f.logic}</p>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
       <div>

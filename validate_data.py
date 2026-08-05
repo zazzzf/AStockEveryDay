@@ -158,6 +158,9 @@ def check_date_file(d, path, stem, rep):
         else:
             if not sf.get("verdict"):
                 rep.hard_err(path, "sectorFocus.verdict 缺失（页面标题为空）")
+            b = sf.get("bias")
+            if not isinstance(b, dict) or not isinstance(b.get("defense"), (int, float)) or not isinstance(b.get("offense"), (int, float)):
+                rep.hard_err(path, "sectorFocus.bias 必须是含 defense/offense 数值的对象（防御/进攻倾向百分比）")
             for grp in ("defense", "offense"):
                 items = sf.get(grp)
                 if items is not None:
