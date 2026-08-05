@@ -15,10 +15,16 @@ AStockEveryDay 数据完整性校验器（pre-commit 钩子 / CI 用）
     7. 个股缺失关键字段(rank/name/code/score/tags/price/change/limitStatus/
        metrics/coreLogic/auctionExpect/entryCondition)
     8. predictions 条目 id 非 YYYYMMDD；topStocks/topCodes 长度 != 5
+    9. 渲染器 schema 错配导致页面显示 undefined / [object Object]：
+       - marketSnapshot.indices[] 缺 label 或 isUp
+       - hotConcepts[] / fiveDayConcepts[] 缺 rank
+       - summaryTable 不是 {headers, rows} 对象
+       - auctionTimeline[] 缺 desc
+       - riskItems[] 包含非字符串对象
 
   【软项 SOFT】→ 历史格式差异或完整性提示，只警告不拦截（退出码仍 0）
     - 缺失可选顶层字段(fiveDayConcepts/auctionTimeline/themeOverview 等)
-    - summaryTable 等数组字段类型不符(旧版为字符串，新版为数组)
+    - footer 仍是字符串（页脚来源/时间会为空，但不会阻断页面）
     - predictions 排序非最新在前
 
 用法：
@@ -112,7 +118,39 @@ def check_date_file(d, path, stem, rep):
             rep.hard_err(path, f"stocks[{i}]({nm}) tags 必须是数组")
         if s.get("metrics") is not None and not isinstance(s["metrics"], list):
             rep.hard_err(path, f"stocks[{i}]({nm}) metrics 必须是数组")
-    # 软检查：数组字段类型
+
+    # ===== 与 index.html 渲染器对齐的 schema 硬检查 =====
+    ms = d.get("marketSnapshot")
+    if isinstance(ms, dict):
+        for j, it in enumerate(ms.get("indices", [])):
+            if "label" not in it:
+                rep.hard_err(path, f"marketSnapshot.indices[{j}] 缺 'label'（会导致 undefined）")
+            if "isUp" not in it:
+                rep.hard_err(path, f"marketSnapshot.indices[{j}] 缺 'isUp' 布尔值")
+    for j, c in enumerate(d.get("hotConcepts", [])):
+        if "rank" not in c:
+            rep.hard_err(path, f"hotConcepts[{j}]({c.get('name','?')}) 缺 'rank'（会显示 #undefined）")
+    for j, c in enumerate(d.get("fiveDayConcepts", [])):
+        if "rank" not in c:
+            rep.hard_err(path, f"fiveDayConcepts[{j}]({c.get('name','?')}) 缺 'rank'")
+    st = d.get("summaryTable")
+    if isinstance(st, list):
+        rep.hard_err(path, "summaryTable 为数组；渲染器需要 {headers, rows} 对象")
+    elif isinstance(st, dict):
+        if "headers" not in st or "rows" not in st:
+            rep.hard_err(path, "summaryTable 对象必须含 'headers' 和 'rows'")
+    for j, t in enumerate(d.get("auctionTimeline", [])):
+        if "desc" not in t:
+            rep.hard_err(path, f"auctionTimeline[{j}] 缺 'desc'（会显示 undefined）")
+    ri = d.get("riskItems")
+    if isinstance(ri, list):
+        for j, r in enumerate(ri):
+            if not isinstance(r, str):
+                rep.hard_err(path, f"riskItems[{j}] 必须是字符串（当前 {type(r).__name__}，会显示 [object Object]）")
+    # footer 软检查：字符串仍能过，但提示应改为对象
+    if isinstance(d.get("footer"), str):
+        rep.soft_warn(path, "footer 建议改为对象 {source, time}（当前字符串导致页脚来源为空）")
+    # 兜底：旧版数组字段类型
     for arr in ("hotConcepts", "fiveDayConcepts", "summaryTable",
                 "auctionTimeline", "riskItems", "marketSnapshot"):
         v = d.get(arr)

@@ -26,13 +26,22 @@ D = {
     "macroAlert": "🚨 <b>示例宏观警报</b>",
     "themeOverview": "<b>「示例」</b>——市场概况描述。",
     "marketSnapshot": {
+        # index.html 使用 i.label / i.isUp(布尔)
         "indices": [
-            {"name": "上证指数", "code": "sh000001", "value": "3900.00", "change": "+0.50%", "trend": "up"},
+            {"label": "上证指数", "code": "sh000001", "value": "3900.00", "change": "+0.50%", "isUp": True},
         ],
         "note": "市场画像描述",
     },
-    "hotConcepts": [{"name": "示例概念", "change": "+3.00%"}],
-    "fiveDayConcepts": [{"name": "示例5日", "change": "+5.00%"}],
+    # index.html 使用 c.rank / c.name / c.change
+    "hotConcepts": [
+        {"rank": 1, "name": "示例概念", "change": "+3.00%"},
+        {"rank": 2, "name": "示例概念2", "change": "+2.00%"},
+    ],
+    # index.html 使用 c.rank / c.medal / c.name / c.change（前三自动给 medal）
+    "fiveDayConcepts": [
+        {"rank": 1, "name": "示例5日", "change": "+5.00%", "medal": "🥇"},
+        {"rank": 2, "name": "示例5日2", "change": "+4.00%", "medal": "🥈"},
+    ],
     "stocks": [
         {
             "rank": 1,
@@ -50,10 +59,33 @@ D = {
         },
         # ... 共 5 只，rank 1-5
     ],
-    "summaryTable": [{"label": "市场背景", "value": "示例"}],
-    "auctionTimeline": [{"time": "9:15-9:20", "event": "示例"}],
-    "riskItems": [{"level": "critical", "text": "🚨 <b>示例风险</b>"}],
-    "footer": "⚠️ 以上内容由 AI 基于公开市场信息自动生成，仅供参考，不构成任何投资建议。",
+    # index.html 使用 d.summaryTable.headers / .rows
+    "summaryTable": {
+        "headers": ["维度", "解读"],
+        "rows": [
+            ["市场背景", "描述"],
+            ["核心逻辑", "描述"],
+            ["风险因素", "描述"],
+            ["仓位建议", "描述"],
+        ],
+    },
+    # index.html 使用 t.time / t.desc
+    "auctionTimeline": [
+        {"time": "9:15-9:20", "desc": "观察竞价量"},
+        {"time": "9:20-9:25", "desc": "确认竞价方向"},
+        {"time": "9:25", "desc": "竞价结束决定是否参与"},
+        {"time": "9:30-10:00", "desc": "开盘观察"},
+    ],
+    # index.html 直接渲染字符串数组，每项必须是 str
+    "riskItems": [
+        "🚨 <b>高风险提示 1</b>",
+        "⚠️ <b>中风险提示 1</b>",
+    ],
+    # index.html 使用 d.footer.source / d.footer.time
+    "footer": {
+        "source": "腾讯自选股 · 龙虎榜 · 通达信",
+        "time": "2026-08-06 19:55",
+    },
 }
 
 # 校验：非法结构会在 dumps 阶段抛错

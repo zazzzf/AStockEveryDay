@@ -80,11 +80,24 @@ Helper functions: `scoreGrad(s)` returns gradient color for score bars, `rankBad
 
 Top-level: `id`, `date`, `weekday`, `generated`, `title`, `subtitle`, `macroAlert` (optional), `themeOverview` (optional), `marketSnapshot`, `hotConcepts[]`, `fiveDayConcepts[]`, `stocks[]`, `summaryTable`, `auctionTimeline[]`, `riskItems[]`, `footer`.
 
-Each stock in `stocks[]`: `rank`, `name`, `code` (e.g. `"sz002384"`), `score` (0-100), `tags[]`, `price`, `change`, `limitStatus`, `metrics[]`, `coreLogic`, `auctionExpect`, `entryCondition`. The `auctionExpect` and `entryCondition` fields may contain inline HTML with classes like `hl` (highlight), `gn` (green/signal), `wn` (warning), `bl` (link/blue), `ac` (accent).
+**必须与 `index.html` 渲染器读取的字段名严格一致**，否则会出现 `#undefined`、`[object Object]`、空白表格等显示问题：
+
+- `marketSnapshot.indices[]` 每项：`label`（不是 `name`）、`code`、`value`、`change`、`isUp`（布尔，不是字符串 `trend`）。
+- `hotConcepts[]` 每项：`rank`（整数）、`name`、`change`；可选 `note`。
+- `fiveDayConcepts[]` 每项：`rank`（整数）、`name`、`change`；前三可加 `medal`（`🥇/🥈/🥉`）。
+- `stocks[]` 每项：`rank`、`name`、`code`、`score`、`tags[]`、`price`、`change`、`limitStatus`、`metrics[]`、`coreLogic`、`auctionExpect`、`entryCondition`。
+  - `tags[]` 每项：`label`、`type`（`concept`/`lhb`/`board`）。
+  - `metrics[]` 每项：`label`、`value`。
+- `summaryTable`：**对象** `{ "headers": [...], "rows": [[...], ...] }`，不是 `[{label,value}]` 数组。渲染器用 `d.summaryTable.headers` 和 `d.summaryTable.rows`。
+- `auctionTimeline[]` 每项：`time`、`desc`（不是 `event`/`action`）。
+- `riskItems[]`：**字符串数组**，每项直接是 HTML 文本；不要放 `{level, text}` 对象（会变成 `[object Object]`）。
+- `footer`：**对象** `{ "source": "...", "time": "..." }`，渲染器用 `d.footer.source` 和 `d.footer.time`。
+
+最安全的做法：直接复制并填写 `gen_template.py`，它已按上述 schema 写好模板，填完运行即可生成合法 JSON。
 
 ### Adding a new prediction
 
-1. Create `data/YYYYMMDD.json` following the detail schema above.
+1. 复制 `gen_template.py` 为临时脚本，修改 `DATE_ID` 和各字段内容，运行后生成 `data/YYYYMMDD.json`。
 2. Prepend a new entry to `data/predictions.json` — set `id` to match the date, populate `topStocks` and `topCodes` with the top 5 stock names and codes respectively.
 3. The app auto-discovers the new entry on next load via `predictions.json`.
 
@@ -96,4 +109,4 @@ Each stock in `stocks[]`: `rank`, `name`, `code` (e.g. `"sz002384"`), `score` (0
 2. **锁定编码**：一律 `open(path, "w", encoding="utf-8")` + `json.dump(..., ensure_ascii=False)`。绝不依赖平台默认编码（Windows 上可能是 GBK，会产生乱码 `�`）。
 3. **提交前必须过校验**：仓库已装 pre-commit 钩子，会在 `git commit` 时自动对暂存区里 `data/*.json` 跑 `validate_data.py`，出现硬伤（解析失败 / U+FFFD 乱码 / 非法控制字符 / `id`≠文件名 / `date` 非 YYYY-MM-DD / `stocks`≠5 / 个股缺字段）直接阻止提交。手动全量审计：`python validate_data.py --all`。
 4. **文件已损坏时**：不要手工改坏文件。用 Python dict 重建（参考 `rebuild_0806.py`），或用"读文本→状态机转义内部引号→`json.loads`→重 dump"的方式修复。
-5. **Schema 约束**：`id` 必须等于文件名（YYYYMMDD）；`stocks` 必须恰好 5 条；`summaryTable` 为 `[{label, value}]` 数组（新版 schema）；`predictions.json` 条目最新在前，`topStocks`/`topCodes` 长度 5。
+5. **Schema 约束**：`id` 必须等于文件名（YYYYMMDD）；`stocks` 必须恰好 5 条；`summaryTable` 为对象 `{headers, rows}`；`riskItems` 为字符串数组；`footer` 为对象 `{source, time}`；`predictions.json` 条目最新在前，`topStocks`/`topCodes` 长度 5。详见上方 schema 说明。
