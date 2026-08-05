@@ -110,7 +110,7 @@ async function home() {
     if (r.ok) latestDetail = await r.json();
   } catch(e) { latestDetail = null; }
   const focusHtml = (latestDetail && latestDetail.sectorFocus && latestDetail.sectorFocus.verdict)
-    ? renderSectorFocus(latestDetail) : '';
+    ? renderSectorFocus(latestDetail, true) : '';
 
   $('#app').innerHTML = `
 <!-- HERO -->
@@ -160,7 +160,6 @@ async function home() {
       <a href="#${latest.id.slice(4)}" class="inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-xl text-sm font-sans font-medium bg-terracotta text-ivory ring-terracotta hover:opacity-90 transition-warm">查看完整报告 →</a>
       <a href="https://github.com/zazzzf/AStockEveryDay" target="_blank" class="inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-xl text-sm font-sans font-medium bg-warm-sand text-charcoal-warm border border-border-warm hover:border-terracotta/30 transition-warm">GitHub 仓库</a>
     </div>
-  </div>
   ${focusHtml}
 </div>
 
@@ -346,7 +345,7 @@ function renderStockCard(s) {
   </div>`;
 }
 
-function renderSectorFocus(d) {
+function renderSectorFocus(d, compact=false) {
   const f = d.sectorFocus;
   if (!f) return '';
   const stockChips = (stocks, hover) => (stocks && stocks.length) ? `<div class="flex flex-wrap gap-1.5 mt-2">${stocks.map(st=>`<span class="inline-flex items-center gap-1 text-[11px] font-sans bg-ivory border border-border-cream rounded-full px-2 py-0.5 text-near-black"><a href="${baiduUrl(st.code)}" target="_blank" class="hover:${hover} transition-warm">${st.name}</a><span class="text-stone-gray font-mono text-[10px]">${st.code}</span></span>`).join('')}</div>` : '';
@@ -374,7 +373,7 @@ function renderSectorFocus(d) {
         ${stockChips(s.stocks, 'text-[#d94a3a]')}
       </div>`).join('');
   const avoid = (f.avoid || []).map(s=>`<span class="inline-flex items-center gap-1 text-[11px] font-sans text-[#b8860b] bg-[#b8860b]/8 border border-[#b8860b]/20 rounded-full px-2.5 py-1">⚠ ${s}</span>`).join('');
-  return `<div class="bg-ivory border border-border-cream rounded-2xl p-6 sm:p-7 mb-8 whisper">
+  const inner = `
     <h2 class="text-[15px] font-serif font-normal text-near-black mb-3 flex items-center gap-2">明日板块侧重 <span class="text-[10px] font-sans text-stone-gray bg-warm-sand/60 border border-border-cream rounded-full px-2 py-0.5 tracking-wide">情绪周期推断 · 仅供参考</span></h2>
     <div class="text-base font-serif font-medium text-terracotta mb-3 font-sans">${f.verdict}</div>
     ${biasBlock}
@@ -390,7 +389,9 @@ function renderSectorFocus(d) {
       </div>
     </div>
     ${avoid ? `<div class="mt-1 pt-4 border-t border-border-cream"><div class="text-[12px] font-sans font-semibold text-[#b8860b] mb-2">⚠ 规避</div><div class="flex flex-wrap gap-2">${avoid}</div></div>`:''}
-  </div>`;
+  `;
+  if (compact) return `<div class="pt-8 mt-8 border-t border-border-cream">${inner}</div>`;
+  return `<div class="bg-ivory border border-border-cream rounded-2xl p-6 sm:p-7 mb-8 whisper">${inner}</div>`;
 }
 
 // ==================== INIT ====================
