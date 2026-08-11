@@ -127,12 +127,21 @@ def check_date_file(d, path, stem, rep):
                 rep.hard_err(path, f"marketSnapshot.indices[{j}] 缺 'label'（会导致 undefined）")
             if "isUp" not in it:
                 rep.hard_err(path, f"marketSnapshot.indices[{j}] 缺 'isUp' 布尔值")
+            if "value" not in it or it.get("value") is None:
+                rep.hard_err(path, f"marketSnapshot.indices[{j}]({it.get('label','?')}) 缺 'value'（页面显示 undefined，旧 schema 用 price 需迁移）")
+            if it.get("change") is not None and not isinstance(it.get("change"), str):
+                rep.soft_warn(path, f"marketSnapshot.indices[{j}]({it.get('label','?')}) change 建议为字符串（当前 {type(it.get('change')).__name__}，如 {it.get('change')!r}→应为 '+1.15%'）")
     for j, c in enumerate(d.get("hotConcepts", [])):
         if "rank" not in c:
             rep.hard_err(path, f"hotConcepts[{j}]({c.get('name','?')}) 缺 'rank'（会显示 #undefined）")
+        # 渲染器执行 c.change.startsWith('+')：非字符串会 TypeError，整页打不开（20260728 真实事故）
+        if c.get("change") is not None and not isinstance(c.get("change"), str):
+            rep.hard_err(path, f"hotConcepts[{j}]({c.get('name','?')}) change 必须是字符串（当前 {type(c.get('change')).__name__}，如 {c.get('change')!r}→应为 '+9.65%'）")
     for j, c in enumerate(d.get("fiveDayConcepts", [])):
         if "rank" not in c:
             rep.hard_err(path, f"fiveDayConcepts[{j}]({c.get('name','?')}) 缺 'rank'")
+        if c.get("change") is not None and not isinstance(c.get("change"), str):
+            rep.soft_warn(path, f"fiveDayConcepts[{j}]({c.get('name','?')}) change 建议为字符串（当前 {type(c.get('change')).__name__}，页面涨幅为空）")
     st = d.get("summaryTable")
     if isinstance(st, list):
         rep.hard_err(path, "summaryTable 为数组；渲染器需要 {headers, rows} 对象")

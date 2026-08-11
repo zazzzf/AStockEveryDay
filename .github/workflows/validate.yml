@@ -14,3 +14,10 @@ jobs:
           python-version: "3.12"
       - name: Validate all data files
         run: python validate_data.py --all
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Frontend smoke test (home tab structure + all prediction renders)
+        # 用 Node vm + 真实 data/ 渲染首页与每一期详情页,断言:
+        # 三个 tab 面板是 #app 平级兄弟(防 8 月嵌套事故复发)、div 配平、无 undefined/[object Object]
+        run: node scripts/smoke_test.mjs

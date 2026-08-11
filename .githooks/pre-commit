@@ -1,0 +1,21 @@
+#!/bin/sh
+# AStockEveryDay pre-commit 钩子:数据契约校验 + 前端冒烟测试
+# 安装: git config core.hooksPath .githooks
+# 逻辑:
+#   - 暂存区改了 data/ 下的文件  -> 跑 validate_data.py(数据契约)
+#   - 任何提交                   -> 跑 scripts/smoke_test.mjs(前端结构/渲染安全网)
+# 任一失败以非零退出码阻断提交。
+set -u
+
+STAGED_DATA=$(git diff --cached --name-only -- data/ | head -n 1)
+if [ -n "$STAGED_DATA" ]; then
+  echo "[pre-commit] data/ 有改动,运行 validate_data.py ..."
+  python validate_data.py || { echo "[pre-commit] 数据校验失败,已阻断提交"; exit 1; }
+else
+  echo "[pre-commit] 本次未改动 data/,跳过数据校验"
+fi
+
+echo "[pre-commit] 运行前端冒烟测试 scripts/smoke_test.mjs ..."
+node scripts/smoke_test.mjs || { echo "[pre-commit] 冒烟测试失败,已阻断提交"; exit 1; }
+
+echo "[pre-commit] 全部检查通过"
