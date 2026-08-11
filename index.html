@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A股每日涨停预测 · Stock Partner</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<!-- Tailwind 已本地化:vendor/tailwindcss.js 为 https://cdn.tailwindcss.com 于 2026-08-11 的完整镜像(407,279 B,浏览器端编译,离线可用,无运行时网络依赖) -->
+<script src="vendor/tailwindcss.js"></script>
 <script>
 tailwind.config = {
   theme: { extend: { colors: {
@@ -69,10 +70,39 @@ const $$ = s => document.querySelectorAll(s);
 let predictionsIndex = [];
 let backtestData = null;
 
-// HTML 转义:所有纯文本数据字段(股票名/代码/日期等)渲染前必须经过 escapeHtml。
-// 注意:summary/themeOverview/macroAlert/timeline.desc/riskItems/coreLogic 等
-// 字段是有意含 <b>/<strong> 标记的富文本,禁止转义。
-const escapeHtml = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+// ==================== DOM 构建助手(替代 innerHTML 字符串拼接) ====================
+// h(tag, props, ...children):
+//  - 字符串/数字子节点经 createTextNode 注入 → 天然防 XSS,无需手动 escapeHtml
+//  - 富文本字段(summary/themeOverview/macroAlert/timeline.desc/riskItems/coreLogic/
+//    auctionExpect/entryCondition)有意含 <b>/<strong> 标记,必须用 props.html 传入
+//  - props 约定: class→className、style→对象、html→innerHTML(富文本)、
+//    dataset→对象、on*→事件监听、其余→setAttribute
+function h(tag, props, ...children) {
+  const el = document.createElement(tag);
+  if (props) {
+    for (const k in props) {
+      const v = props[k];
+      if (v === null || v === undefined) continue;
+      if (k === 'class') el.className = v;
+      else if (k === 'style') Object.assign(el.style, v);
+      else if (k === 'html') el.innerHTML = v;
+      else if (k === 'dataset') Object.assign(el.dataset, v);
+      else if (k.startsWith('on')) el.addEventListener(k.slice(2).toLowerCase(), v);
+      else el.setAttribute(k, v);
+    }
+  }
+  for (const c of children) addChild(el, c);
+  return el;
+}
+
+// 递归挂载子节点:自动处理数组嵌套,跳过 null/undefined/false,字符串/数字转文本节点
+const addChild = (el, c) => {
+  if (Array.isArray(c)) { for (const x of c) addChild(el, x); return; }
+  if (c === null || c === undefined || c === false) return;
+  el.appendChild(typeof c === 'string' || typeof c === 'number' ? document.createTextNode(String(c)) : c);
+};
+
+const mount = (...els) => { const app = $('#app'); app.replaceChildren(...els.flat()); };
 
 function route() {
   const hash = location.hash.replace('#','');
@@ -108,110 +138,116 @@ async function home() {
   const latest = predictionsIndex[0];
   const history = predictionsIndex.slice(1);
 
-  // 拉取最新一期完整数据，用于在「最新一期」tab 内联展示「明日板块侧重」
+  // 拉取最新一期完整数据,用于在「最新一期」tab 内联展示「明日板块侧重」
   let latestDetail = null;
   try {
     const r = await fetch(`data/${latest.id}.json`);
     if (r.ok) latestDetail = await r.json();
   } catch(e) { latestDetail = null; }
-  const focusHtml = (latestDetail && latestDetail.sectorFocus && latestDetail.sectorFocus.verdict)
-    ? renderSectorFocus(latestDetail, true) : '';
+  const focus = (latestDetail && latestDetail.sectorFocus && latestDetail.sectorFocus.verdict)
+    ? renderSectorFocus(latestDetail, true) : null;
 
-  $('#app').innerHTML = `
-<!-- HERO -->
-<div class="bg-warm-sand/30 py-10 sm:py-14 px-4 text-center border-b border-border-cream">
-  <div class="max-w-2xl mx-auto">
-    <div class="inline-flex items-center gap-2.5 text-xs text-stone-gray tracking-[2px] uppercase mb-6 font-sans select-none">
-      <span class="w-[28px] h-[28px] bg-terracotta rounded-lg inline-flex items-center justify-center text-[14px] text-ivory font-bold font-serif">S</span> Stock Partner
-    </div>
-    <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-[48px] font-serif font-normal leading-[1.15] text-near-black mb-4 tracking-tight">A股每日涨停预测</h1>
-    <p class="text-sm sm:text-base text-olive-gray max-w-lg mx-auto leading-relaxed font-sans">基于热门股、资金流向、龙虎榜、热门概念多维数据，每日筛选最具涨停潜力的5只个股</p>
-    <div class="flex items-center justify-center gap-3 mt-6 flex-wrap">
-      <span class="inline-flex items-center gap-1.5 text-xs text-terracotta bg-terracotta/10 border border-terracotta/20 rounded-full px-4 py-1.5 font-sans">每个交易日 20:00 自动更新</span>
-    </div>
-  </div>
-</div>
+  // HERO
+  const hero = h('div', {class:'bg-warm-sand/30 py-10 sm:py-14 px-4 text-center border-b border-border-cream'}, [
+    h('div', {class:'max-w-2xl mx-auto'}, [
+      h('div', {class:'inline-flex items-center gap-2.5 text-xs text-stone-gray tracking-[2px] uppercase mb-6 font-sans select-none'}, [
+        h('span', {class:'w-[28px] h-[28px] bg-terracotta rounded-lg inline-flex items-center justify-center text-[14px] text-ivory font-bold font-serif'}, 'S'),
+        ' Stock Partner'
+      ]),
+      h('h1', {class:'text-2xl sm:text-3xl md:text-4xl lg:text-[48px] font-serif font-normal leading-[1.15] text-near-black mb-4 tracking-tight'}, 'A股每日涨停预测'),
+      h('p', {class:'text-sm sm:text-base text-olive-gray max-w-lg mx-auto leading-relaxed font-sans'}, '基于热门股、资金流向、龙虎榜、热门概念多维数据，每日筛选最具涨停潜力的5只个股'),
+      h('div', {class:'flex items-center justify-center gap-3 mt-6 flex-wrap'}, [
+        h('span', {class:'inline-flex items-center gap-1.5 text-xs text-terracotta bg-terracotta/10 border border-terracotta/20 rounded-full px-4 py-1.5 font-sans'}, '每个交易日 20:00 自动更新'),
+      ]),
+    ]),
+  ]);
 
-<!-- TAB BAR -->
-<div class="max-w-3xl mx-auto px-4 pt-8">
-  <div class="flex gap-1 bg-warm-sand/50 border border-border-cream rounded-xl p-1">
-    <button class="tab-btn flex-1 text-sm font-sans font-medium py-2.5 px-4 rounded-lg transition-warm text-center" data-tab="latest">最新一期</button>
-    <button class="tab-btn flex-1 text-sm font-sans font-medium py-2.5 px-4 rounded-lg transition-warm text-center" data-tab="history">往期记录</button>
-    <button class="tab-btn flex-1 text-sm font-sans font-medium py-2.5 px-4 rounded-lg transition-warm text-center" data-tab="backtest">回测数据</button>
-  </div>
-</div>
+  // TAB BAR
+  const tabBar = h('div', {class:'max-w-3xl mx-auto px-4 pt-8'}, [
+    h('div', {class:'flex gap-1 bg-warm-sand/50 border border-border-cream rounded-xl p-1'}, [
+      h('button', {class:'tab-btn flex-1 text-sm font-sans font-medium py-2.5 px-4 rounded-lg transition-warm text-center', 'data-tab':'latest'}, '最新一期'),
+      h('button', {class:'tab-btn flex-1 text-sm font-sans font-medium py-2.5 px-4 rounded-lg transition-warm text-center', 'data-tab':'history'}, '往期记录'),
+      h('button', {class:'tab-btn flex-1 text-sm font-sans font-medium py-2.5 px-4 rounded-lg transition-warm text-center', 'data-tab':'backtest'}, '回测数据'),
+    ]),
+  ]);
 
-<!-- TAB: LATEST -->
-<div class="tab-panel max-w-3xl mx-auto px-4 py-8" data-tab="latest">
-  <div class="bg-ivory border border-border-cream rounded-2xl p-6 sm:p-8 relative overflow-hidden whisper">
-    <div class="latest-ribbon">LATEST</div>
-    <div class="mb-6">
-      <div class="flex items-center gap-3 flex-wrap mb-4">
-        <span class="inline-flex items-center gap-1 text-xs text-stone-gray bg-warm-sand/50 border border-border-cream rounded-full px-3 py-1 font-sans whitespace-nowrap">${escapeHtml(latest.generated)} 生成</span>
-        <span class="text-border-warm text-base font-serif">→</span>
-        <span class="text-xl sm:text-2xl font-serif font-normal text-near-black inline-flex items-center gap-2">${escapeHtml(latest.date).slice(5)} <span class="text-xs font-sans font-medium text-[#3898ec] bg-[#3898ec]/8 border border-[#3898ec]/15 rounded-full px-2.5 py-1">${escapeHtml(latest.weekday)}</span></span>
-      </div>
-      <p class="text-sm text-olive-gray leading-relaxed pb-6 border-b border-border-cream font-sans">${latest.summary}</p>
-    </div>
+  // TAB: LATEST
+  const latestPanel = h('div', {class:'tab-panel max-w-3xl mx-auto px-4 py-8', 'data-tab':'latest'}, [
+    h('div', {class:'bg-ivory border border-border-cream rounded-2xl p-6 sm:p-8 relative overflow-hidden whisper'}, [
+      h('div', {class:'latest-ribbon'}, 'LATEST'),
+      h('div', {class:'mb-6'}, [
+        h('div', {class:'flex items-center gap-3 flex-wrap mb-4'}, [
+          h('span', {class:'inline-flex items-center gap-1 text-xs text-stone-gray bg-warm-sand/50 border border-border-cream rounded-full px-3 py-1 font-sans whitespace-nowrap'}, latest.generated, ' 生成'),
+          h('span', {class:'text-border-warm text-base font-serif'}, '→'),
+          h('span', {class:'text-xl sm:text-2xl font-serif font-normal text-near-black inline-flex items-center gap-2'}, [
+            latest.date.slice(5),
+            h('span', {class:'text-xs font-sans font-medium text-[#3898ec] bg-[#3898ec]/8 border border-[#3898ec]/15 rounded-full px-2.5 py-1'}, latest.weekday),
+          ]),
+        ]),
+        h('p', {class:'text-sm text-olive-gray leading-relaxed pb-6 border-b border-border-cream font-sans', html: latest.summary}),
+      ]),
+      h('div', {class:'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 mb-7'}, latest.topStocks.map((n,i)=>[
+        h('div', {class:'flex items-center gap-1.5 bg-parchment border border-border-cream rounded-xl px-3 py-2.5 text-sm hover:border-terracotta/30 transition-warm'}, [
+          h('a', {class:`inline-flex items-center justify-center w-5 h-5 rounded-lg shrink-0 ${i===0?'bg-terracotta text-ivory':i===1?'bg-stone-gray text-ivory':i===2?'bg-warn-amber text-ivory':'bg-warm-sand text-stone-gray'} text-[11px] font-bold font-sans`, href:`#${latest.id.slice(4)}`}, i+1),
+          h('a', {class:'font-semibold text-near-black font-sans hover:text-terracotta transition-warm', href: baiduUrl(latest.topCodes[i]), target:'_blank', title:'百度行情'}, n),
+          h('span', {class:'text-[10px] text-stone-gray font-mono ml-auto'}, latest.topCodes[i]),
+        ]),
+      ])),
+      h('div', {class:'flex gap-3 flex-wrap'}, [
+        h('a', {class:'inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-xl text-sm font-sans font-medium bg-terracotta text-ivory ring-terracotta hover:opacity-90 transition-warm', href:`#${latest.id.slice(4)}`}, '查看完整报告 →'),
+        h('a', {class:'inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-xl text-sm font-sans font-medium bg-warm-sand text-charcoal-warm border border-border-warm hover:border-terracotta/30 transition-warm', href:'https://github.com/zazzzf/AStockEveryDay', target:'_blank'}, 'GitHub 仓库'),
+      ]),
+    ]),
+    focus,
+  ]);
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 mb-7">${latest.topStocks.map((n,i)=>`
-      <div class="flex items-center gap-1.5 bg-parchment border border-border-cream rounded-xl px-3 py-2.5 text-sm hover:border-terracotta/30 transition-warm">
-        <a href="#${latest.id.slice(4)}" class="inline-flex items-center justify-center w-5 h-5 rounded-lg shrink-0 ${i===0?'bg-terracotta text-ivory':i===1?'bg-stone-gray text-ivory':i===2?'bg-warn-amber text-ivory':'bg-warm-sand text-stone-gray'} text-[11px] font-bold font-sans">${i+1}</a>
-        <a href="${escapeHtml(baiduUrl(latest.topCodes[i]))}" target="_blank" class="font-semibold text-near-black font-sans hover:text-terracotta transition-warm" title="百度行情">${escapeHtml(n)}</a>
-        <span class="text-[10px] text-stone-gray font-mono ml-auto">${escapeHtml(latest.topCodes[i])}</span>
-      </div>`).join('')}</div>
+  // TAB: HISTORY
+  const historyPanel = h('div', {class:'tab-panel max-w-3xl mx-auto px-4 py-8', 'data-tab':'history', style:{display:'none'}}, history.length ? [
+    h('div', {class:'flex flex-col gap-4'}, history.map((x)=>[
+      h('div', {class:'bg-ivory border border-border-cream rounded-2xl px-5 py-4 transition-warm hover:border-terracotta/20 whisper group'}, [
+        // Header row
+        h('div', {class:'flex items-center gap-3 mb-3'}, [
+          h('span', {class:'text-xs text-stone-gray bg-parchment border border-border-cream rounded-full px-3 py-1 font-sans whitespace-nowrap shrink-0'}, x.generated, ' 生成'),
+          h('span', {class:'text-border-warm text-base shrink-0 group-hover:text-terracotta transition-warm font-serif'}, '→'),
+          h('a', {class:'flex-1 text-base font-sans font-medium text-near-black hover:text-terracotta transition-warm min-w-0', href:`#${x.id.slice(4)}`}, [
+            x.date.slice(5),
+            h('span', {class:'text-[#3898ec] font-normal text-sm ml-1'}, x.weekday),
+          ]),
+          h('a', {class:'text-sm text-stone-gray hover:text-terracotta transition-warm font-sans shrink-0 flex items-center gap-1 group/link', href:`#${x.id.slice(4)}`}, [
+            '查看',
+            h('span', {class:'text-border-warm text-base group-hover/link:text-terracotta group-hover/link:translate-x-[2px] transition-all font-serif'}, '→'),
+          ]),
+        ]),
+        // Stock pills
+        h('div', {class:'flex items-center gap-2 flex-wrap'}, (x.topStocks||[]).map((n,j)=>{
+          const c = (x.topCodes||[])[j]||'';
+          const ret = btRet(x.id, c);
+          return h('a', {class:'inline-flex items-center gap-1.5 bg-parchment border border-border-cream rounded-lg px-3 py-2 text-sm hover:border-terracotta/30 hover:bg-terracotta/[0.03] transition-warm', href: baiduUrl(c), target:'_blank', title:'百度行情'}, [
+            h('span', {class:`inline-flex items-center justify-center w-5 h-5 rounded-md shrink-0 ${j===0?'bg-terracotta text-ivory':j===1?'bg-stone-gray text-ivory':j===2?'bg-warn-amber text-ivory':'bg-warm-sand text-stone-gray'} text-xs font-bold font-sans`}, j+1),
+            h('span', {class:'font-medium text-near-black font-sans'}, n),
+            ret !== null ? h('span', {class:`text-xs font-mono font-semibold ml-0.5 ${ret>=0?'text-rise-red':'text-fall-green'}`}, `${ret>=0?'+':''}${ret.toFixed(1)}%`) : null,
+            h('span', {class:'text-xs text-stone-gray font-mono ml-0.5'}, c),
+          ]);
+        })),
+      ]),
+    ])),
+  ] : h('p', {class:'text-sm text-stone-gray text-center py-10 font-sans'}, '暂无往期记录'));
 
-    <div class="flex gap-3 flex-wrap">
-      <a href="#${latest.id.slice(4)}" class="inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-xl text-sm font-sans font-medium bg-terracotta text-ivory ring-terracotta hover:opacity-90 transition-warm">查看完整报告 →</a>
-      <a href="https://github.com/zazzzf/AStockEveryDay" target="_blank" class="inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-xl text-sm font-sans font-medium bg-warm-sand text-charcoal-warm border border-border-warm hover:border-terracotta/30 transition-warm">GitHub 仓库</a>
-    </div>
-  </div>
-  ${focusHtml}
-</div>
+  // TAB: BACKTEST(统计总览 + 按日期汇总 + 个股明细)
+  const backtestPanel = h('div', {class:'tab-panel max-w-3xl mx-auto px-4 py-8', 'data-tab':'backtest', style:{display:'none'}}, [
+    renderBacktestSummary(),
+    renderBacktestByDate(),
+    renderBacktestDetail(),
+  ]);
 
-<!-- TAB: HISTORY -->
-<div class="tab-panel max-w-3xl mx-auto px-4 py-8" data-tab="history" style="display:none">
-  ${history.length ? `
-  <div class="flex flex-col gap-4">
-    ${history.map((h,i)=>`
-    <div class="bg-ivory border border-border-cream rounded-2xl px-5 py-4 transition-warm hover:border-terracotta/20 whisper group">
-      <!-- Header row -->
-      <div class="flex items-center gap-3 mb-3">
-        <span class="text-xs text-stone-gray bg-parchment border border-border-cream rounded-full px-3 py-1 font-sans whitespace-nowrap shrink-0">${escapeHtml(h.generated)} 生成</span>
-        <span class="text-border-warm text-base shrink-0 group-hover:text-terracotta transition-warm font-serif">→</span>
-        <a href="#${h.id.slice(4)}" class="flex-1 text-base font-sans font-medium text-near-black hover:text-terracotta transition-warm min-w-0">${escapeHtml(h.date).slice(5)} <span class="text-[#3898ec] font-normal text-sm ml-1">${escapeHtml(h.weekday)}</span></a>
-        <a href="#${h.id.slice(4)}" class="text-sm text-stone-gray hover:text-terracotta transition-warm font-sans shrink-0 flex items-center gap-1 group/link">查看 <span class="text-border-warm text-base group-hover/link:text-terracotta group-hover/link:translate-x-[2px] transition-all font-serif">→</span></a>
-      </div>
-      <!-- Stock pills -->
-      <div class="flex items-center gap-2 flex-wrap">
-        ${(h.topStocks||[]).map((n,j)=>{
-          const c = (h.topCodes||[])[j]||'';
-          const ret = btRet(h.id, c);
-          const retClr = ret === null ? '' : (ret >= 0 ? 'text-rise-red' : 'text-fall-green');
-          const retStr = ret === null ? '' : `${ret>=0?'+':''}${ret.toFixed(1)}%`;
-          return `
-        <a href="${escapeHtml(baiduUrl(c))}" target="_blank" class="inline-flex items-center gap-1.5 bg-parchment border border-border-cream rounded-lg px-3 py-2 text-sm hover:border-terracotta/30 hover:bg-terracotta/[0.03] transition-warm" title="百度行情">
-          <span class="inline-flex items-center justify-center w-5 h-5 rounded-md shrink-0 ${j===0?'bg-terracotta text-ivory':j===1?'bg-stone-gray text-ivory':j===2?'bg-warn-amber text-ivory':'bg-warm-sand text-stone-gray'} text-xs font-bold font-sans">${j+1}</span>
-          <span class="font-medium text-near-black font-sans">${escapeHtml(n)}</span>
-          ${ret!==null?`<span class="text-xs font-mono font-semibold ml-0.5 ${retClr}">${retStr}</span>`:''}
-          <span class="text-xs text-stone-gray font-mono ml-0.5">${escapeHtml(c)}</span>
-        </a>`}).join('')}
-      </div>
-    </div>`).join('')}
-  </div>`:'<p class="text-sm text-stone-gray text-center py-10 font-sans">暂无往期记录</p>'}
-</div>
+  // FOOTER
+  const footer = h('div', {class:'text-center py-12 px-4 border-t border-border-cream text-xs text-stone-gray leading-relaxed font-sans'}, [
+    h('p', null, ['数据来源：腾讯自选股 · 龙虎榜 · 通达信', ' | ', '每个交易日 20:00 自动生成']),
+    h('p', {class:'text-crimson/70 mt-3'}, '以上内容由 AI 基于公开信息整理生成，仅供参考，不构成任何投资建议。'),
+    h('p', {class:'mt-3'}, h('a', {class:'text-terracotta hover:text-coral transition-warm', href:'https://github.com/zazzzf/AStockEveryDay', target:'_blank'}, '查看 GitHub 仓库 →')),
+  ]);
 
-<!-- TAB: BACKTEST -->
-<div class="tab-panel max-w-3xl mx-auto px-4 py-8" data-tab="backtest" style="display:none">
-  ${renderBacktestDetail()}
-</div>
-
-<!-- FOOTER -->
-<div class="text-center py-12 px-4 border-t border-border-cream text-xs text-stone-gray leading-relaxed font-sans">
-  <p>数据来源：腾讯自选股 · 龙虎榜 · 通达信 &nbsp;|&nbsp; 每个交易日 20:00 自动生成</p>
-  <p class="text-crimson/70 mt-3">以上内容由 AI 基于公开信息整理生成，仅供参考，不构成任何投资建议。</p>
-  <p class="mt-3"><a href="https://github.com/zazzzf/AStockEveryDay" target="_blank" class="text-terracotta hover:text-coral transition-warm">查看 GitHub 仓库 →</a></p>
-</div>`;
+  mount(hero, tabBar, latestPanel, historyPanel, backtestPanel, footer);
 
   // Tab switching
   const tabs = $$('.tab-btn');
@@ -244,7 +280,7 @@ async function home() {
 
 // ==================== PREDICTION PAGE ====================
 async function loadPrediction(id) {
-  $('#app').innerHTML = `<div id="loading"><div class="spinner"></div></div>`;
+  mount(h('div', {id:'loading'}, h('div', {class:'spinner'})));
   window.scrollTo(0,0);
   try {
     const res = await fetch(`data/${id}.json`);
@@ -252,7 +288,10 @@ async function loadPrediction(id) {
     const d = await res.json();
     renderPrediction(d);
   } catch(e) {
-    $('#app').innerHTML = `<div class="max-w-3xl mx-auto px-4 py-20 text-center font-sans"><p class="text-olive-gray">数据加载失败</p><a href="#home" class="text-terracotta hover:text-coral mt-4 inline-block transition-warm">← 返回首页</a></div>`;
+    mount(h('div', {class:'max-w-3xl mx-auto px-4 py-20 text-center font-sans'}, [
+      h('p', {class:'text-olive-gray'}, '数据加载失败'),
+      h('a', {class:'text-terracotta hover:text-coral mt-4 inline-block transition-warm', href:'#home'}, '← 返回首页'),
+    ]));
   }
 }
 
@@ -264,216 +303,279 @@ function renderPrediction(d) {
   const hasTimeline = d.auctionTimeline && d.auctionTimeline.length > 0;
   const hasSummary = d.summaryTable && d.summaryTable.rows && d.summaryTable.rows.length > 0;
 
-  $('#app').innerHTML = `
-<div class="max-w-3xl mx-auto px-4 py-8 pb-20">
-  <a href="#home" class="inline-flex items-center gap-1 text-sm text-stone-gray hover:text-terracotta mb-6 transition-warm font-sans">← 返回首页</a>
+  const children = [
+    h('a', {class:'inline-flex items-center gap-1 text-sm text-stone-gray hover:text-terracotta mb-6 transition-warm font-sans', href:'#home'}, '← 返回首页'),
 
-  <!-- HEADER -->
-  <div class="text-center pb-10 mb-10 border-b border-border-cream">
-    <h1 class="text-2xl sm:text-3xl md:text-4xl font-serif font-normal text-near-black mb-4 leading-tight tracking-tight">${escapeHtml(d.title)||'涨停预测'}</h1>
-    <p class="text-sm text-olive-gray max-w-lg mx-auto mb-5 leading-relaxed font-sans">${escapeHtml(d.subtitle)||''}</p>
-    <div class="flex justify-center gap-3 flex-wrap">
-      <span class="inline-flex items-center gap-1 text-xs text-terracotta bg-terracotta/8 border border-terracotta/15 rounded-full px-3.5 py-1.5 font-sans">预测日期：${escapeHtml(d.date)}（${escapeHtml(d.weekday)}）| ${escapeHtml(d.generated)}生成</span>
-    </div>
-  </div>
+    // HEADER
+    h('div', {class:'text-center pb-10 mb-10 border-b border-border-cream'}, [
+      h('h1', {class:'text-2xl sm:text-3xl md:text-4xl font-serif font-normal text-near-black mb-4 leading-tight tracking-tight'}, d.title || '涨停预测'),
+      d.subtitle ? h('p', {class:'text-sm text-olive-gray max-w-lg mx-auto mb-5 leading-relaxed font-sans'}, d.subtitle) : null,
+      h('div', {class:'flex justify-center gap-3 flex-wrap'}, [
+        h('span', {class:'inline-flex items-center gap-1 text-xs text-terracotta bg-terracotta/8 border border-terracotta/15 rounded-full px-3.5 py-1.5 font-sans'}, `预测日期：${d.date}（${d.weekday}）| ${d.generated}生成`),
+      ]),
+    ]),
 
-  ${d.macroAlert ? `<div class="bg-crimson/[0.06] border border-crimson/15 rounded-xl p-5 mb-8 font-sans"><strong class="text-crimson">${d.macroAlert}</strong></div>`:''}
+    d.macroAlert ? h('div', {class:'bg-crimson/[0.06] border border-crimson/15 rounded-xl p-5 mb-8 font-sans'}, h('strong', {class:'text-crimson', html: d.macroAlert})) : null,
 
-  <!-- MARKET SNAPSHOT -->
-  ${renderMarketSnapshot(d)}
+    renderMarketSnapshot(d),
 
-  ${d.themeOverview ? `<div class="bg-ivory border border-border-cream rounded-xl p-5 mb-8 text-sm text-olive-gray leading-relaxed font-sans">${d.themeOverview}</div>`:''}
+    d.themeOverview ? h('div', {class:'bg-ivory border border-border-cream rounded-xl p-5 mb-8 text-sm text-olive-gray leading-relaxed font-sans', html: d.themeOverview}) : null,
 
-  <!-- HOT CONCEPTS -->
-  ${hasConcepts ? `<h2 class="text-lg font-serif font-normal text-near-black mb-5 flex items-center gap-2">热门概念</h2><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-8">${d.hotConcepts.map(c=>`<div class="bg-ivory border border-border-cream rounded-xl p-3 text-sm font-sans"><span class="text-terracotta font-medium">#${c.rank}</span> ${escapeHtml(c.name)} <span class="${(c.change.startsWith('+')||c.change.includes('涨停'))?'text-rise-red':'text-fall-green'} float-right font-medium">${escapeHtml(c.change)}</span>${c.note?`<span class="text-xs text-stone-gray block mt-0.5">${escapeHtml(c.note)}</span>`:''}</div>`).join('')}</div>`:''}
+    // HOT CONCEPTS
+    hasConcepts ? h('h2', {class:'text-lg font-serif font-normal text-near-black mb-5 flex items-center gap-2'}, '热门概念') : null,
+    hasConcepts ? h('div', {class:'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-8'}, d.hotConcepts.map(c=>[
+      h('div', {class:'bg-ivory border border-border-cream rounded-xl p-3 text-sm font-sans'}, [
+        h('span', {class:'text-terracotta font-medium'}, `#${c.rank}`),
+        ' ',
+        c.name,
+        ' ',
+        h('span', {class:`${(c.change.startsWith('+')||c.change.includes('涨停'))?'text-rise-red':'text-fall-green'} float-right font-medium`}, c.change),
+        c.note ? h('span', {class:'text-xs text-stone-gray block mt-0.5'}, c.note) : null,
+      ]),
+    ])) : null,
 
-  ${hasFiveDay ? `<h2 class="text-lg font-serif font-normal text-near-black mb-5 flex items-center gap-2">5日最强概念</h2><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 mb-8">${d.fiveDayConcepts.map(c=>`<div class="bg-ivory border ${c.rank<=3?'border-terracotta/20':'border-border-cream'} rounded-xl p-3 text-sm font-sans">${c.medal?`<span class="${c.medal==='🥇'?'text-terracotta':c.medal==='🥈'?'text-stone-gray':'text-warn-amber'}">${c.medal}</span> `:`<span class="text-stone-gray">#${c.rank}</span> `}${escapeHtml(c.name)} <span class="text-rise-red float-right font-medium">${escapeHtml(c.change)}</span></div>`).join('')}</div>`:''}
+    hasFiveDay ? h('h2', {class:'text-lg font-serif font-normal text-near-black mb-5 flex items-center gap-2'}, '5日最强概念') : null,
+    hasFiveDay ? h('div', {class:'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 mb-8'}, d.fiveDayConcepts.map(c=>[
+      h('div', {class:`bg-ivory border ${c.rank<=3?'border-terracotta/20':'border-border-cream'} rounded-xl p-3 text-sm font-sans`}, [
+        c.medal ? h('span', {class:`${c.medal==='🥇'?'text-terracotta':c.medal==='🥈'?'text-stone-gray':'text-warn-amber'}`}, c.medal) : h('span', {class:'text-stone-gray'}, `#${c.rank}`),
+        ' ',
+        c.name,
+        ' ',
+        h('span', {class:'text-rise-red float-right font-medium'}, c.change),
+      ]),
+    ])) : null,
 
-  ${hasFocus ? renderSectorFocus(d) : ''}
+    hasFocus ? renderSectorFocus(d) : null,
 
-  <!-- STOCK CARDS -->
-  <h2 class="text-xl font-serif font-normal text-near-black mb-6 flex items-center gap-2">涨停预测 · 5强个股</h2>
-  ${stocks.map(s=>renderStockCard(s)).join('')}
+    // STOCK CARDS
+    h('h2', {class:'text-xl font-serif font-normal text-near-black mb-6 flex items-center gap-2'}, '涨停预测 · 5强个股'),
+    ...stocks.map(s => renderStockCard(s)),
 
-  <!-- SUMMARY TABLE -->
-  ${hasSummary ? `<h2 class="text-xl font-serif font-normal text-near-black mb-5 mt-10 flex items-center gap-2">汇总对比</h2><div class="overflow-x-auto mb-8"><table class="w-full border-collapse text-[13px] font-sans"><thead><tr>${d.summaryTable.headers.map(h=>`<th class="bg-warm-sand/50 text-terracotta px-3 py-2.5 text-left font-semibold text-xs tracking-wider border border-border-cream whitespace-nowrap">${escapeHtml(h)}</th>`).join('')}</tr></thead><tbody>${d.summaryTable.rows.map((r,i)=>`<tr class="even:bg-ivory hover:bg-terracotta/[0.02]">${r.map(c=>`<td class="px-3 py-2.5 border border-border-cream text-olive-gray text-center">${escapeHtml(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:''}
+    // SUMMARY TABLE
+    hasSummary ? h('h2', {class:'text-xl font-serif font-normal text-near-black mb-5 mt-10 flex items-center gap-2'}, '汇总对比') : null,
+    hasSummary ? h('div', {class:'overflow-x-auto mb-8'}, [
+      h('table', {class:'w-full border-collapse text-[13px] font-sans'}, [
+        h('thead', null, h('tr', null, d.summaryTable.headers.map(hdr => h('th', {class:'bg-warm-sand/50 text-terracotta px-3 py-2.5 text-left font-semibold text-xs tracking-wider border border-border-cream whitespace-nowrap'}, hdr)))),
+        h('tbody', null, d.summaryTable.rows.map(r => h('tr', {class:'even:bg-ivory hover:bg-terracotta/[0.02]'}, r.map(c => h('td', {class:'px-3 py-2.5 border border-border-cream text-olive-gray text-center'}, c))))),
+      ]),
+    ]) : null,
 
-  <!-- AUCTION TIMELINE -->
-  ${hasTimeline ? `<div class="bg-[#3898ec]/[0.04] border border-[#3898ec]/15 rounded-xl p-6 mb-8"><h3 class="text-[15px] font-serif font-normal text-[#3898ec] mb-4">明日竞价统一观察框架（9:15-9:25）</h3><div class="timeline relative pl-6 my-4">${d.auctionTimeline.map(t=>`<div class="timeline-dot relative mb-4 pl-5"><div class="text-[11px] text-stone-gray font-mono font-semibold">${escapeHtml(t.time)}</div><div class="text-[13px] text-olive-gray leading-relaxed mt-0.5 font-sans">${t.desc}</div></div>`).join('')}</div></div>`:''}
+    // AUCTION TIMELINE
+    hasTimeline ? h('div', {class:'bg-[#3898ec]/[0.04] border border-[#3898ec]/15 rounded-xl p-6 mb-8'}, [
+      h('h3', {class:'text-[15px] font-serif font-normal text-[#3898ec] mb-4'}, '明日竞价统一观察框架（9:15-9:25）'),
+      h('div', {class:'timeline relative pl-6 my-4'}, d.auctionTimeline.map(t => [
+        h('div', {class:'timeline-dot relative mb-4 pl-5'}, [
+          h('div', {class:'text-[11px] text-stone-gray font-mono font-semibold'}, t.time),
+          h('div', {class:'text-[13px] text-olive-gray leading-relaxed mt-0.5 font-sans', html: t.desc}),
+        ]),
+      ])),
+    ]) : null,
 
-  <!-- RISK -->
-  ${d.riskItems && d.riskItems.length ? `<div class="bg-crimson/[0.04] border border-crimson/15 rounded-xl p-6 mb-8"><h3 class="text-[15px] font-serif font-normal text-crimson mb-5 flex items-center gap-1.5">风险提示与风控纪律</h3><ul class="list-none space-y-2 font-sans">${d.riskItems.map(r=>`<li class="text-[13px] text-olive-gray leading-relaxed pl-5 relative before:content-['!'] before:absolute before:left-0 before:text-warn-amber before:text-xs before:font-bold border-b border-crimson/5 pb-2">${r}</li>`).join('')}</ul></div>`:''}
+    // RISK
+    d.riskItems && d.riskItems.length ? h('div', {class:'bg-crimson/[0.04] border border-crimson/15 rounded-xl p-6 mb-8'}, [
+      h('h3', {class:'text-[15px] font-serif font-normal text-crimson mb-5 flex items-center gap-1.5'}, '风险提示与风控纪律'),
+      h('ul', {class:'list-none space-y-2 font-sans'}, d.riskItems.map(r => [
+        h('li', {class:'text-[13px] text-olive-gray leading-relaxed pl-5 relative before:content-[\'!\'] before:absolute before:left-0 before:text-warn-amber before:text-xs before:font-bold border-b border-crimson/5 pb-2', html: r}),
+      ])),
+    ]) : null,
 
-  <!-- FOOTER -->
-  ${d.footer ? `<div class="text-center pt-10 border-t border-border-cream text-xs text-stone-gray leading-relaxed font-sans"><p>数据来源：${escapeHtml(d.footer.source)} | 生成时间：${escapeHtml(d.footer.time)}</p><p class="text-crimson/70 mt-3">以上内容由AI基于公开信息整理生成，仅供参考，不构成任何投资建议。</p><p class="mt-2"><a href="https://github.com/zazzzf/AStockEveryDay" target="_blank" class="text-terracotta hover:text-coral transition-warm">View on GitHub</a></p></div>`:''}
-</div>`;
+    // FOOTER
+    d.footer ? h('div', {class:'text-center pt-10 border-t border-border-cream text-xs text-stone-gray leading-relaxed font-sans'}, [
+      h('p', null, ['数据来源：', d.footer.source, ' | 生成时间：', d.footer.time]),
+      h('p', {class:'text-crimson/70 mt-3'}, '以上内容由AI基于公开信息整理生成，仅供参考，不构成任何投资建议。'),
+      h('p', {class:'mt-2'}, h('a', {class:'text-terracotta hover:text-coral transition-warm', href:'https://github.com/zazzzf/AStockEveryDay', target:'_blank'}, 'View on GitHub')),
+    ]) : null,
+  ];
+
+  mount(h('div', {class:'max-w-3xl mx-auto px-4 py-8 pb-20'}, children));
 }
 
 function renderMarketSnapshot(d) {
-  if (!d.marketSnapshot || !d.marketSnapshot.indices) return '';
+  if (!d.marketSnapshot || !d.marketSnapshot.indices) return null;
   const idx = d.marketSnapshot.indices;
-  return `<div class="bg-ivory border border-border-cream rounded-2xl p-6 sm:p-7 mb-8 whisper">
-    <h2 class="text-[15px] font-serif font-normal text-terracotta mb-5 flex items-center gap-2">今日市场全景</h2>
-    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">${idx.map(i=>`
-      <div class="bg-parchment border border-border-cream rounded-xl p-3.5 text-center hover:border-terracotta/20 transition-warm">
-        <div class="text-[11px] text-stone-gray uppercase tracking-wide font-sans">${i.label}</div>
-        <div class="text-lg font-sans font-bold ${i.isUp?'text-rise-red':'text-fall-green'} tabular-nums mt-1">${i.value}</div>
-        ${i.change?`<div class="text-xs ${i.isUp?'text-rise-red':'text-stone-gray'} font-sans mt-0.5">${i.change}</div>`:''}
-      </div>`).join('')}</div></div>`;
+  return h('div', {class:'bg-ivory border border-border-cream rounded-2xl p-6 sm:p-7 mb-8 whisper'}, [
+    h('h2', {class:'text-[15px] font-serif font-normal text-terracotta mb-5 flex items-center gap-2'}, '今日市场全景'),
+    h('div', {class:'grid grid-cols-2 sm:grid-cols-3 gap-3'}, idx.map(i => [
+      h('div', {class:'bg-parchment border border-border-cream rounded-xl p-3.5 text-center hover:border-terracotta/20 transition-warm'}, [
+        h('div', {class:'text-[11px] text-stone-gray uppercase tracking-wide font-sans'}, i.label),
+        h('div', {class:`text-lg font-sans font-bold ${i.isUp?'text-rise-red':'text-fall-green'} tabular-nums mt-1`}, i.value),
+        i.change ? h('div', {class:`text-xs ${i.isUp?'text-rise-red':'text-stone-gray'} font-sans mt-0.5`}, i.change) : null,
+      ]),
+    ])),
+  ]);
 }
 
 function renderStockCard(s) {
   const metrics = s.metrics || [];
   const tags = s.tags || [];
-  return `<div class="bg-ivory border border-border-cream rounded-2xl p-5 sm:p-6 mb-5 whisper hover:border-terracotta/20 transition-warm">
-    <div class="flex items-center gap-3 mb-5 flex-wrap">
-      <span class="inline-flex items-center justify-center w-8 h-8 rounded-xl ${rankBadge(s.rank)} font-bold text-sm font-sans">${s.rank}</span>
-      <span class="text-xl font-serif font-normal text-near-black"><a href="${escapeHtml(baiduUrl(s.code))}" target="_blank" class="hover:text-terracotta transition-warm" title="百度行情">${escapeHtml(s.name)}</a></span>
-      <span class="text-sm text-stone-gray font-mono">${escapeHtml(s.code)}</span>
-      ${tags.map(t=>`<span class="inline-flex items-center gap-1 text-[11px] font-sans font-medium px-2.5 py-1 rounded-full border ${tagClr(t.type)}">${escapeHtml(t.text)}</span>`).join('')}
-    </div>
-    <div class="flex items-center gap-3 mb-5">
-      <span class="text-[11px] text-stone-gray whitespace-nowrap font-sans">涨停概率评分</span>
-      <div class="flex-1 h-1.5 bg-warm-sand rounded-full overflow-hidden"><div class="score-fill" style="width:${s.score}%;background:${scoreGrad(s.score)}"></div></div>
-      <span class="text-sm font-bold text-terracotta min-w-[28px] text-right font-sans">${s.score}</span>
-    </div>
-    <div class="flex items-baseline gap-4 mb-5 flex-wrap">
-      <span class="text-2xl sm:text-[28px] font-bold text-rise-red tabular-nums font-sans">${escapeHtml(s.price)}</span>
-      <span class="text-base font-semibold text-rise-red font-sans">${escapeHtml(s.change)}</span>
-      ${s.limitStatus?`<span class="text-xs text-stone-gray bg-parchment px-3 py-1 rounded-full border border-border-cream font-sans">${escapeHtml(s.limitStatus)}</span>`:''}
-    </div>
-    ${metrics.length ? `<div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">${metrics.map(m=>`<div class="bg-parchment border border-border-cream rounded-xl p-3"><div class="text-[11px] text-stone-gray uppercase tracking-wide font-sans">${escapeHtml(m.label)}</div><div class="text-[15px] font-sans font-semibold ${m.highlight?'text-rise-red':'text-near-black'} mt-0.5">${escapeHtml(m.value)}</div></div>`).join('')}</div>`:''}
-    <div class="space-y-3">
-      ${s.coreLogic?`<div class="bg-[#3898ec]/[0.03] border-l-[3px] border-[#3898ec] border border-[#3898ec]/15 rounded-xl p-4"><h4 class="text-sm font-serif font-normal text-[#3898ec] mb-2">核心逻辑</h4><p class="text-sm text-olive-gray leading-relaxed font-sans">${s.coreLogic}</p></div>`:''}
-      ${s.auctionExpect?`<div class="bg-terracotta/[0.04] border border-terracotta/20 rounded-xl p-5"><h4 class="text-sm font-serif font-normal text-terracotta mb-3 flex items-center gap-1.5">明日竞价预期</h4><p class="text-sm text-olive-gray leading-relaxed font-sans">${s.auctionExpect}</p></div>`:''}
-      ${s.entryCondition?`<div class="bg-[#5a9e6b]/[0.04] border border-[#5a9e6b]/20 rounded-xl p-5"><h4 class="text-sm font-serif font-normal text-fall-green mb-3 flex items-center gap-1.5">建议上车条件</h4><p class="text-sm text-olive-gray leading-relaxed font-sans">${s.entryCondition}</p></div>`:''}
-    </div>
-  </div>`;
+  return h('div', {class:'bg-ivory border border-border-cream rounded-2xl p-5 sm:p-6 mb-5 whisper hover:border-terracotta/20 transition-warm'}, [
+    h('div', {class:'flex items-center gap-3 mb-5 flex-wrap'}, [
+      h('span', {class:`inline-flex items-center justify-center w-8 h-8 rounded-xl ${rankBadge(s.rank)} font-bold text-sm font-sans`}, s.rank),
+      h('span', {class:'text-xl font-serif font-normal text-near-black'}, h('a', {class:'hover:text-terracotta transition-warm', href: baiduUrl(s.code), target:'_blank', title:'百度行情'}, s.name)),
+      h('span', {class:'text-sm text-stone-gray font-mono'}, s.code),
+      ...tags.map(t => h('span', {class:`inline-flex items-center gap-1 text-[11px] font-sans font-medium px-2.5 py-1 rounded-full border ${tagClr(t.type)}`}, t.text)),
+    ]),
+    h('div', {class:'flex items-center gap-3 mb-5'}, [
+      h('span', {class:'text-[11px] text-stone-gray whitespace-nowrap font-sans'}, '涨停概率评分'),
+      h('div', {class:'flex-1 h-1.5 bg-warm-sand rounded-full overflow-hidden'}, h('div', {class:'score-fill', style:{width:`${s.score}%`, background: scoreGrad(s.score)}})),
+      h('span', {class:'text-sm font-bold text-terracotta min-w-[28px] text-right font-sans'}, s.score),
+    ]),
+    h('div', {class:'flex items-baseline gap-4 mb-5 flex-wrap'}, [
+      h('span', {class:'text-2xl sm:text-[28px] font-bold text-rise-red tabular-nums font-sans'}, s.price),
+      h('span', {class:'text-base font-semibold text-rise-red font-sans'}, s.change),
+      s.limitStatus ? h('span', {class:'text-xs text-stone-gray bg-parchment px-3 py-1 rounded-full border border-border-cream font-sans'}, s.limitStatus) : null,
+    ]),
+    metrics.length ? h('div', {class:'grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6'}, metrics.map(m => [
+      h('div', {class:'bg-parchment border border-border-cream rounded-xl p-3'}, [
+        h('div', {class:'text-[11px] text-stone-gray uppercase tracking-wide font-sans'}, m.label),
+        h('div', {class:`text-[15px] font-sans font-semibold ${m.highlight?'text-rise-red':'text-near-black'} mt-0.5`}, m.value),
+      ]),
+    ])) : null,
+    h('div', {class:'space-y-3'}, [
+      s.coreLogic ? h('div', {class:'bg-[#3898ec]/[0.03] border-l-[3px] border-[#3898ec] border border-[#3898ec]/15 rounded-xl p-4'}, [
+        h('h4', {class:'text-sm font-serif font-normal text-[#3898ec] mb-2'}, '核心逻辑'),
+        h('p', {class:'text-sm text-olive-gray leading-relaxed font-sans', html: s.coreLogic}),
+      ]) : null,
+      s.auctionExpect ? h('div', {class:'bg-terracotta/[0.04] border border-terracotta/20 rounded-xl p-5'}, [
+        h('h4', {class:'text-sm font-serif font-normal text-terracotta mb-3 flex items-center gap-1.5'}, '明日竞价预期'),
+        h('p', {class:'text-sm text-olive-gray leading-relaxed font-sans', html: s.auctionExpect}),
+      ]) : null,
+      s.entryCondition ? h('div', {class:'bg-[#5a9e6b]/[0.04] border border-[#5a9e6b]/20 rounded-xl p-5'}, [
+        h('h4', {class:'text-sm font-serif font-normal text-fall-green mb-3 flex items-center gap-1.5'}, '建议上车条件'),
+        h('p', {class:'text-sm text-olive-gray leading-relaxed font-sans', html: s.entryCondition}),
+      ]) : null,
+    ]),
+  ]);
 }
 
 function renderSectorFocus(d, compact=false) {
   const f = d.sectorFocus;
-  if (!f) return '';
-  const stockChips = (stocks, hover) => (stocks && stocks.length) ? `<div class="flex flex-wrap gap-1.5 mt-2">${stocks.map(st=>`<span class="inline-flex items-center gap-1 text-[11px] font-sans bg-ivory border border-border-cream rounded-full px-2 py-0.5 text-near-black"><a href="${escapeHtml(baiduUrl(st.code))}" target="_blank" class="hover:${hover} transition-warm">${escapeHtml(st.name)}</a><span class="text-stone-gray font-mono text-[10px]">${escapeHtml(st.code)}</span></span>`).join('')}</div>` : '';
+  if (!f) return null;
+  const stockChips = (stocks, hover) => (stocks && stocks.length)
+    ? h('div', {class:'flex flex-wrap gap-1.5 mt-2'}, stocks.map(st => [
+        h('span', {class:'inline-flex items-center gap-1 text-[11px] font-sans bg-ivory border border-border-cream rounded-full px-2 py-0.5 text-near-black'}, [
+          h('a', {class:`hover:${hover} transition-warm`, href: baiduUrl(st.code), target:'_blank'}, st.name),
+          h('span', {class:'text-stone-gray font-mono text-[10px]'}, st.code),
+        ]),
+      ]))
+    : null;
   const bias = (f.bias && typeof f.bias.defense === 'number') ? f.bias : { defense: 50, offense: 50 };
-  const biasBlock = `<div class="flex items-center gap-3 mb-4">
-      <div class="flex-1 h-2.5 rounded-full overflow-hidden flex bg-parchment border border-border-cream">
-        <div style="width:${bias.defense}%;background:#5a9e6b"></div>
-        <div style="width:${bias.offense}%;background:#d94a3a"></div>
-      </div>
-    </div>
-    <div class="flex items-center justify-between text-[11px] font-sans mb-4">
-      <span class="text-[#5a9e6b] font-medium">🛡 防御倾向 ${bias.defense}%</span>
-      <span class="text-[#d94a3a] font-medium">⚔ 进攻倾向 ${bias.offense}%</span>
-    </div>`;
-  const defend = (f.defense || []).map(s=>`
-      <div class="bg-[#5a9e6b]/[0.06] border border-[#5a9e6b]/20 rounded-xl p-3">
-        <div class="text-[13px] font-medium text-[#5a9e6b] font-sans">🛡 ${escapeHtml(s.name)}</div>
-        <div class="text-[11px] text-olive-gray mt-1 leading-relaxed font-sans">${escapeHtml(s.reason)}</div>
-        ${stockChips(s.stocks, 'text-[#5a9e6b]')}
-      </div>`).join('');
-  const offend = (f.offense || []).map(s=>`
-      <div class="bg-[#d94a3a]/[0.05] border border-[#d94a3a]/20 rounded-xl p-3">
-        <div class="text-[13px] font-medium text-[#d94a3a] font-sans">⚔ ${escapeHtml(s.name)}</div>
-        <div class="text-[11px] text-olive-gray mt-1 leading-relaxed font-sans">${escapeHtml(s.reason)}</div>
-        ${stockChips(s.stocks, 'text-[#d94a3a]')}
-      </div>`).join('');
-  const avoid = (f.avoid || []).map(s=>`<span class="inline-flex items-center gap-1 text-[11px] font-sans text-[#b8860b] bg-[#b8860b]/8 border border-[#b8860b]/20 rounded-full px-2.5 py-1">⚠ ${escapeHtml(s)}</span>`).join('');
-  const inner = `
-    <h2 class="text-[15px] font-serif font-normal text-near-black mb-3 flex items-center gap-2">明日板块侧重 <span class="text-[10px] font-sans text-stone-gray bg-warm-sand/60 border border-border-cream rounded-full px-2 py-0.5 tracking-wide">情绪周期推断 · 仅供参考</span></h2>
-    <div class="text-base font-serif font-medium text-terracotta mb-3 font-sans">${escapeHtml(f.verdict)}</div>
-    ${biasBlock}
-    <p class="text-xs text-olive-gray leading-relaxed mb-5 font-sans">${escapeHtml(f.logic)}</p>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-      <div>
-        <div class="text-[12px] font-sans font-semibold text-[#5a9e6b] mb-2 flex items-center gap-1">🛡 防御方向（优先）</div>
-        <div class="space-y-2">${defend}</div>
-      </div>
-      <div>
-        <div class="text-[12px] font-sans font-semibold text-[#d94a3a] mb-2 flex items-center gap-1">⚔ 进攻方向（精选）</div>
-        <div class="space-y-2">${offend}</div>
-      </div>
-    </div>
-    ${avoid ? `<div class="mt-1 pt-4 border-t border-border-cream"><div class="text-[12px] font-sans font-semibold text-[#b8860b] mb-2">⚠ 规避</div><div class="flex flex-wrap gap-2">${avoid}</div></div>`:''}
-  `;
-  if (compact) return `<div class="pt-8 mt-8 border-t border-border-cream">${inner}</div>`;
-  return `<div class="bg-ivory border border-border-cream rounded-2xl p-6 sm:p-7 mb-8 whisper">${inner}</div>`;
+  const biasBlock = [
+    h('div', {class:'flex items-center gap-3 mb-4'}, h('div', {class:'flex-1 h-2.5 rounded-full overflow-hidden flex bg-parchment border border-border-cream'}, [
+      h('div', {style:{width:`${bias.defense}%`, background:'#5a9e6b'}}),
+      h('div', {style:{width:`${bias.offense}%`, background:'#d94a3a'}}),
+    ])),
+    h('div', {class:'flex items-center justify-between text-[11px] font-sans mb-4'}, [
+      h('span', {class:'text-[#5a9e6b] font-medium'}, `🛡 防御倾向 ${bias.defense}%`),
+      h('span', {class:'text-[#d94a3a] font-medium'}, `⚔ 进攻倾向 ${bias.offense}%`),
+    ]),
+  ];
+  const defend = (f.defense || []).map(s => [
+    h('div', {class:'bg-[#5a9e6b]/[0.06] border border-[#5a9e6b]/20 rounded-xl p-3'}, [
+      h('div', {class:'text-[13px] font-medium text-[#5a9e6b] font-sans'}, `🛡 ${s.name}`),
+      h('div', {class:'text-[11px] text-olive-gray mt-1 leading-relaxed font-sans'}, s.reason),
+      stockChips(s.stocks, 'text-[#5a9e6b]'),
+    ]),
+  ]);
+  const offend = (f.offense || []).map(s => [
+    h('div', {class:'bg-[#d94a3a]/[0.05] border border-[#d94a3a]/20 rounded-xl p-3'}, [
+      h('div', {class:'text-[13px] font-medium text-[#d94a3a] font-sans'}, `⚔ ${s.name}`),
+      h('div', {class:'text-[11px] text-olive-gray mt-1 leading-relaxed font-sans'}, s.reason),
+      stockChips(s.stocks, 'text-[#d94a3a]'),
+    ]),
+  ]);
+  const avoid = (f.avoid || []).map(s => [
+    h('span', {class:'inline-flex items-center gap-1 text-[11px] font-sans text-[#b8860b] bg-[#b8860b]/8 border border-[#b8860b]/20 rounded-full px-2.5 py-1'}, `⚠ ${s}`),
+  ]);
+  const inner = [
+    h('h2', {class:'text-[15px] font-serif font-normal text-near-black mb-3 flex items-center gap-2'}, [
+      '明日板块侧重 ',
+      h('span', {class:'text-[10px] font-sans text-stone-gray bg-warm-sand/60 border border-border-cream rounded-full px-2 py-0.5 tracking-wide'}, '情绪周期推断 · 仅供参考'),
+    ]),
+    h('div', {class:'text-base font-serif font-medium text-terracotta mb-3 font-sans'}, f.verdict),
+    ...biasBlock,
+    h('p', {class:'text-xs text-olive-gray leading-relaxed mb-5 font-sans'}, f.logic),
+    h('div', {class:'grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4'}, [
+      h('div', null, [
+        h('div', {class:'text-[12px] font-sans font-semibold text-[#5a9e6b] mb-2 flex items-center gap-1'}, '🛡 防御方向（优先）'),
+        h('div', {class:'space-y-2'}, defend),
+      ]),
+      h('div', null, [
+        h('div', {class:'text-[12px] font-sans font-semibold text-[#d94a3a] mb-2 flex items-center gap-1'}, '⚔ 进攻方向（精选）'),
+        h('div', {class:'space-y-2'}, offend),
+      ]),
+    ]),
+    avoid.length ? h('div', {class:'mt-1 pt-4 border-t border-border-cream'}, [
+      h('div', {class:'text-[12px] font-sans font-semibold text-[#b8860b] mb-2'}, '⚠ 规避'),
+      h('div', {class:'flex flex-wrap gap-2'}, avoid),
+    ]) : null,
+  ];
+  if (compact) return h('div', {class:'pt-8 mt-8 border-t border-border-cream'}, inner);
+  return h('div', {class:'bg-ivory border border-border-cream rounded-2xl p-6 sm:p-7 mb-8 whisper'}, inner);
 }
-
-// ==================== INIT ====================
 
 // ==================== BACKTEST RENDER ====================
+// 统计总览:直接读 backtest_results.json 顶层聚合字段
 function renderBacktestSummary() {
-  if (!backtestData || !backtestData.summary) return '';
-  const s = backtestData.summary;
-  const color = s.avg_return >= 0 ? 'text-rise-red' : 'text-fall-green';
-  return `<div class="bg-ivory border border-border-cream rounded-2xl p-6 sm:p-7 mb-8 whisper">
-    <h3 class="text-lg font-serif font-normal text-near-black mb-4">回测总览</h3>
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-      <div class="bg-parchment border border-border-cream rounded-xl p-3.5 text-center">
-        <div class="text-[11px] text-stone-gray uppercase tracking-wide font-sans">总预测数</div>
-        <div class="text-2xl font-sans font-bold text-near-black mt-1">${s.total}</div>
-      </div>
-      <div class="bg-parchment border border-border-cream rounded-xl p-3.5 text-center">
-        <div class="text-[11px] text-stone-gray uppercase tracking-wide font-sans">平均收益</div>
-        <div class="text-2xl font-sans font-bold ${color} mt-1">${s.avg_return >= 0 ? '+' : ''}${s.avg_return.toFixed(2)}%</div>
-      </div>
-      <div class="bg-parchment border border-border-cream rounded-xl p-3.5 text-center">
-        <div class="text-[11px] text-stone-gray uppercase tracking-wide font-sans">胜率</div>
-        <div class="text-2xl font-sans font-bold text-near-black mt-1">${s.win_rate.toFixed(1)}%</div>
-      </div>
-      <div class="bg-parchment border border-border-cream rounded-xl p-3.5 text-center">
-        <div class="text-[11px] text-stone-gray uppercase tracking-wide font-sans">盈利/总</div>
-        <div class="text-2xl font-sans font-bold text-rise-red mt-1">${s.win}/${s.total}</div>
-      </div>
-    </div>
-    <p class="text-xs text-stone-gray mt-3 font-sans leading-relaxed">
-      回测规则：近10个交易日的预测从入选次日开盘追踪至今日收盘；10个交易日之前的预测只追踪10个交易日（从入选日开盘起）。入场价为预测日期开盘价，出场价为截止日收盘价。数据来源：腾讯自选股前复权K线。
-    </p>
-  </div>`;
+  if (!backtestData || typeof backtestData.total_predictions !== 'number') return null;
+  const { total_predictions, win_count, win_rate, avg_return } = backtestData;
+  const color = avg_return >= 0 ? 'text-rise-red' : 'text-fall-green';
+  const statCard = (label, value, valueCls) => h('div', {class:'bg-parchment border border-border-cream rounded-xl p-3.5 text-center'}, [
+    h('div', {class:'text-[11px] text-stone-gray uppercase tracking-wide font-sans'}, label),
+    h('div', {class:`text-2xl font-sans font-bold ${valueCls} mt-1`}, value),
+  ]);
+  return h('div', {class:'bg-ivory border border-border-cream rounded-2xl p-6 sm:p-7 mb-8 whisper'}, [
+    h('h3', {class:'text-lg font-serif font-normal text-near-black mb-4'}, '回测总览'),
+    h('div', {class:'grid grid-cols-2 sm:grid-cols-4 gap-3'}, [
+      statCard('总预测数', total_predictions, 'text-near-black'),
+      statCard('平均收益', `${avg_return >= 0 ? '+' : ''}${avg_return.toFixed(2)}%`, color),
+      statCard('胜率', `${win_rate}%`, 'text-near-black'),
+      statCard('盈利/总', `${win_count}/${total_predictions}`, 'text-rise-red'),
+    ]),
+    h('p', {class:'text-xs text-stone-gray mt-3 font-sans leading-relaxed'},
+      '回测规则：近10个交易日的预测从入选次日开盘追踪至今日收盘；10个交易日之前的预测只追踪10个交易日（从入选日开盘起）。入场价为预测日期开盘价，出场价为截止日收盘价。数据来源：腾讯自选股前复权K线。'),
+  ]);
 }
 
+// 按预测日期汇总:由 results 现场聚合(替代已失效的 by_date schema)
 function renderBacktestByDate() {
-  if (!backtestData || !backtestData.by_date) return '';
-  const dates = backtestData.by_date;
-  // Sort newest first
-  const sorted = [...dates].reverse();
-  return `<div class="bg-ivory border border-border-cream rounded-2xl p-6 sm:p-7 mb-8 whisper">
-    <h3 class="text-lg font-serif font-normal text-near-black mb-4">按预测日期汇总</h3>
-    <div class="overflow-x-auto">
-      <table class="w-full border-collapse text-[13px] font-sans">
-        <thead>
-          <tr>
-            <th class="bg-warm-sand/50 text-terracotta px-3 py-2.5 text-left font-semibold text-xs tracking-wider border border-border-cream whitespace-nowrap">预测日期</th>
-            <th class="bg-warm-sand/50 text-terracotta px-3 py-2.5 text-center font-semibold text-xs tracking-wider border border-border-cream whitespace-nowrap">股数</th>
-            <th class="bg-warm-sand/50 text-terracotta px-3 py-2.5 text-center font-semibold text-xs tracking-wider border border-border-cream whitespace-nowrap">持仓天数</th>
-            <th class="bg-warm-sand/50 text-terracotta px-3 py-2.5 text-center font-semibold text-xs tracking-wider border border-border-cream whitespace-nowrap">平均收益</th>
-            <th class="bg-warm-sand/50 text-terracotta px-3 py-2.5 text-center font-semibold text-xs tracking-wider border border-border-cream whitespace-nowrap">胜率</th>
-            <th class="bg-warm-sand/50 text-terracotta px-3 py-2.5 text-center font-semibold text-xs tracking-wider border border-border-cream whitespace-nowrap">归属</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${sorted.map(d => {
-            const clr = d.avg_return >= 0 ? 'text-rise-red' : 'text-fall-green';
-            const bucket = d.is_recent ? '近10日→今' : '>10日→+10d';
-            const bucketCls = d.is_recent ? 'text-focus-blue' : 'text-stone-gray';
-            return `<tr class="even:bg-parchment hover:bg-terracotta/[0.02]">
-              <td class="px-3 py-2 border border-border-cream text-near-black font-medium whitespace-nowrap">${d.date}</td>
-              <td class="px-3 py-2 border border-border-cream text-center text-olive-gray">${d.count}</td>
-              <td class="px-3 py-2 border border-border-cream text-center text-olive-gray">${d.days_held}</td>
-              <td class="px-3 py-2 border border-border-cream text-center font-semibold ${clr}">${d.avg_return >= 0 ? '+' : ''}${d.avg_return.toFixed(2)}%</td>
-              <td class="px-3 py-2 border border-border-cream text-center">${d.win_rate.toFixed(0)}%</td>
-              <td class="px-3 py-2 border border-border-cream text-center text-xs ${bucketCls}">${bucket}</td>
-            </tr>`;
-          }).join('')}
-        </tbody>
-      </table>
-    </div>
-  </div>`;
+  if (!backtestData || !backtestData.results || !backtestData.results.length) return null;
+  const groups = {};
+  backtestData.results.forEach(r => { (groups[r.pred_date] ||= []).push(r); });
+  const dates = Object.keys(groups).sort().reverse();
+  const head = (txt, align) => h('th', {class:`bg-warm-sand/50 text-terracotta px-3 py-2.5 ${align} font-semibold text-xs tracking-wider border border-border-cream whitespace-nowrap`}, txt);
+  const rows = dates.map(d => {
+    const stocks = groups[d].sort((a,b) => a.rank - b.rank);
+    const avg = stocks.reduce((s,r) => s + r.return_pct, 0) / stocks.length;
+    const win = stocks.filter(r => r.return_pct > 0).length;
+    const isRecent = stocks[0].is_recent;
+    const bucket = isRecent ? '近10日→今' : '>10日→+10d';
+    const bucketCls = isRecent ? 'text-focus-blue' : 'text-stone-gray';
+    const clr = avg >= 0 ? 'text-rise-red' : 'text-fall-green';
+    return h('tr', {class:'even:bg-parchment hover:bg-terracotta/[0.02]'}, [
+      h('td', {class:'px-3 py-2 border border-border-cream text-near-black font-medium whitespace-nowrap'}, d),
+      h('td', {class:'px-3 py-2 border border-border-cream text-center text-olive-gray'}, stocks.length),
+      h('td', {class:'px-3 py-2 border border-border-cream text-center text-olive-gray'}, stocks[0].days_held),
+      h('td', {class:`px-3 py-2 border border-border-cream text-center font-semibold ${clr}`}, `${avg >= 0 ? '+' : ''}${avg.toFixed(2)}%`),
+      h('td', {class:'px-3 py-2 border border-border-cream text-center'}, `${(win / stocks.length * 100).toFixed(0)}%`),
+      h('td', {class:`px-3 py-2 border border-border-cream text-center text-xs ${bucketCls}`}, bucket),
+    ]);
+  });
+  return h('div', {class:'bg-ivory border border-border-cream rounded-2xl p-6 sm:p-7 mb-8 whisper'}, [
+    h('h3', {class:'text-lg font-serif font-normal text-near-black mb-4'}, '按预测日期汇总'),
+    h('div', {class:'overflow-x-auto'}, h('table', {class:'w-full border-collapse text-[13px] font-sans'}, [
+      h('thead', null, h('tr', null, [
+        head('预测日期', 'text-left'), head('股数', 'text-center'), head('持仓天数', 'text-center'),
+        head('平均收益', 'text-center'), head('胜率', 'text-center'), head('归属', 'text-center'),
+      ])),
+      h('tbody', null, rows),
+    ])),
+  ]);
 }
 
+// 个股回测明细
 function renderBacktestDetail() {
-  if (!backtestData || !backtestData.results) return '';
+  if (!backtestData || !backtestData.results || !backtestData.results.length) return null;
   const all = backtestData.results;
   // Group by date
   const groups = {};
@@ -488,61 +590,62 @@ function renderBacktestDetail() {
   const totalAvg = all.reduce((s,r) => s + r.return_pct, 0) / all.length;
   const totalWin = all.filter(r => r.return_pct > 0).length;
 
-  return `<div class="bg-ivory border border-border-cream rounded-2xl p-6 sm:p-7 mb-8 whisper">
-    <h3 class="text-lg font-serif font-normal text-near-black mb-1">个股回测明细</h3>
-    <p class="text-xs text-stone-gray mb-6 font-sans">共 ${totalDays} 个交易日 · ${totalStocks} 只个股 · 总均收益 <span class="${totalAvg>=0?'text-rise-red':'text-fall-green'} font-semibold">${totalAvg>=0?'+':''}${totalAvg.toFixed(2)}%</span> · 胜率 ${(totalWin/totalStocks*100).toFixed(0)}%</p>
-    ${dates.map(d => {
-      const stocks = groups[d].sort((a,b) => a.rank - b.rank);
-      const avg = stocks.reduce((s,r) => s + r.return_pct, 0) / stocks.length;
-      const win = stocks.filter(r => r.return_pct > 0).length;
-      const isRecent = stocks[0].is_recent;
-      const daysHeld = stocks[0].days_held;
-      const exitDate = stocks[0].exit_date;
-      const bucketLabel = isRecent ? `持仓${daysHeld}天→${escapeHtml(exitDate).slice(5)}` : `持仓${daysHeld}天(限10d)`;
-      const dateColor = d === '2026-06-30' ? 'text-terracotta' : 'text-near-black';
+  const body = dates.map(d => {
+    const stocks = groups[d].sort((a,b) => a.rank - b.rank);
+    const avg = stocks.reduce((s,r) => s + r.return_pct, 0) / stocks.length;
+    const win = stocks.filter(r => r.return_pct > 0).length;
+    const isRecent = stocks[0].is_recent;
+    const daysHeld = stocks[0].days_held;
+    const exitDate = stocks[0].exit_date;
+    const bucketLabel = isRecent ? `持仓${daysHeld}天→${exitDate.slice(5)}` : `持仓${daysHeld}天(限10d)`;
+    const dateColor = d === '2026-06-30' ? 'text-terracotta' : 'text-near-black';
 
-      return `<div class="mb-6 last:mb-0">
-        <div class="flex items-center gap-3 mb-3 pb-2 border-b border-border-cream">
-          <span class="text-sm font-serif font-medium ${dateColor}">${escapeHtml(d)}</span>
-          <span class="text-[11px] text-stone-gray font-sans bg-warm-sand/50 border border-border-cream rounded-full px-2 py-0.5">${bucketLabel}</span>
-          <span class="text-xs font-sans font-semibold ${avg>=0?'text-rise-red':'text-fall-green'} ml-auto">${avg>=0?'+':''}${avg.toFixed(2)}%</span>
-          <span class="text-[11px] text-olive-gray font-sans">${win}/${stocks.length}胜</span>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full border-collapse text-[12px] font-sans">
-            <thead>
-              <tr>
-                <th class="bg-warm-sand/30 text-stone-gray px-2 py-1.5 text-center font-semibold text-[10px] tracking-wider border border-border-cream whitespace-nowrap">排名</th>
-                <th class="bg-warm-sand/30 text-stone-gray px-2 py-1.5 text-left font-semibold text-[10px] tracking-wider border border-border-cream whitespace-nowrap">代码</th>
-                <th class="bg-warm-sand/30 text-stone-gray px-2 py-1.5 text-left font-semibold text-[10px] tracking-wider border border-border-cream whitespace-nowrap">名称</th>
-                <th class="bg-warm-sand/30 text-stone-gray px-2 py-1.5 text-right font-semibold text-[10px] tracking-wider border border-border-cream whitespace-nowrap">入场价</th>
-                <th class="bg-warm-sand/30 text-stone-gray px-2 py-1.5 text-right font-semibold text-[10px] tracking-wider border border-border-cream whitespace-nowrap">出场价</th>
-                <th class="bg-warm-sand/30 text-stone-gray px-2 py-1.5 text-right font-semibold text-[10px] tracking-wider border border-border-cream whitespace-nowrap">收益</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${stocks.map(r => {
-                const clr = r.return_pct >= 0 ? 'text-rise-red' : 'text-fall-green';
-                const bg = r.return_pct >= 10 ? 'bg-rise-red/[0.03]' : r.return_pct <= -5 ? 'bg-fall-green/[0.03]' : '';
-                const rankClr = r.rank === 1 ? 'bg-terracotta/10 text-terracotta font-bold' : 'text-olive-gray';
-                return `<tr class="${bg} hover:bg-terracotta/[0.02]">
-                  <td class="px-2 py-1.5 border border-border-cream text-center text-[11px] ${rankClr}">${r.rank}</td>
-                  <td class="px-2 py-1.5 border border-border-cream text-olive-gray font-mono text-[11px]">${escapeHtml(r.code)}</td>
-                  <td class="px-2 py-1.5 border border-border-cream text-near-black">${escapeHtml(r.name)}</td>
-                  <td class="px-2 py-1.5 border border-border-cream text-right tabular-nums">${r.entry_open.toFixed(2)}</td>
-                  <td class="px-2 py-1.5 border border-border-cream text-right tabular-nums">${r.exit_close.toFixed(2)}</td>
-                  <td class="px-2 py-1.5 border border-border-cream text-right font-semibold ${clr} tabular-nums">${r.return_pct >= 0 ? '+' : ''}${r.return_pct.toFixed(2)}%</td>
-                </tr>`;
-              }).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>`;
-    }).join('')}
-    <p class="text-xs text-stone-gray mt-4 pt-4 border-t border-border-cream font-sans">入场价 = 预测日期开盘价（前复权）；出场价 = 截止日收盘价（前复权）。数据来源：腾讯自选股。</p>
-  </div>`;
+    return h('div', {class:'mb-6 last:mb-0'}, [
+      h('div', {class:'flex items-center gap-3 mb-3 pb-2 border-b border-border-cream'}, [
+        h('span', {class:`text-sm font-serif font-medium ${dateColor}`}, d),
+        h('span', {class:'text-[11px] text-stone-gray font-sans bg-warm-sand/50 border border-border-cream rounded-full px-2 py-0.5'}, bucketLabel),
+        h('span', {class:`text-xs font-sans font-semibold ${avg>=0?'text-rise-red':'text-fall-green'} ml-auto`}, `${avg>=0?'+':''}${avg.toFixed(2)}%`),
+        h('span', {class:'text-[11px] text-olive-gray font-sans'}, `${win}/${stocks.length}胜`),
+      ]),
+      h('div', {class:'overflow-x-auto'}, h('table', {class:'w-full border-collapse text-[12px] font-sans'}, [
+        h('thead', null, h('tr', null, [
+          h('th', {class:'bg-warm-sand/30 text-stone-gray px-2 py-1.5 text-center font-semibold text-[10px] tracking-wider border border-border-cream whitespace-nowrap'}, '排名'),
+          h('th', {class:'bg-warm-sand/30 text-stone-gray px-2 py-1.5 text-left font-semibold text-[10px] tracking-wider border border-border-cream whitespace-nowrap'}, '代码'),
+          h('th', {class:'bg-warm-sand/30 text-stone-gray px-2 py-1.5 text-left font-semibold text-[10px] tracking-wider border border-border-cream whitespace-nowrap'}, '名称'),
+          h('th', {class:'bg-warm-sand/30 text-stone-gray px-2 py-1.5 text-right font-semibold text-[10px] tracking-wider border border-border-cream whitespace-nowrap'}, '入场价'),
+          h('th', {class:'bg-warm-sand/30 text-stone-gray px-2 py-1.5 text-right font-semibold text-[10px] tracking-wider border border-border-cream whitespace-nowrap'}, '出场价'),
+          h('th', {class:'bg-warm-sand/30 text-stone-gray px-2 py-1.5 text-right font-semibold text-[10px] tracking-wider border border-border-cream whitespace-nowrap'}, '收益'),
+        ])),
+        h('tbody', null, stocks.map(r => {
+          const clr = r.return_pct >= 0 ? 'text-rise-red' : 'text-fall-green';
+          const bg = r.return_pct >= 10 ? 'bg-rise-red/[0.03]' : r.return_pct <= -5 ? 'bg-fall-green/[0.03]' : '';
+          const rankClr = r.rank === 1 ? 'bg-terracotta/10 text-terracotta font-bold' : 'text-olive-gray';
+          return h('tr', {class:`${bg} hover:bg-terracotta/[0.02]`}, [
+            h('td', {class:`px-2 py-1.5 border border-border-cream text-center text-[11px] ${rankClr}`}, r.rank),
+            h('td', {class:'px-2 py-1.5 border border-border-cream text-olive-gray font-mono text-[11px]'}, r.code),
+            h('td', {class:'px-2 py-1.5 border border-border-cream text-near-black'}, r.name),
+            h('td', {class:'px-2 py-1.5 border border-border-cream text-right tabular-nums'}, r.entry_open.toFixed(2)),
+            h('td', {class:'px-2 py-1.5 border border-border-cream text-right tabular-nums'}, r.exit_close.toFixed(2)),
+            h('td', {class:`px-2 py-1.5 border border-border-cream text-right font-semibold ${clr} tabular-nums`}, `${r.return_pct >= 0 ? '+' : ''}${r.return_pct.toFixed(2)}%`),
+          ]);
+        })),
+      ])),
+    ]);
+  });
+
+  return h('div', {class:'bg-ivory border border-border-cream rounded-2xl p-6 sm:p-7 mb-8 whisper'}, [
+    h('h3', {class:'text-lg font-serif font-normal text-near-black mb-1'}, '个股回测明细'),
+    h('p', {class:'text-xs text-stone-gray mb-6 font-sans'}, [
+      `共 ${totalDays} 个交易日 · ${totalStocks} 只个股 · 总均收益 `,
+      h('span', {class:`${totalAvg>=0?'text-rise-red':'text-fall-green'} font-semibold`}, `${totalAvg>=0?'+':''}${totalAvg.toFixed(2)}%`),
+      ` · 胜率 ${(totalWin/totalStocks*100).toFixed(0)}%`,
+    ]),
+    ...body,
+    h('p', {class:'text-xs text-stone-gray mt-4 pt-4 border-t border-border-cream font-sans'}, '入场价 = 预测日期开盘价（前复权）；出场价 = 截止日收盘价（前复权）。数据来源：腾讯自选股。'),
+  ]);
 }
 
+// ==================== INIT ====================
 async function init() {
   try {
     const [predRes, btRes] = await Promise.all([fetch('data/predictions.json'), fetch('data/backtest_results.json')]);
