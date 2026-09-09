@@ -1,21 +1,86 @@
 {
-  "generated": "2026-09-08",
-  "total_predictions": 300,
-  "win_count": 120,
-  "win_rate": 40.0,
-  "avg_return": -0.82,
+  "generated": "2026-09-09",
+  "total_predictions": 305,
+  "win_count": 119,
+  "win_rate": 39.02,
+  "avg_return": -0.98,
   "results": [
+    {
+      "pred_date": "20260909",
+      "code": "sh688293",
+      "name": "奥浦迈",
+      "rank": 1,
+      "entry_date": "2026-09-09",
+      "exit_date": "2026-09-09",
+      "entry_open": 68.96,
+      "exit_close": 70.98,
+      "return_pct": 2.9292,
+      "days_held": 1,
+      "is_recent": true
+    },
+    {
+      "pred_date": "20260909",
+      "code": "sh601595",
+      "name": "上海电影",
+      "rank": 2,
+      "entry_date": "2026-09-09",
+      "exit_date": "2026-09-09",
+      "entry_open": 22.6,
+      "exit_close": 22.5,
+      "return_pct": -0.4425,
+      "days_held": 1,
+      "is_recent": true
+    },
+    {
+      "pred_date": "20260909",
+      "code": "sz002909",
+      "name": "集泰股份",
+      "rank": 3,
+      "entry_date": "2026-09-09",
+      "exit_date": "2026-09-09",
+      "entry_open": 8.99,
+      "exit_close": 8.61,
+      "return_pct": -4.2269,
+      "days_held": 1,
+      "is_recent": true
+    },
+    {
+      "pred_date": "20260909",
+      "code": "sh605177",
+      "name": "东亚药业",
+      "rank": 4,
+      "entry_date": "2026-09-09",
+      "exit_date": "2026-09-09",
+      "entry_open": 22.5,
+      "exit_close": 22.78,
+      "return_pct": 1.2444,
+      "days_held": 1,
+      "is_recent": true
+    },
+    {
+      "pred_date": "20260909",
+      "code": "sz002470",
+      "name": "金正大",
+      "rank": 5,
+      "entry_date": "2026-09-09",
+      "exit_date": "2026-09-09",
+      "entry_open": 2.78,
+      "exit_close": 2.78,
+      "return_pct": 0.0,
+      "days_held": 1,
+      "is_recent": true
+    },
     {
       "pred_date": "20260908",
       "code": "sz002463",
       "name": "沪电股份",
       "rank": 1,
       "entry_date": "2026-09-08",
-      "exit_date": "2026-09-08",
+      "exit_date": "2026-09-09",
       "entry_open": 126.0,
-      "exit_close": 124.9,
-      "return_pct": -0.873,
-      "days_held": 1,
+      "exit_close": 127.55,
+      "return_pct": 1.2302,
+      "days_held": 2,
       "is_recent": true
     },
     {
@@ -24,11 +89,11 @@
       "name": "景旺电子",
       "rank": 2,
       "entry_date": "2026-09-08",
-      "exit_date": "2026-09-08",
+      "exit_date": "2026-09-09",
       "entry_open": 110.0,
-      "exit_close": 106.97,
-      "return_pct": -2.7545,
-      "days_held": 1,
+      "exit_close": 109.59,
+      "return_pct": -0.3727,
+      "days_held": 2,
       "is_recent": true
     },
     {
@@ -37,11 +102,11 @@
       "name": "光迅科技",
       "rank": 3,
       "entry_date": "2026-09-08",
-      "exit_date": "2026-09-08",
+      "exit_date": "2026-09-09",
       "entry_open": 189.29,
-      "exit_close": 179.92,
-      "return_pct": -4.9501,
-      "days_held": 1,
+      "exit_close": 182.79,
+      "return_pct": -3.4339,
+      "days_held": 2,
       "is_recent": true
     },
     {
@@ -50,11 +115,11 @@
       "name": "深南电路",
       "rank": 4,
       "entry_date": "2026-09-08",
-      "exit_date": "2026-09-08",
+      "exit_date": "2026-09-09",
       "entry_open": 375.37,
-      "exit_close": 382.5,
-      "return_pct": 1.8995,
-      "days_held": 1,
+      "exit_close": 383.3,
+      "return_pct": 2.1126,
+      "days_held": 2,
       "is_recent": true
     },
     {
@@ -63,11 +128,11 @@
       "name": "江海股份",
       "rank": 5,
       "entry_date": "2026-09-08",
-      "exit_date": "2026-09-08",
+      "exit_date": "2026-09-09",
       "entry_open": 64.12,
-      "exit_close": 59.6,
-      "return_pct": -7.0493,
-      "days_held": 1,
+      "exit_close": 58.97,
+      "return_pct": -8.0318,
+      "days_held": 2,
       "is_recent": true
     },
     {
@@ -76,10 +141,10 @@
       "name": "新希望",
       "rank": 1,
       "entry_open": 7.89,
-      "exit_close": 7.82,
-      "days_held": 2,
-      "return_pct": -0.8872,
-      "exit_date": "2026-09-08",
+      "exit_close": 7.91,
+      "days_held": 3,
+      "return_pct": 0.2535,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -88,10 +153,10 @@
       "name": "楚天龙",
       "rank": 2,
       "entry_open": 21.01,
-      "exit_close": 22.25,
-      "days_held": 2,
-      "return_pct": 5.902,
-      "exit_date": "2026-09-08",
+      "exit_close": 21.0,
+      "days_held": 3,
+      "return_pct": -0.0476,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -100,10 +165,10 @@
       "name": "天娱数科",
       "rank": 3,
       "entry_open": 8.37,
-      "exit_close": 8.26,
-      "days_held": 2,
-      "return_pct": -1.3142,
-      "exit_date": "2026-09-08",
+      "exit_close": 7.93,
+      "days_held": 3,
+      "return_pct": -5.2569,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -112,10 +177,10 @@
       "name": "易点天下",
       "rank": 4,
       "entry_open": 38.57,
-      "exit_close": 38.59,
-      "days_held": 2,
-      "return_pct": 0.0519,
-      "exit_date": "2026-09-08",
+      "exit_close": 37.18,
+      "days_held": 3,
+      "return_pct": -3.6038,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -124,10 +189,10 @@
       "name": "平潭发展",
       "rank": 5,
       "entry_open": 8.11,
-      "exit_close": 7.9,
-      "days_held": 2,
-      "return_pct": -2.5894,
-      "exit_date": "2026-09-08",
+      "exit_close": 8.06,
+      "days_held": 3,
+      "return_pct": -0.6165,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -136,10 +201,10 @@
       "name": "华盛昌",
       "rank": 1,
       "entry_open": 114.53,
-      "exit_close": 129.91,
-      "days_held": 3,
-      "return_pct": 13.4288,
-      "exit_date": "2026-09-08",
+      "exit_close": 134.32,
+      "days_held": 4,
+      "return_pct": 17.2793,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -148,10 +213,10 @@
       "name": "黄河旋风",
       "rank": 2,
       "entry_open": 15.8,
-      "exit_close": 16.5,
-      "days_held": 3,
-      "return_pct": 4.4304,
-      "exit_date": "2026-09-08",
+      "exit_close": 16.93,
+      "days_held": 4,
+      "return_pct": 7.1519,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -160,10 +225,10 @@
       "name": "光洋股份",
       "rank": 3,
       "entry_open": 15.43,
-      "exit_close": 16.25,
-      "days_held": 3,
-      "return_pct": 5.3143,
-      "exit_date": "2026-09-08",
+      "exit_close": 16.48,
+      "days_held": 4,
+      "return_pct": 6.8049,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -172,10 +237,10 @@
       "name": "新朋股份",
       "rank": 4,
       "entry_open": 10.4,
-      "exit_close": 9.31,
-      "days_held": 3,
-      "return_pct": -10.4808,
-      "exit_date": "2026-09-08",
+      "exit_close": 9.08,
+      "days_held": 4,
+      "return_pct": -12.6923,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -184,10 +249,10 @@
       "name": "白银有色",
       "rank": 5,
       "entry_open": 7.54,
-      "exit_close": 7.11,
-      "days_held": 3,
-      "return_pct": -5.7029,
-      "exit_date": "2026-09-08",
+      "exit_close": 7.09,
+      "days_held": 4,
+      "return_pct": -5.9682,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -196,10 +261,10 @@
       "name": "飞龙股份",
       "rank": 1,
       "entry_open": 58.0,
-      "exit_close": 58.59,
-      "days_held": 4,
-      "return_pct": 1.0172,
-      "exit_date": "2026-09-08",
+      "exit_close": 56.82,
+      "days_held": 5,
+      "return_pct": -2.0345,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -208,10 +273,10 @@
       "name": "博云新材",
       "rank": 2,
       "entry_open": 20.7,
-      "exit_close": 22.32,
-      "days_held": 4,
-      "return_pct": 7.8261,
-      "exit_date": "2026-09-08",
+      "exit_close": 22.5,
+      "days_held": 5,
+      "return_pct": 8.6957,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -220,10 +285,10 @@
       "name": "内蒙一机",
       "rank": 3,
       "entry_open": 14.6,
-      "exit_close": 13.87,
-      "days_held": 4,
-      "return_pct": -5.0,
-      "exit_date": "2026-09-08",
+      "exit_close": 14.43,
+      "days_held": 5,
+      "return_pct": -1.1644,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -232,10 +297,10 @@
       "name": "国晟科技",
       "rank": 4,
       "entry_open": 10.96,
-      "exit_close": 10.68,
-      "days_held": 4,
-      "return_pct": -2.5547,
-      "exit_date": "2026-09-08",
+      "exit_close": 10.51,
+      "days_held": 5,
+      "return_pct": -4.1058,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -244,10 +309,10 @@
       "name": "茂业商业",
       "rank": 5,
       "entry_open": 4.7,
-      "exit_close": 5.04,
-      "days_held": 4,
-      "return_pct": 7.234,
-      "exit_date": "2026-09-08",
+      "exit_close": 4.98,
+      "days_held": 5,
+      "return_pct": 5.9574,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -256,10 +321,10 @@
       "name": "江天化学",
       "rank": 1,
       "entry_open": 34.5,
-      "exit_close": 32.18,
-      "days_held": 5,
-      "return_pct": -6.7246,
-      "exit_date": "2026-09-08",
+      "exit_close": 30.04,
+      "days_held": 6,
+      "return_pct": -12.9275,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -268,10 +333,10 @@
       "name": "浙江世宝",
       "rank": 2,
       "entry_open": 17.05,
-      "exit_close": 16.93,
-      "days_held": 5,
-      "return_pct": -0.7038,
-      "exit_date": "2026-09-08",
+      "exit_close": 16.52,
+      "days_held": 6,
+      "return_pct": -3.1085,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -280,10 +345,10 @@
       "name": "博纳影业",
       "rank": 3,
       "entry_open": 6.15,
-      "exit_close": 6.12,
-      "days_held": 5,
-      "return_pct": -0.4878,
-      "exit_date": "2026-09-08",
+      "exit_close": 5.86,
+      "days_held": 6,
+      "return_pct": -4.7154,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -292,10 +357,10 @@
       "name": "透景生命",
       "rank": 4,
       "entry_open": 19.97,
-      "exit_close": 18.47,
-      "days_held": 5,
-      "return_pct": -7.5113,
-      "exit_date": "2026-09-08",
+      "exit_close": 18.04,
+      "days_held": 6,
+      "return_pct": -9.6645,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -304,10 +369,10 @@
       "name": "楚天龙",
       "rank": 5,
       "entry_open": 19.6,
-      "exit_close": 22.25,
-      "days_held": 5,
-      "return_pct": 13.5204,
-      "exit_date": "2026-09-08",
+      "exit_close": 21.0,
+      "days_held": 6,
+      "return_pct": 7.1429,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -316,10 +381,10 @@
       "name": "锦龙股份",
       "rank": 1,
       "entry_open": 12.08,
-      "exit_close": 11.85,
-      "days_held": 6,
-      "return_pct": -1.904,
-      "exit_date": "2026-09-08",
+      "exit_close": 11.14,
+      "days_held": 7,
+      "return_pct": -7.7815,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -328,10 +393,10 @@
       "name": "沃特股份",
       "rank": 2,
       "entry_open": 28.83,
-      "exit_close": 25.0,
-      "days_held": 6,
-      "return_pct": -13.2848,
-      "exit_date": "2026-09-08",
+      "exit_close": 26.01,
+      "days_held": 7,
+      "return_pct": -9.7815,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -340,10 +405,10 @@
       "name": "亿田智能",
       "rank": 3,
       "entry_open": 26.0,
-      "exit_close": 29.61,
-      "days_held": 6,
-      "return_pct": 13.8846,
-      "exit_date": "2026-09-08",
+      "exit_close": 29.4,
+      "days_held": 7,
+      "return_pct": 13.0769,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -352,10 +417,10 @@
       "name": "绿控传动",
       "rank": 4,
       "entry_open": 29.85,
-      "exit_close": 23.4,
-      "days_held": 6,
-      "return_pct": -21.608,
-      "exit_date": "2026-09-08",
+      "exit_close": 22.51,
+      "days_held": 7,
+      "return_pct": -24.5896,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -364,10 +429,10 @@
       "name": "芒果超媒",
       "rank": 5,
       "entry_open": 20.38,
-      "exit_close": 20.62,
-      "days_held": 6,
-      "return_pct": 1.1776,
-      "exit_date": "2026-09-08",
+      "exit_close": 18.57,
+      "days_held": 7,
+      "return_pct": -8.8813,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -376,10 +441,10 @@
       "name": "嘉立创",
       "rank": 1,
       "entry_open": 172.05,
-      "exit_close": 162.08,
-      "days_held": 7,
-      "return_pct": -5.7948,
-      "exit_date": "2026-09-08",
+      "exit_close": 162.4,
+      "days_held": 8,
+      "return_pct": -5.6088,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -388,10 +453,10 @@
       "name": "英集芯",
       "rank": 2,
       "entry_open": 29.13,
-      "exit_close": 33.29,
-      "days_held": 7,
-      "return_pct": 14.2808,
-      "exit_date": "2026-09-08",
+      "exit_close": 33.92,
+      "days_held": 8,
+      "return_pct": 16.4435,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -400,10 +465,10 @@
       "name": "誉衡药业",
       "rank": 3,
       "entry_open": 4.63,
-      "exit_close": 4.03,
-      "days_held": 7,
-      "return_pct": -12.959,
-      "exit_date": "2026-09-08",
+      "exit_close": 3.7,
+      "days_held": 8,
+      "return_pct": -20.0864,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -412,10 +477,10 @@
       "name": "香江控股",
       "rank": 4,
       "entry_open": 5.9,
-      "exit_close": 5.5,
-      "days_held": 7,
-      "return_pct": -6.7797,
-      "exit_date": "2026-09-08",
+      "exit_close": 5.22,
+      "days_held": 8,
+      "return_pct": -11.5254,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -424,10 +489,10 @@
       "name": "中安科",
       "rank": 5,
       "entry_open": 3.41,
-      "exit_close": 3.25,
-      "days_held": 7,
-      "return_pct": -4.6921,
-      "exit_date": "2026-09-08",
+      "exit_close": 3.2,
+      "days_held": 8,
+      "return_pct": -6.1584,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -436,10 +501,10 @@
       "name": "德明利",
       "rank": 1,
       "entry_open": 437.5,
-      "exit_close": 416.82,
-      "days_held": 8,
-      "return_pct": -4.7269,
-      "exit_date": "2026-09-08",
+      "exit_close": 409.66,
+      "days_held": 9,
+      "return_pct": -6.3634,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -448,10 +513,10 @@
       "name": "联瑞新材",
       "rank": 2,
       "entry_open": 198.77,
-      "exit_close": 167.69,
-      "days_held": 8,
-      "return_pct": -15.6362,
-      "exit_date": "2026-09-08",
+      "exit_close": 181.79,
+      "days_held": 9,
+      "return_pct": -8.5425,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -460,10 +525,10 @@
       "name": "星网锐捷",
       "rank": 3,
       "entry_open": 33.8,
-      "exit_close": 37.33,
-      "days_held": 8,
-      "return_pct": 10.4438,
-      "exit_date": "2026-09-08",
+      "exit_close": 35.81,
+      "days_held": 9,
+      "return_pct": 5.9467,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -472,10 +537,10 @@
       "name": "金安国纪",
       "rank": 4,
       "entry_open": 72.07,
-      "exit_close": 68.64,
-      "days_held": 8,
-      "return_pct": -4.7593,
-      "exit_date": "2026-09-08",
+      "exit_close": 69.5,
+      "days_held": 9,
+      "return_pct": -3.566,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -484,10 +549,10 @@
       "name": "亨通光电",
       "rank": 5,
       "entry_open": 71.0,
-      "exit_close": 63.11,
-      "days_held": 8,
-      "return_pct": -11.1127,
-      "exit_date": "2026-09-08",
+      "exit_close": 66.62,
+      "days_held": 9,
+      "return_pct": -6.169,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -496,10 +561,10 @@
       "name": "江西铜业",
       "rank": 1,
       "entry_open": 47.65,
-      "exit_close": 48.53,
-      "days_held": 9,
-      "return_pct": 1.8468,
-      "exit_date": "2026-09-08",
+      "exit_close": 49.57,
+      "days_held": 10,
+      "return_pct": 4.0294,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -508,10 +573,10 @@
       "name": "锦龙股份",
       "rank": 2,
       "entry_open": 10.73,
-      "exit_close": 11.85,
-      "days_held": 9,
-      "return_pct": 10.438,
-      "exit_date": "2026-09-08",
+      "exit_close": 11.14,
+      "days_held": 10,
+      "return_pct": 3.8211,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -520,10 +585,10 @@
       "name": "康希诺",
       "rank": 3,
       "entry_open": 83.0,
-      "exit_close": 71.5,
-      "days_held": 9,
-      "return_pct": -13.8554,
-      "exit_date": "2026-09-08",
+      "exit_close": 68.82,
+      "days_held": 10,
+      "return_pct": -17.0843,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -532,10 +597,10 @@
       "name": "白银有色",
       "rank": 4,
       "entry_open": 7.0,
-      "exit_close": 7.11,
-      "days_held": 9,
-      "return_pct": 1.5714,
-      "exit_date": "2026-09-08",
+      "exit_close": 7.09,
+      "days_held": 10,
+      "return_pct": 1.2857,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -544,10 +609,10 @@
       "name": "新大陆",
       "rank": 5,
       "entry_open": 20.7,
-      "exit_close": 20.84,
-      "days_held": 9,
-      "return_pct": 0.6763,
-      "exit_date": "2026-09-08",
+      "exit_close": 20.38,
+      "days_held": 10,
+      "return_pct": -1.5459,
+      "exit_date": "2026-09-09",
       "is_recent": true
     },
     {
@@ -560,7 +625,7 @@
       "days_held": 10,
       "return_pct": -3.2682,
       "exit_date": "2026-09-08",
-      "is_recent": true
+      "is_recent": false
     },
     {
       "pred_date": "20260826",
@@ -572,7 +637,7 @@
       "days_held": 10,
       "return_pct": 5.3721,
       "exit_date": "2026-09-08",
-      "is_recent": true
+      "is_recent": false
     },
     {
       "pred_date": "20260826",
@@ -584,7 +649,7 @@
       "days_held": 10,
       "return_pct": -3.9836,
       "exit_date": "2026-09-08",
-      "is_recent": true
+      "is_recent": false
     },
     {
       "pred_date": "20260826",
@@ -596,7 +661,7 @@
       "days_held": 10,
       "return_pct": 25.0097,
       "exit_date": "2026-09-08",
-      "is_recent": true
+      "is_recent": false
     },
     {
       "pred_date": "20260826",
@@ -608,7 +673,7 @@
       "days_held": 10,
       "return_pct": -0.7742,
       "exit_date": "2026-09-08",
-      "is_recent": true
+      "is_recent": false
     },
     {
       "pred_date": "20260825",
